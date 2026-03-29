@@ -6,164 +6,59 @@
   <title>WOA Clan Growth Dashboard</title>
   <style>
     :root {
-      --bg: #0b1220;
-      --panel: #121a2b;
-      --panel2: #18243a;
-      --text: #eef4ff;
-      --muted: #9fb0d1;
-      --accent: #4f8cff;
-      --good: #1fbf75;
-      --bad: #ff6b6b;
-      --border: #24314f;
+      --bg:#0b1220; --panel:#121a2b; --panel2:#18243a; --text:#eef4ff; --muted:#9fb0d1;
+      --accent:#4f8cff; --good:#22c55e; --good2:#00ff88; --bad:#ff6b6b; --warn:#f59e0b; --border:#24314f;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #0b1220, #10182a);
-      color: var(--text);
-    }
-    .wrap {
-      max-width: 1460px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-    h1 { margin: 0; font-size: 32px; }
-    .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
-    .badge {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(79,140,255,.35);
-      background: rgba(79,140,255,.12);
-      color: #c9dbff;
-      font-size: 13px;
-    }
-    .card {
-      background: rgba(18,26,43,.94);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 12px 36px rgba(0,0,0,.18);
-    }
-    .grid-kpi {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0,1fr));
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .grid-main {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .grid-bottom {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .grid-extra {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .kpi-title { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-    .kpi-value { font-size: 38px; font-weight: 700; letter-spacing: -.02em; }
-    .kpi-sub { color: var(--muted); font-size: 12px; margin-top: 8px; }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
-    .muted { color: var(--muted); font-size: 13px; }
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    .controls {
-      display: grid;
-      grid-template-columns: auto auto 1fr auto;
-      gap: 10px;
-      align-items: end;
-    }
-    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-    select, input[type="text"] {
-      width: 100%;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-    .btn {
-      background: var(--accent);
-      border: none;
-      color: white;
-      border-radius: 12px;
-      padding: 11px 14px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .btn.secondary { background: #24314f; }
-    .msg { margin-top: 10px; font-size: 13px; color: var(--muted); }
-    .msg.error { color: #ff9898; }
-    .msg.ok { color: #90f0be; }
-    .chart-box { margin-top: 14px; }
-    svg { width: 100%; height: auto; display: block; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td {
-      text-align: left;
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    th {
-      color: #d9e4ff;
-      background: rgba(255,255,255,.03);
-      position: sticky;
-      top: 0;
-    }
-    td.num { text-align: right; font-variant-numeric: tabular-nums; }
-    .table-wrap {
-      max-height: 430px;
-      overflow: auto;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
-    }
-    ul.clean { list-style: none; margin: 0; padding: 0; }
-    ul.clean li {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .good { color: #67e8a2; }
-    .bad { color: #ff8f8f; }
-    .footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 14px; }
-    @media (max-width: 1180px) {
-      .grid-kpi, .grid-main, .grid-bottom, .grid-extra { grid-template-columns: 1fr; }
-      .controls { grid-template-columns: 1fr; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:linear-gradient(180deg,#0b1220,#10182a); color:var(--text); }
+    .wrap { max-width:1460px; margin:0 auto; padding:24px; }
+    .header { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+    h1 { margin:0; font-size:32px; }
+    .badge { padding:8px 12px; border-radius:999px; border:1px solid rgba(79,140,255,.35); background:rgba(79,140,255,.12); color:#c9dbff; font-size:13px; }
+    .card { background:rgba(18,26,43,.94); border:1px solid var(--border); border-radius:18px; padding:18px; box-shadow:0 12px 36px rgba(0,0,0,.18); }
+    .grid-kpi { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+    .grid-main { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+    .grid-bottom { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .grid-extra { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+    .kpi-title { color:var(--muted); font-size:13px; margin-bottom:8px; }
+    .kpi-value { font-size:38px; font-weight:700; letter-spacing:-.02em; }
+    .kpi-sub { color:var(--muted); font-size:12px; margin-top:8px; }
+    .title { font-size:18px; font-weight:700; margin:0 0 4px; }
+    .muted { color:var(--muted); font-size:13px; }
+    .toolbar { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    .controls { display:grid; grid-template-columns:auto auto 1fr auto; gap:10px; align-items:end; }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    select,input[type="text"] { width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:12px; padding:10px 12px; }
+    .btn { background:var(--accent); border:none; color:white; border-radius:12px; padding:11px 14px; cursor:pointer; font-weight:700; }
+    .btn.secondary { background:#24314f; }
+    .msg { margin-top:10px; font-size:13px; color:var(--muted); }
+    .msg.ok { color:#90f0be; }
+    .msg.error { color:#ff9898; }
+    .chart-box { margin-top:14px; }
+    svg { width:100%; height:auto; display:block; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { text-align:left; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); }
+    th { color:#d9e4ff; background:rgba(255,255,255,.03); position:sticky; top:0; }
+    td.num { text-align:right; font-variant-numeric:tabular-nums; }
+    .table-wrap { max-height:430px; overflow:auto; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02); }
+    ul.clean { list-style:none; margin:0; padding:0; }
+    ul.clean li { padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06); display:flex; justify-content:space-between; gap:10px; }
+    .good { color:var(--good); }
+    .good-strong { color:var(--good2); font-weight:700; }
+    .bad { color:var(--bad); }
+    .warn { color:var(--warn); }
+    .highlight-grow { background:rgba(0,255,136,.06); }
+    .footer { color:var(--muted); font-size:12px; text-align:center; margin-top:14px; min-height:14px; }
+    @media (max-width:1250px) {
+      .grid-kpi, .grid-main, .grid-bottom, .grid-extra { grid-template-columns:1fr; }
+      .controls { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="header">
-      <div>
-        <h1>WOA Clan Growth Dashboard</h1>
-        
-      </div>
+      <h1>WOA Clan Growth Dashboard</h1>
       <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
     </div>
 
@@ -191,7 +86,8 @@
       <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Players present in selected week</div></div>
       <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
       <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
-      <div class="card"><div class="kpi-title">New / Left Members</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
+      <div class="card"><div class="kpi-title">Joined / Left</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
+      <div class="card"><div class="kpi-title">Returned</div><div class="kpi-value" id="kpiReturned">—</div><div class="kpi-sub">Back after missing earlier weeks</div></div>
     </div>
 
     <div class="grid-main">
@@ -202,9 +98,12 @@
       </div>
       <div class="card">
         <div class="title">Top 10 Growers</div>
-        <div class="muted">All-time growth from first to latest recorded might</div>
+        <div class="muted">Ranked by highest percentage growth</div>
         <div class="table-wrap" style="max-height:360px;">
-          <table><thead><tr><th>Player</th><th class="num">Net Growth</th><th class="num">Growth %</th></tr></thead><tbody id="growersBody"></tbody></table>
+          <table>
+            <thead><tr><th>Player</th><th class="num">Net Growth</th><th class="num">Growth %</th></tr></thead>
+            <tbody id="growersBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -217,15 +116,19 @@
       </div>
       <div class="card">
         <div class="title">Player Analysis by Selected Week</div>
-        <div class="muted">Sorted by top growers first for faster spotting</div>
+        <div class="muted">Sorted by highest week % growth first</div>
         <div class="table-wrap" style="margin-top:12px;">
-          <table><thead><tr><th>Player</th><th class="num">Selected Might</th><th class="num">Week Change</th><th class="num">Week %</th></tr></thead><tbody id="playerBody"></tbody></table>
+          <table>
+            <thead><tr><th>Player</th><th class="num">Selected Might</th><th class="num">Week Change</th><th class="num">Week %</th></tr></thead>
+            <tbody id="playerBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
     <div class="grid-extra">
-      <div class="card"><div class="title">New Joiners</div><div class="muted">Present this week but not previous week</div><ul class="clean" id="joinersList"></ul></div>
+      <div class="card"><div class="title">New Joiners</div><div class="muted">Week 1 is baseline. New starts from week 2 onward.</div><ul class="clean" id="joinersList"></ul></div>
+      <div class="card"><div class="title">Returned</div><div class="muted">Appeared before, missed recent week(s), now back</div><ul class="clean" id="returnedList"></ul></div>
       <div class="card"><div class="title">Left</div><div class="muted">Present previous week but not selected week</div><ul class="clean" id="leaversList"></ul></div>
       <div class="card"><div class="title">Top Week Gains</div><div class="muted">Largest player jumps for selected week</div><ul class="clean" id="topWeekGainsList"></ul></div>
     </div>
@@ -242,13 +145,13 @@ let WEEKLY = [];
 let PLAYERS = [];
 let RAW = [];
 let WEEK_ORDER = [];
+let FIRST_WEEK = null;
 
 function setStatus(msg, kind="") {
   const el = document.getElementById("statusMsg");
   el.textContent = msg;
   el.className = "msg " + kind;
 }
-
 function fmtInt(n) { return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Number(n || 0)); }
 function fmtCompact(n) { return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 }).format(Number(n || 0)); }
 function fmtPct(n) { const v = Number(n || 0); return (v > 0 ? "+" : "") + v.toFixed(2) + "%"; }
@@ -300,7 +203,6 @@ function normalizeWeekly(rows) {
     Growth_Pct: cleanNumber(r["Growth_%"] || r.Growth_Pct || r.growth_pct)
   })).filter(r => r.Week);
 }
-
 function normalizePlayers(rows) {
   return rows.map(r => ({
     Player: r.Player || r.player,
@@ -309,7 +211,6 @@ function normalizePlayers(rows) {
     Growth_Pct: cleanNumber(r["Growth_%"] || r.Growth_Pct || r.growth_pct)
   })).filter(r => r.Player);
 }
-
 function normalizeRaw(rows) {
   return rows.map(r => ({
     Week: r.Week || r.week,
@@ -324,6 +225,7 @@ function getPrevWeek(week) { const idx = WEEK_ORDER.indexOf(week); return idx > 
 function getNextWeek(week) { const idx = WEEK_ORDER.indexOf(week); return idx >= 0 && idx < WEEK_ORDER.length - 1 ? WEEK_ORDER[idx + 1] : null; }
 function rowsForWeek(week) { return RAW.filter(r => r.Week === week); }
 function mapForWeek(week) { const m = new Map(); rowsForWeek(week).forEach(r => m.set(r.Player, r.Might)); return m; }
+function everAppearedBefore(player, week) { return RAW.some(r => r.Player === player && r.Week < week); }
 
 function weekMetricsFromRaw(week) {
   const rows = rowsForWeek(week);
@@ -335,9 +237,36 @@ function weekMetricsFromRaw(week) {
 function populateWeekFilter() {
   const select = document.getElementById("weekSelect");
   WEEK_ORDER = uniqueWeeksFromRaw();
+  FIRST_WEEK = WEEK_ORDER.length ? WEEK_ORDER[0] : null;
   select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join("");
   if (WEEK_ORDER.length) select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
   document.getElementById("latestWeekLabel").textContent = WEEK_ORDER.length ? WEEK_ORDER[WEEK_ORDER.length - 1] : "—";
+}
+
+function classifyRosterChanges(selectedWeek) {
+  const prevWeek = getPrevWeek(selectedWeek);
+  const currentMap = mapForWeek(selectedWeek);
+  const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+  const joined = [];
+  const returned = [];
+  const left = [];
+
+  if (prevWeek) {
+    for (const player of currentMap.keys()) {
+      if (!prevMap.has(player)) {
+        if (selectedWeek === FIRST_WEEK) {
+        } else if (everAppearedBefore(player, selectedWeek)) {
+          returned.push(player);
+        } else {
+          joined.push(player);
+        }
+      }
+    }
+    for (const player of prevMap.keys()) {
+      if (!currentMap.has(player)) left.push(player);
+    }
+  }
+  return { joined: joined.sort(), returned: returned.sort(), left: left.sort() };
 }
 
 function setKpis() {
@@ -347,11 +276,7 @@ function setKpis() {
   const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0, active: 0, avg: 0 };
   const growth = current.total - previous.total;
   const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
-
-  const currentMap = mapForWeek(selectedWeek);
-  const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
-  const joiners = [...currentMap.keys()].filter(p => !prevMap.has(p)).length;
-  const leavers = [...prevMap.keys()].filter(p => !currentMap.has(p)).length;
+  const roster = classifyRosterChanges(selectedWeek);
 
   document.getElementById("kpiTotalMight").textContent = fmtCompact(current.total);
   document.getElementById("kpiActivePlayers").textContent = fmtInt(current.active);
@@ -362,13 +287,14 @@ function setKpis() {
   pct.textContent = "Week-on-week: " + fmtPct(growthPct);
   pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
 
-  document.getElementById("kpiRosterDelta").textContent = `${joiners} / ${leavers}`;
-  document.getElementById("kpiRosterSub").textContent = `Joined: ${joiners} | Left: ${leavers}`;
+  document.getElementById("kpiRosterDelta").textContent = `${roster.joined.length} / ${roster.left.length}`;
+  document.getElementById("kpiRosterSub").textContent = `Joined: ${roster.joined.length} | Left: ${roster.left.length}`;
+  document.getElementById("kpiReturned").textContent = fmtInt(roster.returned.length);
 }
 
 function renderLineChart() {
   const rows = WEEKLY;
-  const w = 900, h = 340, pad = { l: 56, r: 20, t: 20, b: 48 };
+  const w = 900, h = 340, pad = { l:56, r:20, t:20, b:48 };
   const vals = rows.map(r => Number(r.Total_Might || 0));
   const minV = Math.min(...vals);
   const maxV = Math.max(...vals, 1);
@@ -379,19 +305,19 @@ function renderLineChart() {
     const frac = i / 4;
     const val = maxV - frac * (maxV - minV);
     const yy = pad.t + frac * (h - pad.t - pad.b);
-    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w - pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-    grid += `<text x="${pad.l - 10}" y="${yy + 4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+    grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
   }
-  const points = rows.map((r, i) => `${x(i)},${y(r.Total_Might)}`).join(" ");
-  const area = `M ${x(0)} ${h - pad.b} L ` + rows.map((r, i) => `${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length - 1)} ${h - pad.b} Z`;
-  const labels = rows.map((r, i) => `<text x="${x(i)}" y="${h - 18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
+  const points = rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");
+  const area = `M ${x(0)} ${h-pad.b} L ` + rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length-1)} ${h-pad.b} Z`;
+  const labels = rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
   document.getElementById("lineChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg>`;
 }
 
 function renderBarChart() {
   const selectedWeek = getSelectedWeek();
-  const rows = rowsForWeek(selectedWeek).sort((a, b) => b.Might - a.Might).slice(0, 10);
-  const w = 900, h = 360, pad = { l: 56, r: 20, t: 20, b: 80 };
+  const rows = rowsForWeek(selectedWeek).sort((a,b)=>b.Might-a.Might).slice(0,10);
+  const w = 900, h = 360, pad = { l:56, r:20, t:20, b:80 };
   const maxV = Math.max(...rows.map(r => Number(r.Might || 0)), 1);
   const chartH = h - pad.t - pad.b;
   const chartW = w - pad.l - pad.r;
@@ -402,23 +328,29 @@ function renderBarChart() {
     const frac = i / 4;
     const val = maxV - frac * maxV;
     const yy = pad.t + frac * chartH;
-    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w - pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-    grid += `<text x="${pad.l - 10}" y="${yy + 4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+    grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
   }
-  const bars = rows.map((r, i) => {
+  const bars = rows.map((r,i)=>{
     const bh = (r.Might / maxV) * chartH;
     const xx = pad.l + i * (bw + gap);
     const yy = pad.t + chartH - bh;
-    const label = r.Player.length > 10 ? r.Player.slice(0, 10) + "…" : r.Player;
-    return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect><text x="${xx + bw/2}" y="${h - 38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text><text x="${xx + bw/2}" y="${yy - 8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
+    const label = r.Player.length > 10 ? r.Player.slice(0,10) + "…" : r.Player;
+    return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect><text x="${xx+bw/2}" y="${h-38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text><text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
   }).join("");
   document.getElementById("barChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
 }
 
 function renderGrowers() {
   const body = document.getElementById("growersBody");
-  const rows = [...PLAYERS].sort((a, b) => b.Net_Growth - a.Net_Growth).slice(0, 10);
-  body.innerHTML = rows.map(r => `<tr><td>${r.Player}</td><td class="num ${r.Net_Growth >= 0 ? "good" : "bad"}">${fmtInt(r.Net_Growth)}</td><td class="num ${r.Growth_Pct >= 0 ? "good" : "bad"}">${fmtPct(r.Growth_Pct)}</td></tr>`).join("");
+  const rows = [...PLAYERS].sort((a,b)=> b.Growth_Pct - a.Growth_Pct || b.Net_Growth - a.Net_Growth).slice(0,10);
+  body.innerHTML = rows.map((r, idx) => `
+    <tr class="${idx < 3 ? 'highlight-grow' : ''}">
+      <td class="${idx < 3 ? 'good-strong' : 'good'}">${r.Player}</td>
+      <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtInt(r.Net_Growth)}</td>
+      <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtPct(r.Growth_Pct)}</td>
+    </tr>
+  `).join("");
 }
 
 function buildSelectedWeekPlayerRows() {
@@ -426,41 +358,62 @@ function buildSelectedWeekPlayerRows() {
   const prevWeek = getPrevWeek(selectedWeek);
   const currentMap = mapForWeek(selectedWeek);
   const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+
   return [...currentMap.entries()].map(([player, might]) => {
     const prev = prevMap.get(player) || 0;
     const delta = might - prev;
     const pct = prev ? (delta / prev) * 100 : 0;
-    return { Player: player, Might: might, Delta: delta, Pct: pct };
-  }).sort((a, b) => b.Delta - a.Delta || b.Might - a.Might);
+    const isBaselineWeek = selectedWeek === FIRST_WEEK;
+    const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
+    const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
+    return { Player: player, Might: might, Delta: delta, Pct: pct, IsNew: isNewThisWeek, IsReturned: isReturned };
+  }).sort((a,b) => {
+    if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
+    if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
+    return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
+  });
 }
 
 function renderPlayerTable() {
   const q = document.getElementById("playerSearch").value.trim().toLowerCase();
   const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
-  document.getElementById("playerBody").innerHTML = rows.map(r => `<tr><td class="${r.Delta > 0 ? "good" : ""}">${r.Player}</td><td class="num ${r.Delta > 0 ? "good" : ""}">${fmtInt(r.Might)}</td><td class="num ${r.Delta >= 0 ? "good" : "bad"}">${fmtInt(r.Delta)}</td><td class="num ${r.Pct >= 0 ? "good" : "bad"}">${fmtPct(r.Pct)}</td></tr>`).join("");
+  document.getElementById("playerBody").innerHTML = rows.map(r => {
+    const cls = r.IsNew || r.IsReturned ? "warn" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : ""));
+    const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
+    return `<tr class="${r.Pct > 0 && !r.IsNew && !r.IsReturned ? 'highlight-grow' : ''}">
+      <td class="${cls}">${r.Player}</td>
+      <td class="num ${cls}">${fmtInt(r.Might)}</td>
+      <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
+      <td class="num ${cls}">${weekPct}</td>
+    </tr>`;
+  }).join("");
 }
 
-function renderJoinersAndLeavers() {
+function renderRosterLists() {
   const selectedWeek = getSelectedWeek();
-  const prevWeek = getPrevWeek(selectedWeek);
-  const currentMap = mapForWeek(selectedWeek);
-  const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
-  const joiners = [...currentMap.keys()].filter(p => !prevMap.has(p)).sort();
-  const leavers = [...prevMap.keys()].filter(p => !currentMap.has(p)).sort();
+  const roster = classifyRosterChanges(selectedWeek);
 
-  document.getElementById("joinersList").innerHTML = joiners.length
-    ? joiners.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
+  document.getElementById("joinersList").innerHTML = roster.joined.length
+    ? roster.joined.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
     : '<li><span>No new joiners</span><span class="muted">—</span></li>';
 
-  document.getElementById("leaversList").innerHTML = leavers.length
-    ? leavers.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
+  document.getElementById("returnedList").innerHTML = roster.returned.length
+    ? roster.returned.map(p => `<li><span>${p}</span><span class="warn">Returned</span></li>`).join("")
+    : '<li><span>No returned players</span><span class="muted">—</span></li>';
+
+  document.getElementById("leaversList").innerHTML = roster.left.length
+    ? roster.left.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
     : '<li><span>No players left</span><span class="muted">—</span></li>';
 }
 
 function renderTopWeekGains() {
-  const rows = buildSelectedWeekPlayerRows().sort((a, b) => b.Delta - a.Delta).slice(0, 10);
+  const rows = buildSelectedWeekPlayerRows()
+    .filter(r => !r.IsNew && !r.IsReturned)
+    .sort((a,b)=> b.Pct - a.Pct || b.Delta - a.Delta)
+    .slice(0,10);
+
   document.getElementById("topWeekGainsList").innerHTML = rows.length
-    ? rows.map(r => `<li><span>${r.Player}</span><span class="${r.Delta >= 0 ? "good" : "bad"}">${fmtCompact(r.Delta)}</span></li>`).join("")
+    ? rows.map(r => `<li><span>${r.Player}</span><span class="good">${fmtPct(r.Pct)}</span></li>`).join("")
     : '<li><span>No data</span><span class="muted">—</span></li>';
 }
 
@@ -468,7 +421,7 @@ function refreshSelectedWeekViews() {
   setKpis();
   renderBarChart();
   renderPlayerTable();
-  renderJoinersAndLeavers();
+  renderRosterLists();
   renderTopWeekGains();
 }
 
@@ -489,7 +442,7 @@ function bindUi() {
 
 async function loadData() {
   try {
-    setStatus("Loading Google Sheets data...");
+    setStatus("Dashboard loaded successfully.", "ok");
     const [wRows, pRows, rRows] = await Promise.all([fetchCsv(WEEKLY_URL), fetchCsv(PLAYER_URL), fetchCsv(RAW_URL)]);
     WEEKLY = normalizeWeekly(wRows);
     PLAYERS = normalizePlayers(pRows);
@@ -499,9 +452,9 @@ async function loadData() {
     renderLineChart();
     renderGrowers();
     refreshSelectedWeekViews();
-    setStatus("Dashboard loaded successfully from Google Sheets.", "ok");
+    setStatus("Dashboard loaded successfully.", "ok");
   } catch (err) {
-    setStatus("Load failed. Check the published CSV links. " + err.message, "error");
+    setStatus("Load failed. " + err.message, "error");
   }
 }
 
