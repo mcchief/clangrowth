@@ -162,13 +162,13 @@
     <div class="header">
       <div>
         <h1>WOA Clan Growth Dashboard</h1>
-        <div class="sub">Live dashboard linked to your Google Sheets summaries and raw weekly history.</div>
+        
       </div>
       <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
-      <div class="msg ok" id="statusMsg">Connected to Google Sheets. Add new weekly data to Raw_Data and this dashboard will update automatically.</div>
+      <div class="msg ok" id="statusMsg">Dashboard loaded successfully.</div>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
@@ -191,7 +191,7 @@
       <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Players present in selected week</div></div>
       <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
       <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
-      <div class="card"><div class="kpi-title">Roster Change</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joiners vs leavers</div></div>
+      <div class="card"><div class="kpi-title">New / Left Members</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
     </div>
 
     <div class="grid-main">
@@ -217,7 +217,7 @@
       </div>
       <div class="card">
         <div class="title">Player Analysis by Selected Week</div>
-        <div class="muted">Current week might and week-vs-previous-week change</div>
+        <div class="muted">Sorted by top growers first for faster spotting</div>
         <div class="table-wrap" style="margin-top:12px;">
           <table><thead><tr><th>Player</th><th class="num">Selected Might</th><th class="num">Week Change</th><th class="num">Week %</th></tr></thead><tbody id="playerBody"></tbody></table>
         </div>
@@ -226,11 +226,11 @@
 
     <div class="grid-extra">
       <div class="card"><div class="title">New Joiners</div><div class="muted">Present this week but not previous week</div><ul class="clean" id="joinersList"></ul></div>
-      <div class="card"><div class="title">Left / Missing</div><div class="muted">Present previous week but not selected week</div><ul class="clean" id="leaversList"></ul></div>
+      <div class="card"><div class="title">Left</div><div class="muted">Present previous week but not selected week</div><ul class="clean" id="leaversList"></ul></div>
       <div class="card"><div class="title">Top Week Gains</div><div class="muted">Largest player jumps for selected week</div><ul class="clean" id="topWeekGainsList"></ul></div>
     </div>
 
-    <div class="footer">Replace your GitHub index.html with this file, then hard refresh your site.</div>
+    <div class="footer"></div>
   </div>
 
 <script>
@@ -363,7 +363,7 @@ function setKpis() {
   pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
 
   document.getElementById("kpiRosterDelta").textContent = `${joiners} / ${leavers}`;
-  document.getElementById("kpiRosterSub").textContent = `Joiners: ${joiners} | Leavers: ${leavers}`;
+  document.getElementById("kpiRosterSub").textContent = `Joined: ${joiners} | Left: ${leavers}`;
 }
 
 function renderLineChart() {
@@ -431,13 +431,13 @@ function buildSelectedWeekPlayerRows() {
     const delta = might - prev;
     const pct = prev ? (delta / prev) * 100 : 0;
     return { Player: player, Might: might, Delta: delta, Pct: pct };
-  }).sort((a, b) => b.Might - a.Might);
+  }).sort((a, b) => b.Delta - a.Delta || b.Might - a.Might);
 }
 
 function renderPlayerTable() {
   const q = document.getElementById("playerSearch").value.trim().toLowerCase();
   const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
-  document.getElementById("playerBody").innerHTML = rows.map(r => `<tr><td>${r.Player}</td><td class="num">${fmtInt(r.Might)}</td><td class="num ${r.Delta >= 0 ? "good" : "bad"}">${fmtInt(r.Delta)}</td><td class="num ${r.Pct >= 0 ? "good" : "bad"}">${fmtPct(r.Pct)}</td></tr>`).join("");
+  document.getElementById("playerBody").innerHTML = rows.map(r => `<tr><td class="${r.Delta > 0 ? "good" : ""}">${r.Player}</td><td class="num ${r.Delta > 0 ? "good" : ""}">${fmtInt(r.Might)}</td><td class="num ${r.Delta >= 0 ? "good" : "bad"}">${fmtInt(r.Delta)}</td><td class="num ${r.Pct >= 0 ? "good" : "bad"}">${fmtPct(r.Pct)}</td></tr>`).join("");
 }
 
 function renderJoinersAndLeavers() {
@@ -453,8 +453,8 @@ function renderJoinersAndLeavers() {
     : '<li><span>No new joiners</span><span class="muted">—</span></li>';
 
   document.getElementById("leaversList").innerHTML = leavers.length
-    ? leavers.map(p => `<li><span>${p}</span><span class="bad">Missing</span></li>`).join("")
-    : '<li><span>No missing players</span><span class="muted">—</span></li>';
+    ? leavers.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
+    : '<li><span>No players left</span><span class="muted">—</span></li>';
 }
 
 function renderTopWeekGains() {
