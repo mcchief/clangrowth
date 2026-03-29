@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOA Clan Growth Dashboard</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#121a2b;--panel2:#18243a;--text:#eef4ff;--muted:#9fb0d1;--accent:#4f8cff;--good:#1fbf75;--bad:#ff6b6b;--border:#24314f}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0b1220,#10182a);color:var(--text)}
+    .wrap{max-width:1420px;margin:0 auto;padding:24px}
+    .header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    h1{margin:0;font-size:32px}
+    .sub{color:var(--muted);font-size:14px;margin-top:6px}
+    .badge{padding:8px 12px;border-radius:999px;border:1px solid rgba(79,140,255,.35);background:rgba(79,140,255,.12);color:#c9dbff;font-size:13px}
+    .card{background:rgba(18,26,43,.94);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 12px 36px rgba(0,0,0,.18)}
+    .grid-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:16px}
+    .grid-main{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+    .grid-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .kpi-title{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .kpi-value{font-size:38px;font-weight:700;letter-spacing:-.02em}
+    .kpi-sub{color:var(--muted);font-size:12px;margin-top:8px}
+    .title{font-size:18px;font-weight:700;margin:0 0 4px}
+    .muted{color:var(--muted);font-size:13px}
+    .toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .controls{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    select,input[type="text"]{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:10px 12px}
+    .btn{background:var(--accent);border:none;color:white;border-radius:12px;padding:11px 14px;cursor:pointer;font-weight:700}
+    .btn.secondary{background:#24314f}
+    .msg{margin-top:10px;font-size:13px;color:var(--muted)}
+    .msg.error{color:#ff9898}
+    .msg.ok{color:#90f0be}
+    .chart-box{margin-top:14px}
+    svg{width:100%;height:auto;display:block}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{text-align:left;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+    th{color:#d9e4ff;background:rgba(255,255,255,.03);position:sticky;top:0}
+    td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .table-wrap{max-height:430px;overflow:auto;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.02)}
+    .good{color:#67e8a2}
+    .bad{color:#ff8f8f}
+    .footer{color:var(--muted);font-size:12px;text-align:center;margin-top:14px}
+    @media (max-width:1080px){.grid-kpi,.grid-main,.grid-bottom{grid-template-columns:1fr}.controls{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1>WOA Clan Growth Dashboard</h1>
+        <div class="sub">Live dashboard linked to your Google Sheets summaries.</div>
+      </div>
+      <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="msg ok" id="statusMsg">Connected to Google Sheets. Add new weekly data to Raw_Data and this dashboard will update automatically.</div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="toolbar">
+        <div><div class="title">Filters</div><div class="muted">Pick a week for KPI snapshot and search players below.</div></div>
+        <div class="controls">
+          <div><label for="weekSelect">Week</label><select id="weekSelect"></select></div>
+          <div><label for="playerSearch">Search Player</label><input type="text" id="playerSearch" placeholder="Type player name" /></div>
+          <div><label>&nbsp;</label><button class="btn secondary" id="resetFilters">Reset</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-kpi">
+      <div class="card"><div class="kpi-title">Total Clan Might</div><div class="kpi-value" id="kpiTotalMight">—</div><div class="kpi-sub">Selected week total</div></div>
+      <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Selected week tracked players</div></div>
+      <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
+      <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
+    </div>
+
+    <div class="grid-main">
+      <div class="card"><div class="title">Clan Might Trend</div><div class="muted">Historic weekly total might progression</div><div class="chart-box" id="lineChart"></div></div>
+      <div class="card"><div class="title">Top 10 Growers</div><div class="muted">Based on first vs latest recorded might</div><div class="table-wrap" style="max-height:360px;"><table><thead><tr><th>Player</th><th class="num">Net Growth</th><th class="num">Growth %</th></tr></thead><tbody id="growersBody"></tbody></table></div></div>
+    </div>
+
+    <div class="grid-bottom">
+      <div class="card"><div class="title">Top 10 Players by Latest Might</div><div class="muted">Latest snapshot ranking</div><div class="chart-box" id="barChart"></div></div>
+      <div class="card"><div class="title">Player Analysis</div><div class="muted">Search and review latest might + growth</div><div class="table-wrap" style="margin-top:12px;"><table><thead><tr><th>Player</th><th class="num">Latest Might</th><th class="num">Net Growth</th><th class="num">Growth %</th></tr></thead><tbody id="playerBody"></tbody></table></div></div>
+    </div>
+    <div class="footer">Host this file on GitHub Pages, then embed the live URL into Google Sites.</div>
+  </div>
+
+<script>
+const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+let WEEKLY=[],PLAYERS=[];
+function setStatus(msg,kind=""){const el=document.getElementById("statusMsg");el.textContent=msg;el.className="msg "+kind}
+function fmtInt(n){return new Intl.NumberFormat("en-US",{maximumFractionDigits:0}).format(Number(n||0))}
+function fmtCompact(n){return new Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:2}).format(Number(n||0))}
+function fmtPct(n){const v=Number(n||0);return (v>0?"+":"")+v.toFixed(2)+"%"}
+function csvToRows(text){const rows=[];let row=[],cur="",inQuotes=false;for(let i=0;i<text.length;i++){const ch=text[i],next=text[i+1];if(ch=='"'){if(inQuotes&&next=='"'){cur+='"';i++}else inQuotes=!inQuotes}else if(ch===','&&!inQuotes){row.push(cur);cur=""}else if((ch==='\n'||ch==='\r')&&!inQuotes){if(ch==='\r'&&next==='\n')i++;row.push(cur);cur="";if(row.some(x=>String(x).trim()!==""))rows.push(row);row=[]}else cur+=ch}row.push(cur);if(row.some(x=>String(x).trim()!==""))rows.push(row);if(!rows.length)return[];const headers=rows[0].map(h=>String(h).trim());return rows.slice(1).map(r=>{const obj={};headers.forEach((h,idx)=>obj[h]=(r[idx]??"").trim());return obj})}
+async function fetchCsv(url){const res=await fetch(url);if(!res.ok)throw new Error("Could not fetch CSV: "+url);return csvToRows(await res.text())}
+function normalizeWeekly(rows){return rows.map(r=>({Week:r.Week||r.week,Total_Might:Number((r.Total_Might||r.total_might||"0").replace(/,/g,"")),Active_Players:Number((r.Active_Players||r.active_players||"0").replace(/,/g,"")),Avg_Might:Number((r.Avg_Might||r.avg_might||"0").replace(/,/g,"")),Growth:Number((r.Growth||r.growth||"0").replace(/,/g,"")),Growth_Pct:Number((r["Growth_%"]||r.Growth_Pct||r.growth_pct||"0").replace(/,/g,""))})).filter(r=>r.Week)}
+function normalizePlayers(rows){return rows.map(r=>({Player:r.Player||r.player,Latest_Might:Number((r.Latest_Might||r.latest_might||"0").replace(/,/g,"")),Net_Growth:Number((r.Net_Growth||r.net_growth||"0").replace(/,/g,"")),Growth_Pct:Number((r["Growth_%"]||r.Growth_Pct||r.growth_pct||"0").replace(/,/g,"")),First_Week:r.First_Week||r.first_week||"",Latest_Week:r.Latest_Week||r.latest_week||""})).filter(r=>r.Player)}
+function populateWeekFilter(){const select=document.getElementById("weekSelect");const weeks=WEEKLY.map(r=>r.Week);select.innerHTML=weeks.map(w=>`<option value="${w}">${w}</option>`).join("");if(weeks.length)select.value=weeks[weeks.length-1];document.getElementById("latestWeekLabel").textContent=weeks.length?weeks[weeks.length-1]:"—"}
+function setKpis(){const selectedWeek=document.getElementById("weekSelect").value;const row=WEEKLY.find(r=>r.Week===selectedWeek)||WEEKLY[WEEKLY.length-1];if(!row)return;document.getElementById("kpiTotalMight").textContent=fmtCompact(row.Total_Might);document.getElementById("kpiActivePlayers").textContent=fmtInt(row.Active_Players);document.getElementById("kpiAvgMight").textContent=fmtCompact(row.Avg_Might);document.getElementById("kpiGrowth").textContent=fmtCompact(row.Growth);const pct=document.getElementById("kpiGrowthPct");pct.textContent="Week-on-week: "+fmtPct(row.Growth_Pct);pct.className="kpi-sub "+(row.Growth_Pct>=0?"good":"bad")}
+function renderLineChart(){const rows=WEEKLY,w=900,h=340,pad={l:56,r:20,t:20,b:48};const vals=rows.map(r=>Number(r.Total_Might||0));const minV=Math.min(...vals),maxV=Math.max(...vals,1);const x=i=>pad.l+(i*(w-pad.l-pad.r)/Math.max(1,rows.length-1));const y=v=>pad.t+(h-pad.t-pad.b)*(1-((v-minV)/Math.max(1,(maxV-minV))));let grid="";for(let i=0;i<5;i++){const frac=i/4,val=maxV-frac*(maxV-minV),yy=pad.t+frac*(h-pad.t-pad.b);grid+=`<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;grid+=`<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`}let points=rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");let area=`M ${x(0)} ${h-pad.b} L `+rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ")+` L ${x(rows.length-1)} ${h-pad.b} Z`;let labels=rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");document.getElementById("lineChart").innerHTML=`<svg viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg>`}
+function renderBarChart(){const rows=[...PLAYERS].sort((a,b)=>b.Latest_Might-a.Latest_Might).slice(0,10),w=900,h=360,pad={l:56,r:20,t:20,b:80};const maxV=Math.max(...rows.map(r=>Number(r.Latest_Might||0)),1),chartH=h-pad.t-pad.b,chartW=w-pad.l-pad.r,gap=10,bw=Math.max(18,(chartW-gap*(rows.length-1))/Math.max(1,rows.length));let grid="";for(let i=0;i<5;i++){const frac=i/4,val=maxV-frac*maxV,yy=pad.t+frac*chartH;grid+=`<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;grid+=`<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`}let bars=rows.map((r,i)=>{const bh=(r.Latest_Might/maxV)*chartH,xx=pad.l+i*(bw+gap),yy=pad.t+chartH-bh,label=r.Player.length>10?r.Player.slice(0,10)+"…":r.Player;return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect><text x="${xx+bw/2}" y="${h-38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text><text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Latest_Might)}</text>`}).join("");document.getElementById("barChart").innerHTML=`<svg viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`}
+function renderGrowers(){const body=document.getElementById("growersBody");const rows=[...PLAYERS].sort((a,b)=>b.Net_Growth-a.Net_Growth).slice(0,10);body.innerHTML=rows.map(r=>`<tr><td>${r.Player}</td><td class="num ${r.Net_Growth>=0?"good":"bad"}">${fmtInt(r.Net_Growth)}</td><td class="num ${r.Growth_Pct>=0?"good":"bad"}">${fmtPct(r.Growth_Pct)}</td></tr>`).join("")}
+function renderPlayerTable(){const q=document.getElementById("playerSearch").value.trim().toLowerCase();const rows=PLAYERS.filter(r=>!q||r.Player.toLowerCase().includes(q)).sort((a,b)=>b.Latest_Might-a.Latest_Might);document.getElementById("playerBody").innerHTML=rows.map(r=>`<tr><td>${r.Player}</td><td class="num">${fmtInt(r.Latest_Might)}</td><td class="num ${r.Net_Growth>=0?"good":"bad"}">${fmtInt(r.Net_Growth)}</td><td class="num ${r.Growth_Pct>=0?"good":"bad"}">${fmtPct(r.Growth_Pct)}</td></tr>`).join("")}
+function bindUi(){document.getElementById("weekSelect").addEventListener("change",setKpis);document.getElementById("playerSearch").addEventListener("input",renderPlayerTable);document.getElementById("resetFilters").addEventListener("click",()=>{const select=document.getElementById("weekSelect");if(select.options.length)select.value=select.options[select.options.length-1].value;document.getElementById("playerSearch").value="";setKpis();renderPlayerTable()})}
+async function loadData(){try{setStatus("Loading Google Sheets data...");const [wRows,pRows]=await Promise.all([fetchCsv(WEEKLY_URL),fetchCsv(PLAYER_URL)]);WEEKLY=normalizeWeekly(wRows);PLAYERS=normalizePlayers(pRows);if(!WEEKLY.length||!PLAYERS.length)throw new Error("No rows found in one or both sheets.");populateWeekFilter();setKpis();renderLineChart();renderBarChart();renderGrowers();renderPlayerTable();setStatus("Dashboard loaded successfully from Google Sheets.","ok")}catch(err){setStatus("Load failed. Check the published CSV links. "+err.message,"error")}}
+bindUi();loadData();
+</script>
+</body>
+</html>
