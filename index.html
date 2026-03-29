@@ -22,7 +22,7 @@
     .grid-extra { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
     .kpi-title { color:var(--muted); font-size:13px; margin-bottom:8px; }
     .kpi-value { font-size:38px; font-weight:700; letter-spacing:-.02em; }
-    .kpi-sub { color:var(--muted); font-size:12px; margin-top:8px; }
+    .kpi-sub { color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35; }
     .title { font-size:18px; font-weight:700; margin:0 0 4px; }
     .muted { color:var(--muted); font-size:13px; }
     .toolbar { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
@@ -38,9 +38,13 @@
     svg { width:100%; height:auto; display:block; }
     table { width:100%; border-collapse:collapse; font-size:14px; }
     th,td { text-align:left; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); }
-    th { color:#d9e4ff; background:rgba(255,255,255,.03); position:sticky; top:0; }
-    td.num { text-align:right; font-variant-numeric:tabular-nums; }
+    th { color:#d9e4ff; background:rgba(255,255,255,.03); position:sticky; top:0; z-index:1; white-space:nowrap; }
+    td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
     .table-wrap { max-height:430px; overflow:auto; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02); }
+    .player-table th:nth-child(1), .player-table td:nth-child(1) { width:34%; }
+    .player-table th:nth-child(2), .player-table td:nth-child(2) { width:24%; }
+    .player-table th:nth-child(3), .player-table td:nth-child(3) { width:22%; }
+    .player-table th:nth-child(4), .player-table td:nth-child(4) { width:20%; padding-right:22px; }
     ul.clean { list-style:none; margin:0; padding:0; }
     ul.clean li { padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06); display:flex; justify-content:space-between; gap:10px; }
     .good { color:var(--good); }
@@ -118,7 +122,7 @@
         <div class="title">Player Analysis by Selected Week</div>
         <div class="muted">Sorted by highest week % growth first</div>
         <div class="table-wrap" style="margin-top:12px;">
-          <table>
+          <table class="player-table">
             <thead><tr><th>Player</th><th class="num">Selected Might</th><th class="num">Week Change</th><th class="num">Week %</th></tr></thead>
             <tbody id="playerBody"></tbody>
           </table>
@@ -127,19 +131,19 @@
     </div>
 
     <div class="grid-extra">
-      <div class="card"><div class="title">New Joiners</div><div class="muted">Week 1 is baseline. New starts from week 2 onward.</div><ul class="clean" id="joinersList"></ul></div>
-      <div class="card"><div class="title">Returned</div><div class="muted">Appeared before, missed recent week(s), now back</div><ul class="clean" id="returnedList"></ul></div>
-      <div class="card"><div class="title">Left</div><div class="muted">Present previous week but not selected week</div><ul class="clean" id="leaversList"></ul></div>
-      <div class="card"><div class="title">Top Week Gains</div><div class="muted">Largest player jumps for selected week</div><ul class="clean" id="topWeekGainsList"></ul></div>
+      <div class="card"><div class="title">New Joiners</div><ul class="clean" id="joinersList"></ul></div>
+      <div class="card"><div class="title">Returned</div><ul class="clean" id="returnedList"></ul></div>
+      <div class="card"><div class="title">Left</div><ul class="clean" id="leaversList"></ul></div>
+      <div class="card"><div class="title">Top Week Gains</div><ul class="clean" id="topWeekGainsList"></ul></div>
     </div>
 
     <div class="footer"></div>
   </div>
 
 <script>
-const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+const WEEKLY_URL = "__WEEKLY_URL__";
+const PLAYER_URL = "__PLAYER_URL__";
+const RAW_URL = "__RAW_URL__";
 
 let WEEKLY = [];
 let PLAYERS = [];
@@ -377,10 +381,11 @@ function buildSelectedWeekPlayerRows() {
 function renderPlayerTable() {
   const q = document.getElementById("playerSearch").value.trim().toLowerCase();
   const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
-  document.getElementById("playerBody").innerHTML = rows.map(r => {
-    const cls = r.IsNew || r.IsReturned ? "warn" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : ""));
+  document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
+    const top5 = idx < 5 && !r.IsNew && !r.IsReturned;
+    const cls = r.IsNew || r.IsReturned ? "warn" : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : "")));
     const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
-    return `<tr class="${r.Pct > 0 && !r.IsNew && !r.IsReturned ? 'highlight-grow' : ''}">
+    return `<tr class="${top5 ? 'highlight-grow' : ''}">
       <td class="${cls}">${r.Player}</td>
       <td class="num ${cls}">${fmtInt(r.Might)}</td>
       <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
