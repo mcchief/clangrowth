@@ -108,7 +108,7 @@
       font-weight:700;
     }
     .btn.secondary { background:#24314f; }
-    .msg { margin-top:10px; font-size:13px; color:var(--muted); }
+    .msg { margin-top:10px; font-size:13px; color:var(--muted); white-space:pre-wrap; }
     .msg.ok { color:#90f0be; }
     .msg.error { color:#ff9898; }
     .chart-box { margin-top:14px; }
@@ -260,7 +260,7 @@
       <div class="card"><div class="title">Top Week Gains</div><ul class="clean" id="topWeekGainsList"></ul></div>
     </div>
 
-    <div class="footer"></div>
+    <div class="footer" id="footerMsg"></div>
   </div>
 
   <script>
@@ -278,6 +278,10 @@
       const el = document.getElementById("statusMsg");
       el.textContent = msg;
       el.className = "msg " + kind;
+    }
+
+    function setFooter(msg = "") {
+      document.getElementById("footerMsg").textContent = msg;
     }
 
     function fmtInt(n) {
@@ -351,24 +355,55 @@
       });
     }
 
-    async function fetchCsv(url) {
-      const res = await fetch(url, {
+    async function fetchTextViaFetch(url) {
+      const res = await fetch(url + "&t=" + Date.now(), {
         method: "GET",
         cache: "no-store",
         redirect: "follow"
       });
-
-      if (!res.ok) {
-        throw new Error(`Could not fetch CSV (${res.status})`);
-      }
-
+      if (!res.ok) throw new Error("fetch failed with status " + res.status);
       const text = await res.text();
+      if (!text || !text.trim()) throw new Error("fetch returned empty response");
+      return text;
+    }
 
-      if (!text || !text.trim()) {
-        throw new Error("CSV response was empty");
+    function fetchTextViaXHR(url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url + "&t=" + Date.now(), true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText && xhr.responseText.trim()) {
+              resolve(xhr.responseText);
+            } else {
+              reject(new Error("xhr failed with status " + xhr.status));
+            }
+          }
+        };
+        xhr.onerror = function () {
+          reject(new Error("xhr network error"));
+        };
+        xhr.send();
+      });
+    }
+
+    async function fetchCsvRobust(url, label) {
+      const attempts = [];
+      try {
+        const text = await fetchTextViaFetch(url);
+        return { rows: csvToRows(text), method: "fetch", label };
+      } catch (err) {
+        attempts.push(label + " fetch: " + err.message);
       }
 
-      return csvToRows(text);
+      try {
+        const text = await fetchTextViaXHR(url);
+        return { rows: csvToRows(text), method: "xhr", label };
+      } catch (err) {
+        attempts.push(label + " xhr: " + err.message);
+      }
+
+      throw new Error(attempts.join(" | "));
     }
 
     function normalizeWeekly(rows) {
@@ -508,7 +543,6 @@
         for (const player of currentMap.keys()) {
           if (!prevMap.has(player)) {
             if (selectedWeek === FIRST_WEEK) {
-              // baseline week
             } else if (everAppearedBefore(player, selectedWeek)) {
               returned.push(player);
             } else {
@@ -734,32 +768,42 @@
 
     async function loadData() {
       setStatus("Loading dashboard data...", "");
+      setFooter("");
+
+      const loadNotes = [];
 
       try {
         const results = await Promise.allSettled([
-          fetchCsv(WEEKLY_URL),
-          fetchCsv(PLAYER_URL),
-          fetchCsv(RAW_URL)
+          fetchCsvRobust(WEEKLY_URL, "WEEKLY"),
+          fetchCsvRobust(PLAYER_URL, "PLAYER"),
+          fetchCsvRobust(RAW_URL, "RAW")
         ]);
 
         const [weeklyRes, playerRes, rawRes] = results;
 
         if (rawRes.status !== "fulfilled") {
-          throw new Error("RAW sheet could not be loaded. RAW is required for the dashboard.");
+          throw new Error("RAW load failed. " + rawRes.reason.message);
         }
 
-        RAW = normalizeRaw(rawRes.value);
+        RAW = normalizeRaw(rawRes.value.rows);
+        loadNotes.push("RAW via " + rawRes.value.method);
 
         if (!RAW.length) {
-          throw new Error("RAW sheet loaded but no usable rows were found.");
+          throw new Error("RAW loaded but no usable rows were found.");
         }
 
         if (weeklyRes.status === "fulfilled") {
-          WEEKLY = normalizeWeekly(weeklyRes.value);
+          WEEKLY = normalizeWeekly(weeklyRes.value.rows);
+          loadNotes.push("WEEKLY via " + weeklyRes.value.method);
+        } else {
+          loadNotes.push("WEEKLY fallback from RAW");
         }
 
         if (playerRes.status === "fulfilled") {
-          PLAYERS = normalizePlayers(playerRes.value);
+          PLAYERS = normalizePlayers(playerRes.value.rows);
+          loadNotes.push("PLAYER via " + playerRes.value.method);
+        } else {
+          loadNotes.push("PLAYER fallback from RAW");
         }
 
         if (!WEEKLY.length) WEEKLY = deriveWeeklyFromRaw();
@@ -770,19 +814,12 @@
         renderGrowers();
         refreshSelectedWeekViews();
 
-        const warnings = [];
-        if (weeklyRes.status !== "fulfilled") warnings.push("weekly sheet fallback used");
-        if (playerRes.status !== "fulfilled") warnings.push("player sheet fallback used");
-
-        setStatus(
-          warnings.length
-            ? "Dashboard loaded with fallback mode: " + warnings.join(" | ")
-            : "Dashboard loaded successfully.",
-          "ok"
-        );
+        setStatus("Dashboard loaded successfully.", "ok");
+        setFooter(loadNotes.join(" | "));
       } catch (err) {
         console.error(err);
         setStatus("Load failed. " + err.message, "error");
+        setFooter("If this still fails, the remaining issue is likely source access/publication for the RAW tab, not the dashboard layout.");
       }
     }
 
