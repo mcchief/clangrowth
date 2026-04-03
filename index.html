@@ -10,26 +10,103 @@
       --accent:#4f8cff; --good:#22c55e; --good2:#00ff88; --bad:#ff6b6b; --warn:#f59e0b; --border:#24314f;
     }
     * { box-sizing:border-box; }
-    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:linear-gradient(180deg,#0b1220,#10182a); color:var(--text); }
+    body {
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,#0b1220,#10182a);
+      color:var(--text);
+    }
     .wrap { max-width:1460px; margin:0 auto; padding:24px; }
-    .header { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+    .header {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
     h1 { margin:0; font-size:32px; }
-    .badge { padding:8px 12px; border-radius:999px; border:1px solid rgba(79,140,255,.35); background:rgba(79,140,255,.12); color:#c9dbff; font-size:13px; }
-    .card { background:rgba(18,26,43,.94); border:1px solid var(--border); border-radius:18px; padding:18px; box-shadow:0 12px 36px rgba(0,0,0,.18); }
-    .grid-kpi { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
-    .grid-main { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
-    .grid-bottom { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-    .grid-extra { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+    .badge {
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(79,140,255,.35);
+      background:rgba(79,140,255,.12);
+      color:#c9dbff;
+      font-size:13px;
+    }
+    .card {
+      background:rgba(18,26,43,.94);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 12px 36px rgba(0,0,0,.18);
+    }
+    .grid-kpi {
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .grid-main {
+      display:grid;
+      grid-template-columns:2fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .grid-bottom {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .grid-extra {
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
     .kpi-title { color:var(--muted); font-size:13px; margin-bottom:8px; }
     .kpi-value { font-size:38px; font-weight:700; letter-spacing:-.02em; }
     .kpi-sub { color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35; }
     .title { font-size:18px; font-weight:700; margin:0 0 4px; }
     .muted { color:var(--muted); font-size:13px; }
-    .toolbar { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
-    .controls { display:grid; grid-template-columns:auto auto 1fr auto; gap:10px; align-items:end; }
-    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
-    select,input[type="text"] { width:100%; background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:12px; padding:10px 12px; }
-    .btn { background:var(--accent); border:none; color:white; border-radius:12px; padding:11px 14px; cursor:pointer; font-weight:700; }
+    .toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .controls {
+      display:grid;
+      grid-template-columns:auto auto 1fr auto;
+      gap:10px;
+      align-items:end;
+    }
+    label {
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    select, input[type="text"] {
+      width:100%;
+      background:var(--panel2);
+      border:1px solid var(--border);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+    }
+    .btn {
+      background:var(--accent);
+      border:none;
+      color:white;
+      border-radius:12px;
+      padding:11px 14px;
+      cursor:pointer;
+      font-weight:700;
+    }
     .btn.secondary { background:#24314f; }
     .msg { margin-top:10px; font-size:13px; color:var(--muted); }
     .msg.ok { color:#90f0be; }
@@ -37,22 +114,55 @@
     .chart-box { margin-top:14px; }
     svg { width:100%; height:auto; display:block; }
     table { width:100%; border-collapse:collapse; font-size:14px; }
-    th,td { text-align:left; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); }
-    th { color:#d9e4ff; background:rgba(255,255,255,.03); position:sticky; top:0; z-index:1; white-space:nowrap; }
-    td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
-    .table-wrap { max-height:430px; overflow:auto; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02); }
+    th, td {
+      text-align:left;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    th {
+      color:#d9e4ff;
+      background:rgba(255,255,255,.03);
+      position:sticky;
+      top:0;
+      z-index:1;
+      white-space:nowrap;
+    }
+    td.num {
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;
+    }
+    .table-wrap {
+      max-height:430px;
+      overflow:auto;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.02);
+    }
     .player-table th:nth-child(1), .player-table td:nth-child(1) { width:34%; }
     .player-table th:nth-child(2), .player-table td:nth-child(2) { width:24%; }
     .player-table th:nth-child(3), .player-table td:nth-child(3) { width:22%; }
     .player-table th:nth-child(4), .player-table td:nth-child(4) { width:20%; padding-right:22px; }
     ul.clean { list-style:none; margin:0; padding:0; }
-    ul.clean li { padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06); display:flex; justify-content:space-between; gap:10px; }
+    ul.clean li {
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
     .good { color:var(--good); }
     .good-strong { color:var(--good2); font-weight:700; }
     .bad { color:var(--bad); }
     .warn { color:var(--warn); }
     .highlight-grow { background:rgba(0,255,136,.06); }
-    .footer { color:var(--muted); font-size:12px; text-align:center; margin-top:14px; min-height:14px; }
+    .footer {
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      margin-top:14px;
+      min-height:14px;
+    }
     @media (max-width:1250px) {
       .grid-kpi, .grid-main, .grid-bottom, .grid-extra { grid-template-columns:1fr; }
       .controls { grid-template-columns:1fr; }
@@ -67,7 +177,7 @@
     </div>
 
     <div class="card" style="margin-bottom:16px;">
-      <div class="msg ok" id="statusMsg">Dashboard loaded successfully.</div>
+      <div class="msg" id="statusMsg">Loading dashboard data...</div>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
@@ -105,7 +215,13 @@
         <div class="muted">Ranked by highest percentage growth</div>
         <div class="table-wrap" style="max-height:360px;">
           <table>
-            <thead><tr><th>Player</th><th class="num">Net Growth</th><th class="num">Growth %</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th class="num">Net Growth</th>
+                <th class="num">Growth %</th>
+              </tr>
+            </thead>
             <tbody id="growersBody"></tbody>
           </table>
         </div>
@@ -123,7 +239,14 @@
         <div class="muted">Sorted by highest week % growth first</div>
         <div class="table-wrap" style="margin-top:12px;">
           <table class="player-table">
-            <thead><tr><th>Player</th><th class="num">Selected Might</th><th class="num">Week Change</th><th class="num">Week %</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th class="num">Selected Might</th>
+                <th class="num">Week Change</th>
+                <th class="num">Week %</th>
+              </tr>
+            </thead>
             <tbody id="playerBody"></tbody>
           </table>
         </div>
@@ -140,333 +263,531 @@
     <div class="footer"></div>
   </div>
 
-<script>
-const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+  <script>
+    const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+    const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+    const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
 
-const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+    let WEEKLY = [];
+    let PLAYERS = [];
+    let RAW = [];
+    let WEEK_ORDER = [];
+    let FIRST_WEEK = null;
 
-const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
-
-let WEEKLY = [];
-let PLAYERS = [];
-let RAW = [];
-let WEEK_ORDER = [];
-let FIRST_WEEK = null;
-
-function setStatus(msg, kind="") {
-  const el = document.getElementById("statusMsg");
-  el.textContent = msg;
-  el.className = "msg " + kind;
-}
-function fmtInt(n) { return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Number(n || 0)); }
-function fmtCompact(n) { return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 }).format(Number(n || 0)); }
-function fmtPct(n) { const v = Number(n || 0); return (v > 0 ? "+" : "") + v.toFixed(2) + "%"; }
-function cleanNumber(v) { if (v === null || v === undefined) return 0; return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0; }
-
-function csvToRows(text) {
-  const rows = [];
-  let row = [], cur = "", inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i], next = text[i + 1];
-    if (ch === '"') {
-      if (inQuotes && next === '"') { cur += '"'; i++; }
-      else { inQuotes = !inQuotes; }
-    } else if (ch === "," && !inQuotes) {
-      row.push(cur); cur = "";
-    } else if ((ch === "\n" || ch === "\r") && !inQuotes) {
-      if (ch === "\r" && next === "\n") i++;
-      row.push(cur); cur = "";
-      if (row.some(x => String(x).trim() !== "")) rows.push(row);
-      row = [];
-    } else {
-      cur += ch;
+    function setStatus(msg, kind = "") {
+      const el = document.getElementById("statusMsg");
+      el.textContent = msg;
+      el.className = "msg " + kind;
     }
-  }
-  row.push(cur);
-  if (row.some(x => String(x).trim() !== "")) rows.push(row);
-  if (!rows.length) return [];
-  const headers = rows[0].map(h => String(h).trim());
-  return rows.slice(1).map(r => {
-    const obj = {};
-    headers.forEach((h, idx) => obj[h] = (r[idx] ?? "").trim());
-    return obj;
-  });
-}
 
-async function fetchCsv(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not fetch CSV: " + url);
-  return csvToRows(await res.text());
-}
+    function fmtInt(n) {
+      return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Number(n || 0));
+    }
 
-function normalizeWeekly(rows) {
-  return rows.map(r => ({
-    Week: r.Week || r.week,
-    Total_Might: cleanNumber(r.Total_Might || r.total_might),
-    Active_Players: cleanNumber(r.Active_Players || r.active_players),
-    Avg_Might: cleanNumber(r.Avg_Might || r.avg_might),
-    Growth: cleanNumber(r.Growth || r.growth),
-    Growth_Pct: cleanNumber(r["Growth_%"] || r.Growth_Pct || r.growth_pct)
-  })).filter(r => r.Week);
-}
-function normalizePlayers(rows) {
-  return rows.map(r => ({
-    Player: r.Player || r.player,
-    Latest_Might: cleanNumber(r.Latest_Might || r.latest_might),
-    Net_Growth: cleanNumber(r.Net_Growth || r.net_growth),
-    Growth_Pct: cleanNumber(r["Growth_%"] || r.Growth_Pct || r.growth_pct)
-  })).filter(r => r.Player);
-}
-function normalizeRaw(rows) {
-  return rows.map(r => ({
-    Week: r.Week || r.week,
-    Player: r.Player || r.player,
-    Might: cleanNumber(r.Might || r.might)
-  })).filter(r => r.Week && r.Player);
-}
+    function fmtCompact(n) {
+      return new Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 2
+      }).format(Number(n || 0));
+    }
 
-function uniqueWeeksFromRaw() { return [...new Set(RAW.map(r => r.Week))].sort(); }
-function getSelectedWeek() { return document.getElementById("weekSelect").value; }
-function getPrevWeek(week) { const idx = WEEK_ORDER.indexOf(week); return idx > 0 ? WEEK_ORDER[idx - 1] : null; }
-function getNextWeek(week) { const idx = WEEK_ORDER.indexOf(week); return idx >= 0 && idx < WEEK_ORDER.length - 1 ? WEEK_ORDER[idx + 1] : null; }
-function rowsForWeek(week) { return RAW.filter(r => r.Week === week); }
-function mapForWeek(week) { const m = new Map(); rowsForWeek(week).forEach(r => m.set(r.Player, r.Might)); return m; }
-function everAppearedBefore(player, week) { return RAW.some(r => r.Player === player && r.Week < week); }
+    function fmtPct(n) {
+      const v = Number(n || 0);
+      return (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+    }
 
-function weekMetricsFromRaw(week) {
-  const rows = rowsForWeek(week);
-  const total = rows.reduce((s, r) => s + r.Might, 0);
-  const active = rows.length;
-  return { total, active, avg: active ? total / active : 0 };
-}
+    function cleanNumber(v) {
+      if (v === null || v === undefined) return 0;
+      return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0;
+    }
 
-function populateWeekFilter() {
-  const select = document.getElementById("weekSelect");
-  WEEK_ORDER = uniqueWeeksFromRaw();
-  FIRST_WEEK = WEEK_ORDER.length ? WEEK_ORDER[0] : null;
-  select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join("");
-  if (WEEK_ORDER.length) select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
-  document.getElementById("latestWeekLabel").textContent = WEEK_ORDER.length ? WEEK_ORDER[WEEK_ORDER.length - 1] : "—";
-}
+    function cleanHeader(v) {
+      return String(v || "").replace(/^\uFEFF/, "").trim();
+    }
 
-function classifyRosterChanges(selectedWeek) {
-  const prevWeek = getPrevWeek(selectedWeek);
-  const currentMap = mapForWeek(selectedWeek);
-  const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
-  const joined = [];
-  const returned = [];
-  const left = [];
+    function csvToRows(text) {
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
 
-  if (prevWeek) {
-    for (const player of currentMap.keys()) {
-      if (!prevMap.has(player)) {
-        if (selectedWeek === FIRST_WEEK) {
-        } else if (everAppearedBefore(player, selectedWeek)) {
-          returned.push(player);
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+
+        if (ch === '"') {
+          if (inQuotes && next === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          row.push(cur);
+          cur = "";
+        } else if ((ch === "\n" || ch === "\r") && !inQuotes) {
+          if (ch === "\r" && next === "\n") i++;
+          row.push(cur);
+          cur = "";
+          if (row.some(x => String(x).trim() !== "")) rows.push(row);
+          row = [];
         } else {
-          joined.push(player);
+          cur += ch;
         }
       }
+
+      row.push(cur);
+      if (row.some(x => String(x).trim() !== "")) rows.push(row);
+      if (!rows.length) return [];
+
+      const headers = rows[0].map(cleanHeader);
+
+      return rows.slice(1).map(r => {
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = String(r[idx] ?? "").trim();
+        });
+        return obj;
+      });
     }
-    for (const player of prevMap.keys()) {
-      if (!currentMap.has(player)) left.push(player);
+
+    async function fetchCsv(url) {
+      const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store",
+        redirect: "follow"
+      });
+
+      if (!res.ok) {
+        throw new Error(`Could not fetch CSV (${res.status})`);
+      }
+
+      const text = await res.text();
+
+      if (!text || !text.trim()) {
+        throw new Error("CSV response was empty");
+      }
+
+      return csvToRows(text);
     }
-  }
-  return { joined: joined.sort(), returned: returned.sort(), left: left.sort() };
-}
 
-function setKpis() {
-  const selectedWeek = getSelectedWeek();
-  const prevWeek = getPrevWeek(selectedWeek);
-  const current = weekMetricsFromRaw(selectedWeek);
-  const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0, active: 0, avg: 0 };
-  const growth = current.total - previous.total;
-  const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
-  const roster = classifyRosterChanges(selectedWeek);
+    function normalizeWeekly(rows) {
+      return rows.map(r => ({
+        Week: r.Week || r.week || r.WEEK,
+        Total_Might: cleanNumber(r.Total_Might || r["Total Might"] || r.total_might),
+        Active_Players: cleanNumber(r.Active_Players || r["Active Players"] || r.active_players),
+        Avg_Might: cleanNumber(r.Avg_Might || r["Average Might"] || r.avg_might),
+        Growth: cleanNumber(r.Growth || r.growth),
+        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
+      })).filter(r => r.Week);
+    }
 
-  document.getElementById("kpiTotalMight").textContent = fmtCompact(current.total);
-  document.getElementById("kpiActivePlayers").textContent = fmtInt(current.active);
-  document.getElementById("kpiAvgMight").textContent = fmtCompact(current.avg);
-  document.getElementById("kpiGrowth").textContent = fmtCompact(growth);
+    function normalizePlayers(rows) {
+      return rows.map(r => ({
+        Player: r.Player || r.player || r.PLAYER,
+        Latest_Might: cleanNumber(r.Latest_Might || r["Latest Might"] || r.latest_might),
+        Net_Growth: cleanNumber(r.Net_Growth || r["Net Growth"] || r.net_growth),
+        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
+      })).filter(r => r.Player);
+    }
 
-  const pct = document.getElementById("kpiGrowthPct");
-  pct.textContent = "Week-on-week: " + fmtPct(growthPct);
-  pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
+    function normalizeRaw(rows) {
+      return rows.map(r => ({
+        Week: r.Week || r.week || r.WEEK,
+        Player: r.Player || r.player || r.PLAYER,
+        Might: cleanNumber(r.Might || r.might || r.MIGHT)
+      })).filter(r => r.Week && r.Player);
+    }
 
-  document.getElementById("kpiRosterDelta").textContent = `${roster.joined.length} / ${roster.left.length}`;
-  document.getElementById("kpiRosterSub").textContent = `Joined: ${roster.joined.length} | Left: ${roster.left.length}`;
-  document.getElementById("kpiReturned").textContent = fmtInt(roster.returned.length);
-}
+    function uniqueWeeksFromRaw() {
+      return [...new Set(RAW.map(r => r.Week))].sort();
+    }
 
-function renderLineChart() {
-  const rows = WEEKLY;
-  const w = 900, h = 340, pad = { l:56, r:20, t:20, b:48 };
-  const vals = rows.map(r => Number(r.Total_Might || 0));
-  const minV = Math.min(...vals);
-  const maxV = Math.max(...vals, 1);
-  const x = i => pad.l + (i * (w - pad.l - pad.r) / Math.max(1, rows.length - 1));
-  const y = v => pad.t + (h - pad.t - pad.b) * (1 - ((v - minV) / Math.max(1, (maxV - minV))));
-  let grid = "";
-  for (let i = 0; i < 5; i++) {
-    const frac = i / 4;
-    const val = maxV - frac * (maxV - minV);
-    const yy = pad.t + frac * (h - pad.t - pad.b);
-    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-    grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
-  }
-  const points = rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");
-  const area = `M ${x(0)} ${h-pad.b} L ` + rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length-1)} ${h-pad.b} Z`;
-  const labels = rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
-  document.getElementById("lineChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg>`;
-}
+    function getSelectedWeek() {
+      return document.getElementById("weekSelect").value;
+    }
 
-function renderBarChart() {
-  const selectedWeek = getSelectedWeek();
-  const rows = rowsForWeek(selectedWeek).sort((a,b)=>b.Might-a.Might).slice(0,10);
-  const w = 900, h = 360, pad = { l:56, r:20, t:20, b:80 };
-  const maxV = Math.max(...rows.map(r => Number(r.Might || 0)), 1);
-  const chartH = h - pad.t - pad.b;
-  const chartW = w - pad.l - pad.r;
-  const gap = 10;
-  const bw = Math.max(18, (chartW - gap * (rows.length - 1)) / Math.max(1, rows.length));
-  let grid = "";
-  for (let i = 0; i < 5; i++) {
-    const frac = i / 4;
-    const val = maxV - frac * maxV;
-    const yy = pad.t + frac * chartH;
-    grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-    grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
-  }
-  const bars = rows.map((r,i)=>{
-    const bh = (r.Might / maxV) * chartH;
-    const xx = pad.l + i * (bw + gap);
-    const yy = pad.t + chartH - bh;
-    const label = r.Player.length > 10 ? r.Player.slice(0,10) + "…" : r.Player;
-    return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect><text x="${xx+bw/2}" y="${h-38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text><text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
-  }).join("");
-  document.getElementById("barChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
-}
+    function getPrevWeek(week) {
+      const idx = WEEK_ORDER.indexOf(week);
+      return idx > 0 ? WEEK_ORDER[idx - 1] : null;
+    }
 
-function renderGrowers() {
-  const body = document.getElementById("growersBody");
-  const rows = [...PLAYERS].sort((a,b)=> b.Growth_Pct - a.Growth_Pct || b.Net_Growth - a.Net_Growth).slice(0,10);
-  body.innerHTML = rows.map((r, idx) => `
-    <tr class="${idx < 3 ? 'highlight-grow' : ''}">
-      <td class="${idx < 3 ? 'good-strong' : 'good'}">${r.Player}</td>
-      <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtInt(r.Net_Growth)}</td>
-      <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtPct(r.Growth_Pct)}</td>
-    </tr>
-  `).join("");
-}
+    function getNextWeek(week) {
+      const idx = WEEK_ORDER.indexOf(week);
+      return idx >= 0 && idx < WEEK_ORDER.length - 1 ? WEEK_ORDER[idx + 1] : null;
+    }
 
-function buildSelectedWeekPlayerRows() {
-  const selectedWeek = getSelectedWeek();
-  const prevWeek = getPrevWeek(selectedWeek);
-  const currentMap = mapForWeek(selectedWeek);
-  const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+    function rowsForWeek(week) {
+      return RAW.filter(r => r.Week === week);
+    }
 
-  return [...currentMap.entries()].map(([player, might]) => {
-    const prev = prevMap.get(player) || 0;
-    const delta = might - prev;
-    const pct = prev ? (delta / prev) * 100 : 0;
-    const isBaselineWeek = selectedWeek === FIRST_WEEK;
-    const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
-    const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
-    return { Player: player, Might: might, Delta: delta, Pct: pct, IsNew: isNewThisWeek, IsReturned: isReturned };
-  }).sort((a,b) => {
-    if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
-    if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
-    return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
-  });
-}
+    function mapForWeek(week) {
+      const m = new Map();
+      rowsForWeek(week).forEach(r => m.set(r.Player, r.Might));
+      return m;
+    }
 
-function renderPlayerTable() {
-  const q = document.getElementById("playerSearch").value.trim().toLowerCase();
-  const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
-  document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
-    const top5 = idx < 5 && !r.IsNew && !r.IsReturned;
-    const cls = r.IsNew || r.IsReturned ? "warn" : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : "")));
-    const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
-    return `<tr class="${top5 ? 'highlight-grow' : ''}">
-      <td class="${cls}">${r.Player}</td>
-      <td class="num ${cls}">${fmtInt(r.Might)}</td>
-      <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
-      <td class="num ${cls}">${weekPct}</td>
-    </tr>`;
-  }).join("");
-}
+    function everAppearedBefore(player, week) {
+      return RAW.some(r => r.Player === player && r.Week < week);
+    }
 
-function renderRosterLists() {
-  const selectedWeek = getSelectedWeek();
-  const roster = classifyRosterChanges(selectedWeek);
+    function weekMetricsFromRaw(week) {
+      const rows = rowsForWeek(week);
+      const total = rows.reduce((s, r) => s + r.Might, 0);
+      const active = rows.length;
+      return { total, active, avg: active ? total / active : 0 };
+    }
 
-  document.getElementById("joinersList").innerHTML = roster.joined.length
-    ? roster.joined.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
-    : '<li><span>No new joiners</span><span class="muted">—</span></li>';
+    function deriveWeeklyFromRaw() {
+      return uniqueWeeksFromRaw().map((week, idx, arr) => {
+        const current = weekMetricsFromRaw(week);
+        const prevWeek = idx > 0 ? arr[idx - 1] : null;
+        const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0 };
+        const growth = current.total - previous.total;
+        const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
 
-  document.getElementById("returnedList").innerHTML = roster.returned.length
-    ? roster.returned.map(p => `<li><span>${p}</span><span class="warn">Returned</span></li>`).join("")
-    : '<li><span>No returned players</span><span class="muted">—</span></li>';
+        return {
+          Week: week,
+          Total_Might: current.total,
+          Active_Players: current.active,
+          Avg_Might: current.avg,
+          Growth: growth,
+          Growth_Pct: growthPct
+        };
+      });
+    }
 
-  document.getElementById("leaversList").innerHTML = roster.left.length
-    ? roster.left.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
-    : '<li><span>No players left</span><span class="muted">—</span></li>';
-}
+    function derivePlayersFromRaw() {
+      const byPlayer = new Map();
 
-function renderTopWeekGains() {
-  const rows = buildSelectedWeekPlayerRows()
-    .filter(r => !r.IsNew && !r.IsReturned)
-    .sort((a,b)=> b.Pct - a.Pct || b.Delta - a.Delta)
-    .slice(0,10);
+      RAW.forEach(r => {
+        if (!byPlayer.has(r.Player)) byPlayer.set(r.Player, []);
+        byPlayer.get(r.Player).push(r);
+      });
 
-  document.getElementById("topWeekGainsList").innerHTML = rows.length
-    ? rows.map(r => `<li><span>${r.Player}</span><span class="good">${fmtPct(r.Pct)}</span></li>`).join("")
-    : '<li><span>No data</span><span class="muted">—</span></li>';
-}
+      return [...byPlayer.entries()].map(([player, rows]) => {
+        const sorted = rows.sort((a, b) => String(a.Week).localeCompare(String(b.Week)));
+        const first = sorted[0]?.Might || 0;
+        const latest = sorted[sorted.length - 1]?.Might || 0;
+        const net = latest - first;
+        const pct = first ? (net / first) * 100 : 0;
 
-function refreshSelectedWeekViews() {
-  setKpis();
-  renderBarChart();
-  renderPlayerTable();
-  renderRosterLists();
-  renderTopWeekGains();
-}
+        return {
+          Player: player,
+          Latest_Might: latest,
+          Net_Growth: net,
+          Growth_Pct: pct
+        };
+      });
+    }
 
-function bindUi() {
-  document.getElementById("weekSelect").addEventListener("change", refreshSelectedWeekViews);
-  document.getElementById("playerSearch").addEventListener("input", renderPlayerTable);
-  document.getElementById("prevWeekBtn").addEventListener("click", () => {
-    const select = document.getElementById("weekSelect");
-    const prev = getPrevWeek(select.value);
-    if (prev) { select.value = prev; refreshSelectedWeekViews(); }
-  });
-  document.getElementById("nextWeekBtn").addEventListener("click", () => {
-    const select = document.getElementById("weekSelect");
-    const next = getNextWeek(select.value);
-    if (next) { select.value = next; refreshSelectedWeekViews(); }
-  });
-}
+    function populateWeekFilter() {
+      const select = document.getElementById("weekSelect");
+      WEEK_ORDER = uniqueWeeksFromRaw();
+      FIRST_WEEK = WEEK_ORDER.length ? WEEK_ORDER[0] : null;
 
-async function loadData() {
-  try {
-    setStatus("Dashboard loaded successfully.", "ok");
-    const [wRows, pRows, rRows] = await Promise.all([fetchCsv(WEEKLY_URL), fetchCsv(PLAYER_URL), fetchCsv(RAW_URL)]);
-    WEEKLY = normalizeWeekly(wRows);
-    PLAYERS = normalizePlayers(pRows);
-    RAW = normalizeRaw(rRows);
-    if (!WEEKLY.length || !PLAYERS.length || !RAW.length) throw new Error("No rows found in one or more sheets.");
-    populateWeekFilter();
-    renderLineChart();
-    renderGrowers();
-    refreshSelectedWeekViews();
-    setStatus("Dashboard loaded successfully.", "ok");
-  } catch (err) {
-    setStatus("Load failed. " + err.message, "error");
-  }
-}
+      select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join("");
 
-bindUi();
-loadData();
-</script>
+      if (WEEK_ORDER.length) {
+        select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
+        document.getElementById("latestWeekLabel").textContent = WEEK_ORDER[WEEK_ORDER.length - 1];
+      } else {
+        document.getElementById("latestWeekLabel").textContent = "—";
+      }
+    }
+
+    function classifyRosterChanges(selectedWeek) {
+      const prevWeek = getPrevWeek(selectedWeek);
+      const currentMap = mapForWeek(selectedWeek);
+      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+      const joined = [];
+      const returned = [];
+      const left = [];
+
+      if (prevWeek) {
+        for (const player of currentMap.keys()) {
+          if (!prevMap.has(player)) {
+            if (selectedWeek === FIRST_WEEK) {
+              // baseline week
+            } else if (everAppearedBefore(player, selectedWeek)) {
+              returned.push(player);
+            } else {
+              joined.push(player);
+            }
+          }
+        }
+
+        for (const player of prevMap.keys()) {
+          if (!currentMap.has(player)) left.push(player);
+        }
+      }
+
+      return { joined: joined.sort(), returned: returned.sort(), left: left.sort() };
+    }
+
+    function setKpis() {
+      const selectedWeek = getSelectedWeek();
+      const prevWeek = getPrevWeek(selectedWeek);
+      const current = weekMetricsFromRaw(selectedWeek);
+      const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0, active: 0, avg: 0 };
+      const growth = current.total - previous.total;
+      const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
+      const roster = classifyRosterChanges(selectedWeek);
+
+      document.getElementById("kpiTotalMight").textContent = fmtCompact(current.total);
+      document.getElementById("kpiActivePlayers").textContent = fmtInt(current.active);
+      document.getElementById("kpiAvgMight").textContent = fmtCompact(current.avg);
+      document.getElementById("kpiGrowth").textContent = fmtCompact(growth);
+
+      const pct = document.getElementById("kpiGrowthPct");
+      pct.textContent = "Week-on-week: " + fmtPct(growthPct);
+      pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
+
+      document.getElementById("kpiRosterDelta").textContent = `${roster.joined.length} / ${roster.left.length}`;
+      document.getElementById("kpiRosterSub").textContent = `Joined: ${roster.joined.length} | Left: ${roster.left.length}`;
+      document.getElementById("kpiReturned").textContent = fmtInt(roster.returned.length);
+    }
+
+    function renderLineChart() {
+      const rows = WEEKLY;
+
+      if (!rows.length) {
+        document.getElementById("lineChart").innerHTML = '<div class="muted">No trend data available.</div>';
+        return;
+      }
+
+      const w = 900, h = 340, pad = { l:56, r:20, t:20, b:48 };
+      const vals = rows.map(r => Number(r.Total_Might || 0));
+      const minV = Math.min(...vals);
+      const maxV = Math.max(...vals, 1);
+      const x = i => pad.l + (i * (w - pad.l - pad.r) / Math.max(1, rows.length - 1));
+      const y = v => pad.t + (h - pad.t - pad.b) * (1 - ((v - minV) / Math.max(1, (maxV - minV))));
+
+      let grid = "";
+      for (let i = 0; i < 5; i++) {
+        const frac = i / 4;
+        const val = maxV - frac * (maxV - minV);
+        const yy = pad.t + frac * (h - pad.t - pad.b);
+        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+      }
+
+      const points = rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");
+      const area = `M ${x(0)} ${h-pad.b} L ` + rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length-1)} ${h-pad.b} Z`;
+      const labels = rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
+
+      document.getElementById("lineChart").innerHTML =
+        `<svg viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg>`;
+    }
+
+    function renderBarChart() {
+      const selectedWeek = getSelectedWeek();
+      const rows = rowsForWeek(selectedWeek).sort((a,b)=>b.Might-a.Might).slice(0,10);
+
+      if (!rows.length) {
+        document.getElementById("barChart").innerHTML = '<div class="muted">No selected-week data available.</div>';
+        return;
+      }
+
+      const w = 900, h = 360, pad = { l:56, r:20, t:20, b:80 };
+      const maxV = Math.max(...rows.map(r => Number(r.Might || 0)), 1);
+      const chartH = h - pad.t - pad.b;
+      const chartW = w - pad.l - pad.r;
+      const gap = 10;
+      const bw = Math.max(18, (chartW - gap * (rows.length - 1)) / Math.max(1, rows.length));
+
+      let grid = "";
+      for (let i = 0; i < 5; i++) {
+        const frac = i / 4;
+        const val = maxV - frac * maxV;
+        const yy = pad.t + frac * chartH;
+        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+      }
+
+      const bars = rows.map((r,i)=>{
+        const bh = (r.Might / maxV) * chartH;
+        const xx = pad.l + i * (bw + gap);
+        const yy = pad.t + chartH - bh;
+        const label = r.Player.length > 10 ? r.Player.slice(0,10) + "…" : r.Player;
+        return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect>
+                <text x="${xx+bw/2}" y="${h-38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text>
+                <text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
+      }).join("");
+
+      document.getElementById("barChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+    }
+
+    function renderGrowers() {
+      const body = document.getElementById("growersBody");
+      const rows = [...PLAYERS].sort((a,b)=> b.Growth_Pct - a.Growth_Pct || b.Net_Growth - a.Net_Growth).slice(0,10);
+
+      body.innerHTML = rows.map((r, idx) => `
+        <tr class="${idx < 3 ? 'highlight-grow' : ''}">
+          <td class="${idx < 3 ? 'good-strong' : 'good'}">${r.Player}</td>
+          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtInt(r.Net_Growth)}</td>
+          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtPct(r.Growth_Pct)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function buildSelectedWeekPlayerRows() {
+      const selectedWeek = getSelectedWeek();
+      const prevWeek = getPrevWeek(selectedWeek);
+      const currentMap = mapForWeek(selectedWeek);
+      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+
+      return [...currentMap.entries()].map(([player, might]) => {
+        const prev = prevMap.get(player) || 0;
+        const delta = might - prev;
+        const pct = prev ? (delta / prev) * 100 : 0;
+        const isBaselineWeek = selectedWeek === FIRST_WEEK;
+        const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
+        const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
+
+        return { Player: player, Might: might, Delta: delta, Pct: pct, IsNew: isNewThisWeek, IsReturned: isReturned };
+      }).sort((a,b) => {
+        if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
+        if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
+        return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
+      });
+    }
+
+    function renderPlayerTable() {
+      const q = document.getElementById("playerSearch").value.trim().toLowerCase();
+      const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
+
+      document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
+        const top5 = idx < 5 && !r.IsNew && !r.IsReturned;
+        const cls = r.IsNew || r.IsReturned
+          ? "warn"
+          : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : "")));
+        const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
+
+        return `<tr class="${top5 ? 'highlight-grow' : ''}">
+          <td class="${cls}">${r.Player}</td>
+          <td class="num ${cls}">${fmtInt(r.Might)}</td>
+          <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
+          <td class="num ${cls}">${weekPct}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderRosterLists() {
+      const selectedWeek = getSelectedWeek();
+      const roster = classifyRosterChanges(selectedWeek);
+
+      document.getElementById("joinersList").innerHTML = roster.joined.length
+        ? roster.joined.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
+        : '<li><span>No new joiners</span><span class="muted">—</span></li>';
+
+      document.getElementById("returnedList").innerHTML = roster.returned.length
+        ? roster.returned.map(p => `<li><span>${p}</span><span class="warn">Returned</span></li>`).join("")
+        : '<li><span>No returned players</span><span class="muted">—</span></li>';
+
+      document.getElementById("leaversList").innerHTML = roster.left.length
+        ? roster.left.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
+        : '<li><span>No players left</span><span class="muted">—</span></li>';
+    }
+
+    function renderTopWeekGains() {
+      const rows = buildSelectedWeekPlayerRows()
+        .filter(r => !r.IsNew && !r.IsReturned)
+        .sort((a,b)=> b.Pct - a.Pct || b.Delta - a.Delta)
+        .slice(0,10);
+
+      document.getElementById("topWeekGainsList").innerHTML = rows.length
+        ? rows.map(r => `<li><span>${r.Player}</span><span class="good">${fmtPct(r.Pct)}</span></li>`).join("")
+        : '<li><span>No data</span><span class="muted">—</span></li>';
+    }
+
+    function refreshSelectedWeekViews() {
+      setKpis();
+      renderBarChart();
+      renderPlayerTable();
+      renderRosterLists();
+      renderTopWeekGains();
+    }
+
+    function bindUi() {
+      document.getElementById("weekSelect").addEventListener("change", refreshSelectedWeekViews);
+      document.getElementById("playerSearch").addEventListener("input", renderPlayerTable);
+
+      document.getElementById("prevWeekBtn").addEventListener("click", () => {
+        const select = document.getElementById("weekSelect");
+        const prev = getPrevWeek(select.value);
+        if (prev) {
+          select.value = prev;
+          refreshSelectedWeekViews();
+        }
+      });
+
+      document.getElementById("nextWeekBtn").addEventListener("click", () => {
+        const select = document.getElementById("weekSelect");
+        const next = getNextWeek(select.value);
+        if (next) {
+          select.value = next;
+          refreshSelectedWeekViews();
+        }
+      });
+    }
+
+    async function loadData() {
+      setStatus("Loading dashboard data...", "");
+
+      try {
+        const results = await Promise.allSettled([
+          fetchCsv(WEEKLY_URL),
+          fetchCsv(PLAYER_URL),
+          fetchCsv(RAW_URL)
+        ]);
+
+        const [weeklyRes, playerRes, rawRes] = results;
+
+        if (rawRes.status !== "fulfilled") {
+          throw new Error("RAW sheet could not be loaded. RAW is required for the dashboard.");
+        }
+
+        RAW = normalizeRaw(rawRes.value);
+
+        if (!RAW.length) {
+          throw new Error("RAW sheet loaded but no usable rows were found.");
+        }
+
+        if (weeklyRes.status === "fulfilled") {
+          WEEKLY = normalizeWeekly(weeklyRes.value);
+        }
+
+        if (playerRes.status === "fulfilled") {
+          PLAYERS = normalizePlayers(playerRes.value);
+        }
+
+        if (!WEEKLY.length) WEEKLY = deriveWeeklyFromRaw();
+        if (!PLAYERS.length) PLAYERS = derivePlayersFromRaw();
+
+        populateWeekFilter();
+        renderLineChart();
+        renderGrowers();
+        refreshSelectedWeekViews();
+
+        const warnings = [];
+        if (weeklyRes.status !== "fulfilled") warnings.push("weekly sheet fallback used");
+        if (playerRes.status !== "fulfilled") warnings.push("player sheet fallback used");
+
+        setStatus(
+          warnings.length
+            ? "Dashboard loaded with fallback mode: " + warnings.join(" | ")
+            : "Dashboard loaded successfully.",
+          "ok"
+        );
+      } catch (err) {
+        console.error(err);
+        setStatus("Load failed. " + err.message, "error");
+      }
+    }
+
+    bindUi();
+    loadData();
+  </script>
 </body>
 </html>
