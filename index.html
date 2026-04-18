@@ -5,121 +5,247 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WOA Clan Growth Dashboard</title>
   <style>
-    :root {
-      --bg:#0b1220; --panel:#121a2b; --panel2:#18243a; --text:#eef4ff; --muted:#9fb0d1;
-      --accent:#4f8cff; --good:#22c55e; --good2:#00ff88; --bad:#ff6b6b; --warn:#f59e0b; --border:#24314f;
+    :root{
+      --bg:#0b1220;
+      --bg2:#10182a;
+      --panel:rgba(18,26,43,.94);
+      --panel2:#18243a;
+      --text:#eef4ff;
+      --muted:#9fb0d1;
+      --accent:#4f8cff;
+      --accent2:#6ba1ff;
+      --good:#22c55e;
+      --good2:#00ff88;
+      --bad:#ff6b6b;
+      --warn:#f59e0b;
+      --border:#24314f;
+      --shadow:0 10px 28px rgba(0,0,0,.18);
+      --radius:18px;
     }
-    * { box-sizing:border-box; }
-    body {
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      width:100%;
+      max-width:100%;
       margin:0;
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(180deg,#0b1220,#10182a);
-      color:var(--text);
+      padding:0;
+      overflow-x:hidden;
     }
-    .wrap { max-width:1460px; margin:0 auto; padding:24px; }
-    .header {
+
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,var(--bg),var(--bg2));
+      color:var(--text);
+      line-height:1.4;
+    }
+
+    .site-shell{
+      width:100%;
+      max-width:100%;
+      margin:0;
+      padding:14px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:100%;
+      margin:0;
+      padding:0;
+    }
+
+    .header{
       display:flex;
       justify-content:space-between;
       align-items:flex-end;
-      gap:16px;
+      gap:14px;
       flex-wrap:wrap;
-      margin-bottom:18px;
+      margin-bottom:14px;
     }
-    h1 { margin:0; font-size:32px; }
-    .badge {
+
+    h1{
+      margin:0;
+      font-size:clamp(22px, 2.8vw, 32px);
+      line-height:1.15;
+      letter-spacing:-0.02em;
+    }
+
+    .badge{
       padding:8px 12px;
       border-radius:999px;
       border:1px solid rgba(79,140,255,.35);
       background:rgba(79,140,255,.12);
       color:#c9dbff;
       font-size:13px;
+      max-width:100%;
     }
-    .card {
-      background:rgba(18,26,43,.94);
+
+    .card{
+      background:var(--panel);
       border:1px solid var(--border);
-      border-radius:18px;
-      padding:18px;
-      box-shadow:0 12px 36px rgba(0,0,0,.18);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+      width:100%;
+      min-width:0;
     }
-    .grid-kpi {
+
+    .grid-kpi,
+    .grid-main,
+    .grid-bottom,
+    .grid-extra{
       display:grid;
+      gap:14px;
+      margin-bottom:14px;
+      width:100%;
+      min-width:0;
+    }
+
+    .grid-kpi{
       grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:16px;
-      margin-bottom:16px;
     }
-    .grid-main {
-      display:grid;
-      grid-template-columns:2fr 1fr;
-      gap:16px;
-      margin-bottom:16px;
+
+    .grid-main{
+      grid-template-columns:minmax(0,1.8fr) minmax(300px,1fr);
     }
-    .grid-bottom {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-      margin-bottom:16px;
+
+    .grid-bottom{
+      grid-template-columns:minmax(0,1.15fr) minmax(320px,1fr);
     }
-    .grid-extra {
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr 1fr;
-      gap:16px;
-      margin-bottom:16px;
+
+    .grid-extra{
+      grid-template-columns:repeat(4,minmax(0,1fr));
     }
-    .kpi-title { color:var(--muted); font-size:13px; margin-bottom:8px; }
-    .kpi-value { font-size:38px; font-weight:700; letter-spacing:-.02em; }
-    .kpi-sub { color:var(--muted); font-size:12px; margin-top:8px; line-height:1.35; }
-    .title { font-size:18px; font-weight:700; margin:0 0 4px; }
-    .muted { color:var(--muted); font-size:13px; }
-    .toolbar {
+
+    .title{
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 4px;
+      line-height:1.25;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .kpi-title{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .kpi-value{
+      font-size:clamp(24px, 3.2vw, 38px);
+      font-weight:700;
+      letter-spacing:-.02em;
+      word-break:break-word;
+    }
+
+    .kpi-sub{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+      line-height:1.35;
+    }
+
+    .toolbar{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       gap:12px;
       flex-wrap:wrap;
-      margin-bottom:12px;
+      width:100%;
     }
-    .controls {
+
+    .controls{
       display:grid;
-      grid-template-columns:auto auto 1fr auto;
+      grid-template-columns:auto minmax(180px,220px) minmax(180px,1fr) auto;
       gap:10px;
       align-items:end;
+      width:100%;
+      max-width:900px;
+      min-width:0;
     }
-    label {
+
+    label{
       display:block;
       font-size:12px;
       color:var(--muted);
       margin-bottom:6px;
     }
-    select, input[type="text"] {
+
+    select, input[type="text"]{
       width:100%;
+      min-width:0;
       background:var(--panel2);
       border:1px solid var(--border);
       color:var(--text);
       border-radius:12px;
       padding:10px 12px;
+      outline:none;
     }
-    .btn {
+
+    .btn{
       background:var(--accent);
       border:none;
-      color:white;
+      color:#fff;
       border-radius:12px;
       padding:11px 14px;
       cursor:pointer;
       font-weight:700;
+      min-width:110px;
+      white-space:nowrap;
     }
-    .btn.secondary { background:#24314f; }
-    .msg { margin-top:10px; font-size:13px; color:var(--muted); white-space:pre-wrap; }
-    .msg.ok { color:#90f0be; }
-    .msg.error { color:#ff9898; }
-    .chart-box { margin-top:14px; }
-    svg { width:100%; height:auto; display:block; }
-    table { width:100%; border-collapse:collapse; font-size:14px; }
-    th, td {
+
+    .btn.secondary{ background:#24314f; }
+
+    .msg{
+      margin-top:6px;
+      font-size:13px;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
+    .msg.ok{ color:#90f0be; }
+    .msg.error{ color:#ff9898; }
+
+    .chart-box{
+      margin-top:14px;
+      width:100%;
+      min-width:0;
+      overflow:hidden;
+    }
+
+    .chart-frame{
+      width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      border-radius:14px;
+    }
+
+    svg{
+      display:block;
+      width:100%;
+      height:auto;
+      min-width:680px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+
+    th, td{
       text-align:left;
       padding:10px 12px;
       border-bottom:1px solid rgba(255,255,255,.06);
+      vertical-align:middle;
     }
-    th {
+
+    th{
       color:#d9e4ff;
       background:rgba(255,255,255,.03);
       position:sticky;
@@ -127,146 +253,201 @@
       z-index:1;
       white-space:nowrap;
     }
-    td.num {
+
+    td.num{
       text-align:right;
       font-variant-numeric:tabular-nums;
       white-space:nowrap;
     }
-    .table-wrap {
+
+    .table-wrap{
+      width:100%;
+      max-width:100%;
       max-height:430px;
       overflow:auto;
       border-radius:14px;
       border:1px solid var(--border);
       background:rgba(255,255,255,.02);
+      min-width:0;
     }
-    .player-table th:nth-child(1), .player-table td:nth-child(1) { width:34%; }
-    .player-table th:nth-child(2), .player-table td:nth-child(2) { width:24%; }
-    .player-table th:nth-child(3), .player-table td:nth-child(3) { width:22%; }
-    .player-table th:nth-child(4), .player-table td:nth-child(4) { width:20%; padding-right:22px; }
-    ul.clean { list-style:none; margin:0; padding:0; }
-    ul.clean li {
+
+    .player-table th:nth-child(1), .player-table td:nth-child(1){ width:34%; }
+    .player-table th:nth-child(2), .player-table td:nth-child(2){ width:24%; }
+    .player-table th:nth-child(3), .player-table td:nth-child(3){ width:22%; }
+    .player-table th:nth-child(4), .player-table td:nth-child(4){ width:20%; padding-right:22px; }
+
+    ul.clean{
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+
+    ul.clean li{
       padding:10px 0;
       border-bottom:1px solid rgba(255,255,255,.06);
       display:flex;
       justify-content:space-between;
+      align-items:flex-start;
       gap:10px;
     }
-    .good { color:var(--good); }
-    .good-strong { color:var(--good2); font-weight:700; }
-    .bad { color:var(--bad); }
-    .warn { color:var(--warn); }
-    .highlight-grow { background:rgba(0,255,136,.06); }
-    .footer {
+
+    .good{ color:var(--good); }
+    .good-strong{ color:var(--good2); font-weight:700; }
+    .bad{ color:var(--bad); }
+    .warn{ color:var(--warn); }
+    .highlight-grow{ background:rgba(0,255,136,.06); }
+
+    .footer{
       color:var(--muted);
       font-size:12px;
       text-align:center;
-      margin-top:14px;
+      margin-top:12px;
       min-height:14px;
+      padding-bottom:8px;
+      word-break:break-word;
     }
-    @media (max-width:1250px) {
-      .grid-kpi, .grid-main, .grid-bottom, .grid-extra { grid-template-columns:1fr; }
-      .controls { grid-template-columns:1fr; }
+
+    .embed-note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    @media (max-width:1400px){
+      .grid-kpi{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .grid-extra{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+
+    @media (max-width:1024px){
+      .grid-main,
+      .grid-bottom,
+      .grid-extra,
+      .grid-kpi{
+        grid-template-columns:1fr;
+      }
+
+      .controls{
+        grid-template-columns:1fr 1fr;
+        max-width:none;
+      }
+
+      .btn{
+        width:100%;
+        min-width:0;
+      }
+    }
+
+    @media (max-width:640px){
+      .site-shell{ padding:10px; }
+      .card{ padding:14px; border-radius:16px; }
+      .controls{ grid-template-columns:1fr; }
+      .toolbar{ align-items:stretch; }
+      th, td{ padding:9px 10px; font-size:13px; }
+      svg{ min-width:620px; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <h1>WOA Clan Growth Dashboard</h1>
-      <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div class="msg" id="statusMsg">Loading dashboard data...</div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <div class="toolbar">
-        <div>
-          <div class="title">Navigation</div>
-          <div class="muted">Use arrows for quick week browsing or pick any week from the list.</div>
-        </div>
-        <div class="controls">
-          <div><label>&nbsp;</label><button class="btn secondary" id="prevWeekBtn">← Previous</button></div>
-          <div><label for="weekSelect">Week</label><select id="weekSelect"></select></div>
-          <div><label for="playerSearch">Search Player</label><input type="text" id="playerSearch" placeholder="Type player name" /></div>
-          <div><label>&nbsp;</label><button class="btn secondary" id="nextWeekBtn">Next →</button></div>
-        </div>
+  <div class="site-shell">
+    <div class="wrap">
+      <div class="header">
+        <h1>WOA Clan Growth Dashboard</h1>
+        <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
       </div>
-    </div>
 
-    <div class="grid-kpi">
-      <div class="card"><div class="kpi-title">Total Clan Might</div><div class="kpi-value" id="kpiTotalMight">—</div><div class="kpi-sub">Selected week total</div></div>
-      <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Players present in selected week</div></div>
-      <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
-      <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
-      <div class="card"><div class="kpi-title">Joined / Left</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
-      <div class="card"><div class="kpi-title">Returned</div><div class="kpi-value" id="kpiReturned">—</div><div class="kpi-sub">Returning Members</div></div>
-    </div>
-
-    <div class="grid-main">
-      <div class="card">
-        <div class="title">Clan Might Trend</div>
-        <div class="muted">Historic weekly total might progression</div>
-        <div class="chart-box" id="lineChart"></div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="msg" id="statusMsg">Loading dashboard data...</div>
       </div>
-      <div class="card">
-        <div class="title">Top 10 Growers</div>
-        <div class="muted">Ranked by highest percentage growth</div>
-        <div class="table-wrap" style="max-height:360px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th class="num">Net Growth</th>
-                <th class="num">Growth %</th>
-              </tr>
-            </thead>
-            <tbody id="growersBody"></tbody>
-          </table>
+
+      <div class="card" style="margin-bottom:14px;">
+        <div class="toolbar">
+          <div>
+            <div class="title">Navigation</div>
+            <div class="muted">Use arrows for quick week browsing or pick any week from the list.</div>
+          </div>
+          <div class="controls">
+            <div><label>&nbsp;</label><button class="btn secondary" id="prevWeekBtn">← Previous</button></div>
+            <div><label for="weekSelect">Week</label><select id="weekSelect"></select></div>
+            <div><label for="playerSearch">Search Player</label><input type="text" id="playerSearch" placeholder="Type player name" /></div>
+            <div><label>&nbsp;</label><button class="btn secondary" id="nextWeekBtn">Next →</button></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="grid-bottom">
-      <div class="card">
-        <div class="title">Top 10 Players by Selected Week</div>
-        <div class="muted">This ranking changes with the selected week</div>
-        <div class="chart-box" id="barChart"></div>
+      <div class="grid-kpi">
+        <div class="card"><div class="kpi-title">Total Clan Might</div><div class="kpi-value" id="kpiTotalMight">—</div><div class="kpi-sub">Selected week total</div></div>
+        <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Players present in selected week</div></div>
+        <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
+        <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
+        <div class="card"><div class="kpi-title">Joined / Left</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
+        <div class="card"><div class="kpi-title">Returned</div><div class="kpi-value" id="kpiReturned">—</div><div class="kpi-sub">Returning Members</div></div>
       </div>
-      <div class="card">
-        <div class="title">Player Analysis by Selected Week</div>
-        <div class="muted">Sorted by highest week % growth first</div>
-        <div class="table-wrap" style="margin-top:12px;">
-          <table class="player-table">
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th class="num">Selected Might</th>
-                <th class="num">Week Change</th>
-                <th class="num">Week %</th>
-              </tr>
-            </thead>
-            <tbody id="playerBody"></tbody>
-          </table>
+
+      <div class="grid-main">
+        <div class="card">
+          <div class="title">Clan Might Trend</div>
+          <div class="muted">Historic weekly total might progression</div>
+          <div class="chart-box" id="lineChart"></div>
+        </div>
+        <div class="card">
+          <div class="title">Top 10 Growers</div>
+          <div class="muted">Ranked by highest percentage growth</div>
+          <div class="table-wrap" style="max-height:360px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th class="num">Net Growth</th>
+                  <th class="num">Growth %</th>
+                </tr>
+              </thead>
+              <tbody id="growersBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="grid-extra">
-      <div class="card"><div class="title">New Joiners</div><ul class="clean" id="joinersList"></ul></div>
-      <div class="card"><div class="title">Returned</div><ul class="clean" id="returnedList"></ul></div>
-      <div class="card"><div class="title">Left</div><ul class="clean" id="leaversList"></ul></div>
-      <div class="card"><div class="title">Top Week Gains</div><ul class="clean" id="topWeekGainsList"></ul></div>
-    </div>
+      <div class="grid-bottom">
+        <div class="card">
+          <div class="title">Top 10 Players by Selected Week</div>
+          <div class="muted">This ranking changes with the selected week</div>
+          <div class="chart-box" id="barChart"></div>
+        </div>
+        <div class="card">
+          <div class="title">Player Analysis by Selected Week</div>
+          <div class="muted">Sorted by highest week % growth first</div>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table class="player-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th class="num">Selected Might</th>
+                  <th class="num">Week Change</th>
+                  <th class="num">Week %</th>
+                </tr>
+              </thead>
+              <tbody id="playerBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-    <div class="footer" id="footerMsg"></div>
+      <div class="grid-extra">
+        <div class="card"><div class="title">New Joiners</div><ul class="clean" id="joinersList"></ul></div>
+        <div class="card"><div class="title">Returned</div><ul class="clean" id="returnedList"></ul></div>
+        <div class="card"><div class="title">Left</div><ul class="clean" id="leaversList"></ul></div>
+        <div class="card"><div class="title">Top Week Gains</div><ul class="clean" id="topWeekGainsList"></ul></div>
+      </div>
+
+      <div class="footer" id="footerMsg"></div>
+    </div>
   </div>
 
   <script>
-    const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-    const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-    const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+  const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+  const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+  const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+
 
     let WEEKLY = [];
     let PLAYERS = [];
@@ -611,7 +792,7 @@
       const labels = rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
 
       document.getElementById("lineChart").innerHTML =
-        `<svg viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg>`;
+        `<div class="chart-frame"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg></div>`;
     }
 
     function renderBarChart() {
@@ -649,7 +830,7 @@
                 <text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
       }).join("");
 
-      document.getElementById("barChart").innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+      document.getElementById("barChart").innerHTML = `<div class="chart-frame"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">${grid}${bars}</svg></div>`;
     }
 
     function renderGrowers() {
