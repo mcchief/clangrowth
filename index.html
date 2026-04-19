@@ -423,22 +423,6 @@
       font-weight:600;
     }
 
-    .main-grid{
-      display:grid;
-      grid-template-columns:1.55fr .95fr;
-      gap:12px;
-      margin-bottom:12px;
-      align-items:start;
-    }
-
-    .dual-grid{
-      display:grid;
-      grid-template-columns:1.55fr .95fr;
-      gap:12px;
-      margin-bottom:12px;
-      align-items:start;
-    }
-
     .full-width-row{
       margin-bottom:12px;
     }
@@ -506,9 +490,19 @@
       padding:10px;
     }
 
-    .stack{
+    .chart-wrap-wide{
+      height:340px;
+    }
+	    .rank-stack-full{
       display:grid;
+      grid-template-columns:1fr;
       gap:12px;
+    }
+
+    .rank-card-full{
+      width:100%;
+      border-radius:22px;
+      overflow:hidden;
     }
 
     .table-card{
@@ -525,10 +519,17 @@
     .table-wrap.tall{
       max-height:520px;
     }
-	    table{
+
+    .rank-table-wrap{
+      max-height:170px;
+      overflow:auto;
+      border-top:1px solid var(--stroke);
+    }
+
+    table{
       width:100%;
       border-collapse:collapse;
-      min-width:640px;
+      min-width:980px;
     }
 
     thead th{
@@ -608,9 +609,29 @@
       border-color:rgba(255,107,125,0.22);
     }
 
+    .tag.focus{
+      color:#ffe4a3;
+      background:rgba(255,179,71,0.12);
+      border-color:rgba(255,179,71,0.28);
+    }
+
+    .tag.top{
+      color:#9ff0c7;
+      background:rgba(53,210,138,0.14);
+      border-color:rgba(53,210,138,0.28);
+    }
+
     .metric-pos{color:#61e29d;font-weight:800}
     .metric-neg{color:#ff7f8f;font-weight:800}
     .metric-flat{color:#c6d3ea;font-weight:800}
+
+    .highlight-top5{
+      background:linear-gradient(90deg, rgba(53,210,138,0.14), rgba(53,210,138,0.04));
+    }
+
+    .highlight-top10{
+      background:linear-gradient(90deg, rgba(122,184,255,0.14), rgba(122,184,255,0.04));
+    }
 
     .bottom-grid{
       display:grid;
@@ -655,10 +676,8 @@
       display:none;
     }
 
-    @media (max-width: 1200px){
+    @media (max-width:1200px){
       .hero-grid,
-      .main-grid,
-      .dual-grid,
       .bottom-grid{
         grid-template-columns:1fr;
       }
@@ -672,7 +691,7 @@
       }
     }
 
-    @media (max-width: 820px){
+    @media (max-width:820px){
       .container{
         width:min(100%, calc(100% - 12px));
       }
@@ -682,7 +701,8 @@
       .panel,
       .list-card,
       .topbar,
-      .table-card{
+      .table-card,
+      .rank-card-full{
         border-radius:18px;
       }
 
@@ -708,16 +728,17 @@
         align-items:flex-start;
       }
 
-      .chart-wrap{
+      .chart-wrap,
+      .chart-wrap-wide{
         height:280px;
       }
 
       table{
-        min-width:560px;
+        min-width:980px;
       }
     }
 
-    @media (max-width: 560px){
+    @media (max-width:560px){
       .hero-side{
         grid-template-columns:1fr;
       }
@@ -758,7 +779,7 @@
         <div class="status-strip">
           <div class="pill"><strong>Latest Snapshot:</strong>&nbsp;<span id="latestSnapshot">Loading...</span></div>
           <div class="pill"><strong>Focus KPI:</strong>&nbsp;Players under 100M</div>
-          <div class="pill"><strong>Risk Watch:</strong>&nbsp;Slow Growers + Score</div>
+          <div class="pill"><strong>Development Focus:</strong>&nbsp;Low Growth Performers</div>
           <div class="pill"><strong>Mode:</strong>&nbsp;Live Weekly Analysis</div>
         </div>
       </div>
@@ -771,8 +792,8 @@
           <h1>WOA Clan Growth Dashboard</h1>
           <p>
             Real-time clan performance dashboard delivering weekly growth insights, player rankings,
-            trend analysis, slow-grower tracking, enforcement visibility, and scoring-based governance —
-            including under-100M alerts, roster movement, and top contributors.
+            trend analysis, all-time movers, development focus visibility, and scoring-based governance —
+            including under-100M alerts, roster movement, and top contributor highlighting.
           </p>
         </div>
 
@@ -786,8 +807,8 @@
             <div class="mini-stat-value">Players under 100M</div>
           </div>
           <div class="mini-stat">
-            <div class="mini-stat-label">Risk Watch</div>
-            <div class="mini-stat-value">Slow Growers + Score</div>
+            <div class="mini-stat-label">Growth Signals</div>
+            <div class="mini-stat-value">Top 5 Weekly + Top 10 All-Time</div>
           </div>
           <div class="mini-stat">
             <div class="mini-stat-label">Mode</div>
@@ -804,7 +825,7 @@
       </div>
       <div class="notice-right">
         <span class="badge-success">Operational</span>
-        <span>Dashboard loaded successfully.</span>
+        <span>Weekly and all-time growth intelligence active.</span>
       </div>
     </div>
 
@@ -884,13 +905,13 @@
         <div class="kpi-note" id="kpiUnder100mNote">Players under 100,000,000 might</div>
       </div>
 
-      <div class="kpi-card glass red">
-        <div class="kpi-label">Enforcement Required</div>
+      <div class="kpi-card glass gold">
+        <div class="kpi-label">Development Focus</div>
         <div class="kpi-value" id="kpiEnforcement">0</div>
-        <div class="kpi-note">Players needing attention</div>
+        <div class="kpi-note">Players with low growth performance</div>
       </div>
     </section>
-	    <section class="main-grid fade-in">
+	    <section class="full-width-row fade-in">
       <div class="panel glass">
         <div class="panel-head">
           <div>
@@ -902,24 +923,26 @@
           </div>
         </div>
         <div class="panel-body">
-          <div class="chart-wrap">
+          <div class="chart-wrap chart-wrap-wide">
             <canvas id="trendChart"></canvas>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="stack">
-        <div class="table-card glass">
+    <section class="full-width-row fade-in">
+      <div class="rank-stack-full">
+        <div class="rank-card-full glass">
           <div class="panel-head">
             <div>
               <h3 class="panel-title">Top 10 Growers</h3>
               <p class="panel-desc">Highest percentage growth across all tracked weeks</p>
             </div>
             <div class="panel-tools">
-              <div class="chip">Top Performers</div>
+              <div class="chip">Top 10 All-Time Highlighted</div>
             </div>
           </div>
-          <div class="table-wrap">
+          <div class="rank-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -933,17 +956,17 @@
           </div>
         </div>
 
-        <div class="table-card glass">
+        <div class="rank-card-full glass">
           <div class="panel-head">
             <div>
               <h3 class="panel-title">Top 10 Week Gains</h3>
               <p class="panel-desc">Best weekly growth performers for selected week</p>
             </div>
             <div class="panel-tools">
-              <div class="chip">Hot</div>
+              <div class="chip">Top 5 Weekly Highlighted</div>
             </div>
           </div>
-          <div class="table-wrap">
+          <div class="rank-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -957,7 +980,7 @@
           </div>
         </div>
 
-        <div class="table-card glass">
+        <div class="rank-card-full glass">
           <div class="panel-head">
             <div>
               <h3 class="panel-title">Top 10 Slow Growers (All Time)</h3>
@@ -967,7 +990,7 @@
               <div class="chip">Risk Watch</div>
             </div>
           </div>
-          <div class="table-wrap">
+          <div class="rank-table-wrap">
             <table>
               <thead>
                 <tr>
@@ -983,7 +1006,7 @@
       </div>
     </section>
 
-    <section class="fade-in" style="margin-bottom:12px;">
+    <section class="full-width-row fade-in">
       <div class="panel glass">
         <div class="panel-head">
           <div>
@@ -1007,7 +1030,7 @@
         <div class="panel-head">
           <div>
             <h3 class="panel-title">Player Analysis by Selected Week</h3>
-            <p class="panel-desc">Scored by lifetime growth, recent growth, and might standard</p>
+            <p class="panel-desc">Weekly change, all-time growth, score, and status intelligence</p>
           </div>
           <div class="panel-tools">
             <div class="chip">Week Detail</div>
@@ -1021,6 +1044,8 @@
                 <th>Selected Might</th>
                 <th>Week Change</th>
                 <th>Week %</th>
+                <th>All-Time Change</th>
+                <th>All-Time %</th>
                 <th>Score</th>
                 <th>Status</th>
               </tr>
@@ -1254,11 +1279,6 @@
           const week = getValueByAliases(row, ["week", "date", "snapshot", "week ending"]);
           const player = getValueByAliases(row, ["player", "player name", "name", "ingame name", "in game name"]);
           const mightRaw = getValueByAliases(row, ["might", "power", "total might"]);
-          const heroLevelRaw = getValueByAliases(row, ["hero level", "captain level", "level"]);
-          const cryptLevelRaw = getValueByAliases(row, ["crypt level", "crypt", "carter crypt", "carter/crypt"]);
-          const troopLevel = getValueByAliases(row, ["troop level", "troops", "highest troop level"]);
-          const modernizationRaw = getValueByAliases(row, ["modernization", "army modernization"]);
-          const monsterBoostRaw = getValueByAliases(row, ["monster boost", "monsters boost"]);
           const captain = getValueByAliases(row, ["captain", "main captain"]);
 
           const weekClean = String(week || "").trim();
@@ -1270,11 +1290,6 @@
             week: weekClean,
             player: playerClean,
             might: parseMight(mightRaw),
-            heroLevel: parseInt(heroLevelRaw, 10) || 0,
-            cryptLevel: parseInt(String(cryptLevelRaw).match(/\d+/)?.[0] || "0", 10) || 0,
-            troopLevel: String(troopLevel || "").trim(),
-            modernization: parseInt(String(modernizationRaw).match(/\d+/)?.[0] || "0", 10) || 0,
-            monsterBoost: parseInt(String(monsterBoostRaw).match(/\d+/)?.[0] || "0", 10) || 0,
             captain: String(captain || "").trim()
           };
         })
@@ -1528,8 +1543,8 @@
         .slice(0, 10);
 
       const tbody = document.getElementById("topGrowersTable");
-      tbody.innerHTML = stats.map(item => `
-        <tr>
+      tbody.innerHTML = stats.map((item, index) => `
+        <tr class="highlight-top10">
           <td>${createNameCell(item.player)}</td>
           <td class="${metricClass(item.netGrowth)}">${formatSignedShort(item.netGrowth)}</td>
           <td class="${metricClass(item.growthPct)}">${formatPercent(item.growthPct)}</td>
@@ -1553,8 +1568,8 @@
         .slice(0, 10);
 
       const tbody = document.getElementById("topWeekGainsTable");
-      tbody.innerHTML = rows.map(item => `
-        <tr>
+      tbody.innerHTML = rows.map((item, index) => `
+        <tr class="${index < 5 ? 'highlight-top5' : ''}">
           <td>${createNameCell(item.player)}</td>
           <td class="${metricClass(item.gain)}">${formatSignedShort(item.gain)}</td>
           <td class="${metricClass(item.pct)}">${formatPercent(item.pct)}</td>
@@ -1593,7 +1608,7 @@
       `).join("");
     }
 
-    function renderPlayerWeekAnalysis(selectedWeekRows, prevWeekMap, allStats, newJoinersSet) {
+    function renderPlayerWeekAnalysis(selectedWeekRows, prevWeekMap, allStats, newJoinersSet, weeklyTop5Set, allTimeTop10Set) {
       const searchTerm = document.getElementById("playerSearch").value.trim().toLowerCase();
 
       const rows = selectedWeekRows
@@ -1610,9 +1625,13 @@
             might: row.might,
             weekChange: deltaInfo.delta,
             weekPct: deltaInfo.pct,
+            allTimeChange: lifetime?.netGrowth || 0,
+            allTimePct: lifetime?.growthPct || 0,
             score,
             status,
-            isNew
+            isNew,
+            isTop5Weekly: weeklyTop5Set.has(row.player),
+            isTop10AllTime: allTimeTop10Set.has(row.player)
           };
         })
         .filter(item => !searchTerm || item.player.toLowerCase().includes(searchTerm))
@@ -1622,24 +1641,32 @@
         });
 
       const tbody = document.getElementById("playerWeekAnalysisTable");
-      tbody.innerHTML = rows.map(item => `
-        <tr>
-          <td>${createNameCell(item.player)}</td>
-          <td>${formatShort(item.might)}</td>
-          <td class="${metricClass(item.weekChange)}">${formatSignedShort(item.weekChange)}</td>
-          <td class="${metricClass(item.weekPct)}">${formatPercent(item.weekPct)}</td>
-          <td>${item.score === null ? "—" : item.score}</td>
-          <td>${renderStatusBadge(item.status)}</td>
-        </tr>
-      `).join("");
+      tbody.innerHTML = rows.map(item => {
+        const rowClass = item.isTop5Weekly ? "highlight-top5" : item.isTop10AllTime ? "highlight-top10" : "";
+        const statusBadge = renderStatusBadge(item.status, item.isTop5Weekly, item.isTop10AllTime);
+        return `
+          <tr class="${rowClass}">
+            <td>${createNameCell(item.player)}</td>
+            <td>${formatShort(item.might)}</td>
+            <td class="${metricClass(item.weekChange)}">${formatSignedShort(item.weekChange)}</td>
+            <td class="${metricClass(item.weekPct)}">${formatPercent(item.weekPct)}</td>
+            <td class="${metricClass(item.allTimeChange)}">${formatSignedShort(item.allTimeChange)}</td>
+            <td class="${metricClass(item.allTimePct)}">${formatPercent(item.allTimePct)}</td>
+            <td>${item.score === null ? "—" : item.score}</td>
+            <td>${statusBadge}</td>
+          </tr>
+        `;
+      }).join("");
     }
 
-    function renderStatusBadge(status) {
+    function renderStatusBadge(status, isTop5Weekly = false, isTop10AllTime = false) {
+      if (isTop5Weekly) return `<span class="tag top">Top 5 Weekly</span>`;
+      if (isTop10AllTime) return `<span class="tag top">Top 10 All-Time</span>`;
       if (status === "New Member") return `<span class="tag new">New Member</span>`;
       if (status === "Needs Attention") return `<span class="tag left">Needs Attention</span>`;
-      if (status === "Slow Growth") return `<span class="tag returned">Slow Growth</span>`;
-      if (status === "On Track") return `<span class="tag new">On Track</span>`;
-      if (status === "Top Growth") return `<span class="tag new">Top Growth</span>`;
+      if (status === "Slow Growth") return `<span class="tag focus">Slow Growth</span>`;
+      if (status === "On Track") return `<span class="tag returned">On Track</span>`;
+      if (status === "Top Growth") return `<span class="tag top">Top Growth</span>`;
       return `<span class="tag">${escapeHtml(status)}</span>`;
     }
 
@@ -1702,7 +1729,7 @@
       };
     }
 
-    function updateKPIs(ctx) {
+    function updateKPIs(ctx, allStats) {
       const { currentWeekRows, prevWeekMap, newJoiners, leftPlayers, returnedPlayers } = ctx;
 
       const totalPlayers = currentWeekRows.length;
@@ -1716,12 +1743,15 @@
       });
 
       const under100mRows = currentWeekRows.filter(r => r.might > 0 && r.might < 100000000);
-      const enforcementRows = currentWeekRows.filter(r =>
-        (r.might > 0 && r.might < 100000000) ||
-        (r.heroLevel > 0 && r.heroLevel < 145) ||
-        (r.cryptLevel > 0 && r.cryptLevel < 20) ||
-        /^g[1-5]\b/i.test(r.troopLevel || "")
-      );
+
+      const developmentFocusRows = currentWeekRows.filter(row => {
+        const prev = prevWeekMap.get(row.player);
+        const lifetime = allStats.find(s => s.player === row.player);
+        const isNew = newJoiners.includes(row.player);
+        const score = calculateScore(row.player, row, prev, lifetime, isNew);
+        const status = classifyStatus(score, isNew);
+        return status === "Needs Attention" || status === "Slow Growth";
+      });
 
       setText("kpiTotalMight", formatShort(totalMight));
       setText("kpiPlayers", totalPlayers.toLocaleString());
@@ -1734,7 +1764,7 @@
       setText("kpiUnder100mNote", under100mRows.length
         ? `${under100mRows.length} players below clan minimum`
         : "No players under 100,000,000 might");
-      setText("kpiEnforcement", enforcementRows.length.toLocaleString());
+      setText("kpiEnforcement", developmentFocusRows.length.toLocaleString());
     }
 
     function renderBottomLists(ctx) {
@@ -1745,17 +1775,46 @@
       renderSimpleList("leftList", leftPlayers.sort((a, b) => a.localeCompare(b)), "left");
     }
 
+    function getWeeklyTop5Set(ctx) {
+      const rows = ctx.currentWeekRows
+        .map(row => {
+          const prev = ctx.prevWeekMap.get(row.player);
+          const deltaInfo = calculateWeekDelta(row, prev);
+          return {
+            player: row.player,
+            gain: deltaInfo.delta,
+            pct: deltaInfo.pct
+          };
+        })
+        .filter(x => Number.isFinite(x.pct) && x.gain > 0)
+        .sort((a, b) => b.pct - a.pct)
+        .slice(0, 5);
+
+      return new Set(rows.map(r => r.player));
+    }
+
+    function getAllTimeTop10Set(allStats) {
+      const rows = [...allStats]
+        .filter(x => !x.isNewOnly)
+        .sort((a, b) => b.growthPct - a.growthPct)
+        .slice(0, 10);
+
+      return new Set(rows.map(r => r.player));
+    }
+
     function renderAll() {
       if (!selectedWeek) return;
 
       const ctx = computeWeekContext();
       const allStats = buildLifetimeStats();
       const newJoinersSet = new Set(ctx.newJoiners);
+      const weeklyTop5Set = getWeeklyTop5Set(ctx);
+      const allTimeTop10Set = getAllTimeTop10Set(allStats);
 
       setText("latestSnapshot", ctx.currentWeek || "No data");
       setText("heroSnapshot", ctx.currentWeek || "No data");
 
-      updateKPIs(ctx);
+      updateKPIs(ctx, allStats);
       renderTrendChart();
       renderWeeklyTopChart(ctx.currentWeekRows);
       renderTopGrowers();
@@ -1771,7 +1830,9 @@
         ctx.currentWeekRows,
         ctx.prevWeekMap,
         allStats,
-        newJoinersSet
+        newJoinersSet,
+        weeklyTop5Set,
+        allTimeTop10Set
       );
       renderBottomLists(ctx);
     }
@@ -1847,7 +1908,7 @@
           <tr><td colspan="3" class="metric-neg">Check RAW_URL and CSV headers.</td></tr>
         `;
         document.getElementById("playerWeekAnalysisTable").innerHTML = `
-          <tr><td colspan="6" class="metric-neg">No data available.</td></tr>
+          <tr><td colspan="8" class="metric-neg">No data available.</td></tr>
         `;
 
         renderSimpleList("newJoinersList", [], "new");
