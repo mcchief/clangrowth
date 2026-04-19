@@ -1878,35 +1878,6 @@ async function loadData() {
   }
 }
 
-        buildWeeks();
-        wireEvents();
-        renderAll();
-
-        console.log("WOA Dashboard loaded successfully.");
-        console.log("Sample normalized rows:", normalizedRows.slice(0, 5));
-
-      } catch (error) {
-        console.error("Dashboard load error:", error);
-
-        setText("latestSnapshot", "Load failed");
-        setText("heroSnapshot", "Load failed");
-
-        document.getElementById("topGrowersTable").innerHTML = `
-          <tr><td colspan="3" class="metric-neg">Failed to load data: ${escapeHtml(error.message)}</td></tr>
-        `;
-        document.getElementById("slowGrowersTable").innerHTML = `
-          <tr><td colspan="3" class="metric-neg">Check DATA_SOURCE_URL and CSV headers.</td></tr>
-        `;
-        document.getElementById("playerWeekAnalysisTable").innerHTML = `
-          <tr><td colspan="6" class="metric-neg">No data available.</td></tr>
-        `;
-
-        renderSimpleList("newJoinersList", [], "new");
-        renderSimpleList("returnedList", [], "returned");
-        renderSimpleList("leftList", [], "left");
-        renderSimpleList("topWeekGainsList", [], "gains");
-      }
-    }
 
     loadData();
   </script>
