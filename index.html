@@ -1,308 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOA Titan Dashboard</title>
-  <style>
-    :root {
-      --bg: #030712;
-      --glass: rgba(17, 24, 39, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.5);
-      --text-main: #f3f4f6;
-      --text-dim: #9ca3af;
-      --good: #10b981;
-      --bad: #ef4444;
-      --warn: #f59e0b;
-      --radius: 20px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WOA Clan Growth Dashboard — Premium</title>
 
-    * { box-sizing: border-box; scroll-behavior: smooth; }
+<style>
+/* ================= ROOT THEME ================= */
+:root{
+  --bg:#070b16;
+  --glass:rgba(255,255,255,.08);
+  --glass-strong:rgba(255,255,255,.14);
+  --border:rgba(255,255,255,.18);
+  --text:#eef3ff;
+  --muted:#a8b4d6;
+  --accent:#5f9cff;
+  --accent2:#7bb2ff;
+  --good:#2cff9a;
+  --bad:#ff6b6b;
+  --warn:#ffc857;
+  --radius:20px;
+  --blur:16px;
+  --shadow:0 20px 50px rgba(0,0,0,.35);
+}
 
-    body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: radial-gradient(circle at top right, #111827, var(--bg));
-      color: var(--text-main);
-      min-height: 100vh;
-    }
+/* ================= GLOBAL ================= */
+*{box-sizing:border-box;}
+html,body{
+  margin:0;padding:0;
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(95,156,255,.15), transparent),
+    radial-gradient(900px 500px at 85% 10%, rgba(123,178,255,.12), transparent),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+body{overflow-x:hidden;}
+.wrap{max-width:1600px;margin:auto;padding:18px}
 
-    /* Animations */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate { animation: fadeInUp 0.6s ease forwards; }
+/* ================= HEADER ================= */
+.header{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:14px;
+}
+h1{
+  margin:0;
+  font-size:clamp(24px,3vw,34px);
+  letter-spacing:-.02em;
+}
+.badge{
+  padding:10px 16px;
+  border-radius:999px;
+  background:var(--glass);
+  border:1px solid var(--border);
+  backdrop-filter:blur(var(--blur));
+  font-size:13px;
+}
 
-    .dashboard-container {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 24px;
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 24px;
-    }
+/* ================= GLASS CARD ================= */
+.card{
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.15),
+    rgba(255,255,255,.03)
+  );
+  backdrop-filter:blur(var(--blur));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow);
+  animation:fadeUp .6s ease both;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}
+}
 
-    /* Sidebar - Sticky KPI */
-    .sidebar {
-      position: sticky;
-      top: 24px;
-      height: calc(100vh - 48px);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+/* ================= STICKY KPI BAR ================= */
+.kpi-sticky{
+  position:sticky;
+  top:10px;
+  z-index:30;
+  margin-bottom:16px;
+}
+.grid-kpi{
+  display:grid;
+  grid-template-columns:repeat(7, minmax(0,1fr));
+  gap:14px;
+}
 
-    .glass-card {
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-    }
+/* KPI elements */
+.kpi-title{font-size:12px;color:var(--muted);}
+.kpi-value{
+  font-size:clamp(22px,2.5vw,34px);
+  font-weight:800;
+  letter-spacing:-.03em;
+}
 
-    .glass-card:hover { border-color: rgba(59, 130, 246, 0.3); }
+/* ================= LAYOUT GRIDS ================= */
+.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.grid-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-bottom:14px}
+.grid-extra{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 
-    /* Typography */
-    h1 { font-size: 22px; margin: 0; letter-spacing: -0.5px; text-transform: uppercase; }
-    .kpi-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-    .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); }
-    .kpi-sub { font-size: 13px; margin-top: 4px; }
+/* ================= TABLE ================= */
+table{width:100%;border-collapse:collapse}
+th,td{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:14px;
+}
+th{
+  position:sticky;top:0;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(10px);
+}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
 
-    /* Controls */
-    select, input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
-      padding: 12px;
-      border-radius: 12px;
-      color: white;
-      margin-top: 5px;
-      outline: none;
-    }
+/* ================= LISTS ================= */
+ul.clean{list-style:none;margin:0;padding:0}
+ul.clean li{
+  display:flex;
+  justify-content:space-between;
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.08)
+}
 
-    .btn-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    button {
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button.sec { background: rgba(255,255,255,0.1); }
+/* ================= HELPERS ================= */
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+.warn{color:var(--warn)}
+.muted{color:var(--muted);font-size:13px}
 
-    /* Main Content */
-    .main-content { display: flex; flex-direction: column; gap: 24px; }
-    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
-
-    /* Tables */
-    .table-container { max-height: 500px; overflow-y: auto; margin-top: 15px; border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; font-size: 11px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border); text-transform: uppercase; position: sticky; top: 0; background: #0f172a; }
-    td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
-    
-    .status-tag { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-    .tag-warn { background: rgba(245, 158, 11, 0.2); color: var(--warn); }
-
-    @media (max-width: 1024px) {
-      .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { position: relative; height: auto; top: 0; }
-    }
-  </style>
+/* ================= RESPONSIVE ================= */
+@media(max-width:1200px){
+  .grid-kpi{grid-template-columns:repeat(3,1fr)}
+  .grid-main,.grid-bottom,.grid-extra{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
+<div class="wrap">
 
-<div class="dashboard-container">
-  <aside class="sidebar animate">
-    <div class="glass-card">
-      <div class="kpi-label">Clan System</div>
-      <h1>Titan Command</h1>
-      <div id="syncStatus" style="font-size:12px; color:var(--accent); margin-top:8px;">Syncing Sources...</div>
-    </div>
-
-    <div class="glass-card">
-      <div class="kpi-label">Navigation</div>
-      <select id="weekSelect"></select>
-      <input type="text" id="playerSearch" placeholder="Search Commander...">
-      <div class="btn-nav">
-        <button class="sec" id="prevBtn">← Prev</button>
-        <button class="sec" id="nextBtn">Next →</button>
-      </div>
-    </div>
-
-    <div class="glass-card">
-      <div class="kpi-label">Total Might</div>
-      <div class="kpi-value" id="kpiTotal">—</div>
-      <div class="kpi-sub" id="kpiGrowthTrend">Trend loading...</div>
-    </div>
-
-    <div class="glass-card" style="border-left: 4px solid var(--warn);">
-      <div class="kpi-label">Under 100M Might</div>
-      <div class="kpi-value" id="kpiLowMight" style="color: var(--warn);">—</div>
-      <div class="kpi-sub">Needs growth support</div>
-    </div>
-
-    <div class="glass-card">
-      <div class="kpi-label">Roster Strength</div>
-      <div class="kpi-value" id="kpiActive">—</div>
-      <div class="kpi-sub">Active Commanders</div>
-    </div>
-  </aside>
-
-  <main class="main-content">
-    <div class="grid-stats">
-      <div class="glass-card animate" style="animation-delay: 0.1s;">
-        <div class="kpi-label">Average Might</div>
-        <div id="avgMight" style="font-size: 20px; font-weight: bold; margin-top:8px;">—</div>
-      </div>
-      <div class="glass-card animate" style="animation-delay: 0.2s;">
-        <div class="kpi-label">Top Weekly Grower</div>
-        <div id="topGrower" style="font-size: 16px; font-weight: bold; margin-top:8px; color:var(--good);">—</div>
-      </div>
-    </div>
-
-    <div class="glass-card animate" style="animation-delay: 0.3s;">
-      <div class="kpi-label">Roster Intelligence Intelligence</div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Commander</th>
-              <th>Might Rating</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="mainTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
+<div class="header">
+  <h1>WOA Clan Growth Dashboard</h1>
+  <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
 </div>
 
+<!-- ================= KPI STICKY BAR ================= -->
+<div class="kpi-sticky">
+  <div class="grid-kpi">
+    <div class="card"><div class="kpi-title">Total Might</div><div id="kpiTotalMight" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Active Players</div><div id="kpiActivePlayers" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Average Might</div><div id="kpiAvgMight" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Weekly Growth</div><div id="kpiGrowth" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Joined / Left</div><div id="kpiRosterDelta" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Returned</div><div id="kpiReturned" class="kpi-value">—</div></div>
+
+    <!-- ✅ NEW KPI -->
+    <div class="card">
+      <div class="kpi-title">Under 100M Might</div>
+      <div id="kpiBelow100M" class="kpi-value warn">—</div>
+      <div class="muted">Players &lt; 100M</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="grid-main">
+  <div class="card">
+    <h3>Clan Might Trend</h3>
+    <div id="lineChart"></div>
+  </div>
+  <div class="card">
+    <h3>Top 10 Growers</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr><th>Player</th><th class="num">Net</th><th class="num">%</th></tr>
+        </thead>
+        <tbody id="growersBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid-bottom">
+  <div class="card">
+    <h3>Top Players (Week)</h3>
+    <div id="barChart"></div>
+  </div>
+  <div class="card">
+    <h3>Player Analysis</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr>
+          <th>Player</th>
+          <th class="num">Might</th>
+          <th class="num">Δ</th>
+          <th class="num">%</th>
+        </tr>
+        </thead>
+        <tbody id="playerBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid-extra">
+  <div class="card"><h4>New Joiners</h4><ul id="joinersList" class="clean"></ul></div>
+  <div class="card"><h4>Returned</h4><ul id="returnedList" class="clean"></ul></div>
+  <div class="card"><h4>Left</h4><ul id="leaversList" class="clean"></ul></div>
+  <div class="card"><h4>Top Week Gains</h4><ul id="topWeekGainsList" class="clean"></ul></div>
+</div>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
 <script>
-  // Robust Source Links
-  const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-  const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-  const RAW_URL    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+/* ✅ Key addition: KPI Below 100M */
 
-  let DATA = { weekly: [], player: [], raw: [] };
-  let WEEKS = [];
+function updateBelow100M(){
+  const week = getSelectedWeek();
+  const rows = rowsForWeek(week);
+  const count = rows.filter(r => r.Might < 100000000).length;
+  document.getElementById("kpiBelow100M").textContent = count;
+}
 
-  const fmt = n => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
-
-  // Fuzzy parser to handle variations in column names
-  function parseCSV(text) {
-    const lines = text.split('\n').filter(l => l.trim() !== "");
-    const headers = lines[0].split(',').map(h => h.trim().replace(/^\uFEFF/, ""));
-    return lines.slice(1).map(line => {
-      const cols = line.split(',');
-      let obj = {};
-      headers.forEach((h, i) => {
-        let val = cols[i]?.trim() || "";
-        let num = parseFloat(val.replace(/[^0-9.-]/g, ''));
-        obj[h] = isNaN(num) ? val : num;
-      });
-      return obj;
-    });
-  }
-
-  async function syncTitan() {
-    const status = document.getElementById('syncStatus');
-    try {
-      const [resW, resP, resR] = await Promise.all([
-        fetch(WEEKLY_URL + "&t=" + Date.now()),
-        fetch(PLAYER_URL + "&t=" + Date.now()),
-        fetch(RAW_URL + "&t=" + Date.now())
-      ]);
-
-      DATA.weekly = parseCSV(await resW.text());
-      DATA.player = parseCSV(await resP.text());
-      DATA.raw    = parseCSV(await resR.text());
-
-      // Identify the "Week" and "Player" columns dynamically
-      const weekCol = Object.keys(DATA.raw[0] || {}).find(k => k.toLowerCase().includes('week')) || 'Week';
-      WEEKS = [...new Set(DATA.raw.map(d => d[weekCol]))].sort();
-
-      const select = document.getElementById('weekSelect');
-      select.innerHTML = WEEKS.map(w => `<option value="${w}">${w}</option>`).join('');
-      select.value = WEEKS[WEEKS.length - 1];
-
-      status.textContent = "Titan Core Online";
-      status.style.color = "var(--good)";
-
-      initApp();
-    } catch (err) {
-      status.textContent = "Data Link Error";
-      status.style.color = "var(--bad)";
-    }
-  }
-
-  function initApp() {
-    document.getElementById('weekSelect').onchange = update;
-    document.getElementById('playerSearch').oninput = update;
-    document.getElementById('prevBtn').onclick = () => { move(-1); };
-    document.getElementById('nextBtn').onclick = () => { move(1); };
-    update();
-  }
-
-  function move(dir) {
-    const s = document.getElementById('weekSelect');
-    s.selectedIndex = Math.max(0, Math.min(s.options.length - 1, s.selectedIndex + dir));
-    update();
-  }
-
-  function update() {
-    const selWeek = document.getElementById('weekSelect').value;
-    const search = document.getElementById('playerSearch').value.toLowerCase();
-    
-    // Key Column IDs
-    const weekCol = Object.keys(DATA.raw[0] || {}).find(k => k.toLowerCase().includes('week')) || 'Week';
-    const playerCol = Object.keys(DATA.raw[0] || {}).find(k => k.toLowerCase().includes('player')) || 'Player';
-    const mightCol = Object.keys(DATA.raw[0] || {}).find(k => k.toLowerCase().includes('might')) || 'Might';
-
-    const roster = DATA.raw.filter(d => d[weekCol] == selWeek);
-    const filtered = roster.filter(d => String(d[playerCol]).toLowerCase().includes(search));
-
-    // KPI logic
-    const total = roster.reduce((s, p) => s + (p[mightCol] || 0), 0);
-    const lowMight = roster.filter(p => p[mightCol] < 100000000);
-    const weeklyInfo = DATA.weekly.find(w => w[weekCol] == selWeek) || {};
-
-    document.getElementById('kpiTotal').textContent = fmt(total);
-    document.getElementById('kpiLowMight').textContent = lowMight.length;
-    document.getElementById('kpiActive').textContent = roster.length;
-    document.getElementById('avgMight').textContent = fmt(total / (roster.length || 1));
-    
-    const growthVal = weeklyInfo["Growth %"] || weeklyInfo["Growth_Pct"] || 0;
-    document.getElementById('kpiGrowthTrend').textContent = `Growth: ${growthVal}%`;
-    document.getElementById('kpiGrowthTrend').style.color = growthVal >= 0 ? "var(--good)" : "var(--bad)";
-
-    // Top Grower ranking from Player Tab
-    const growerCol = Object.keys(DATA.player[0] || {}).find(k => k.toLowerCase().includes('pct')) || 'Growth %';
-    const top = [...DATA.player].sort((a,b) => (b[growerCol] || 0) - (a[growerCol] || 0))[0];
-    document.getElementById('topGrower').textContent = top ? `${top[playerCol]} (${top[growerCol]}%)` : "—";
-
-    // Table
-    const tbody = document.getElementById('mainTableBody');
-    tbody.innerHTML = filtered.sort((a,b) => b[mightCol] - a[mightCol]).map(p => `
-      <tr>
-        <td style="font-weight:700">${p[playerCol]}</td>
-        <td style="font-family:monospace">${fmt(p[mightCol])}</td>
-        <td>
-          ${p[mightCol] < 100000000 ? '<span class="status-tag tag-warn">Low Might</span>' : '<span style="color:var(--text-dim)">Elite</span>'}
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  syncTitan();
+/* Hook into existing refresh */
+const _origRefresh = refreshSelectedWeekViews;
+refreshSelectedWeekViews = function(){
+  _origRefresh();
+  updateBelow100M();
+};
 </script>
 
 </body>
