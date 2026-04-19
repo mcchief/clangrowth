@@ -519,12 +519,19 @@
     .table-wrap.tall{
       max-height:520px;
     }
+.rank-table-wrap{
+  overflow:visible;
+  border-top:1px solid var(--stroke);
+  max-height:none;
+}
+.rank-card-full table{
+  min-width:100%;
+}
 
-    .rank-table-wrap{
-      max-height:170px;
-      overflow:auto;
-      border-top:1px solid var(--stroke);
-    }
+.rank-card-full tbody td,
+.rank-card-full thead th{
+  padding:10px 14px;
+}
 
     table{
       width:100%;
