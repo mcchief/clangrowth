@@ -3,1009 +3,345 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOA Clan Growth Dashboard</title>
+  <title>WOA Titan Dashboard</title>
   <style>
-    :root{
-      --bg:#0b1220;
-      --bg2:#10182a;
-      --panel:rgba(18,26,43,.94);
-      --panel2:#18243a;
-      --text:#eef4ff;
-      --muted:#9fb0d1;
-      --accent:#4f8cff;
-      --accent2:#6ba1ff;
-      --good:#22c55e;
-      --good2:#00ff88;
-      --bad:#ff6b6b;
-      --warn:#f59e0b;
-      --border:#24314f;
-      --shadow:0 10px 28px rgba(0,0,0,.18);
-      --radius:18px;
+    :root {
+      --bg: #030712;
+      --glass: rgba(17, 24, 39, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.5);
+      --text-main: #f3f4f6;
+      --text-dim: #9ca3af;
+      --good: #10b981;
+      --bad: #ef4444;
+      --warn: #f59e0b;
+      --radius: 20px;
     }
 
-    *{ box-sizing:border-box; }
+    * { box-sizing: border-box; scroll-behavior: smooth; }
 
-    html, body{
-      width:100%;
-      max-width:100%;
-      margin:0;
-      padding:0;
-      overflow-x:hidden;
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: radial-gradient(circle at top right, #111827, var(--bg));
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(180deg,var(--bg),var(--bg2));
-      color:var(--text);
-      line-height:1.4;
+    /* Entry Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .site-shell{
-      width:100%;
-      max-width:100%;
-      margin:0;
-      padding:14px;
+    .animate { animation: fadeInUp 0.6s ease forwards; }
+
+    /* Layout Shell */
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px;
+      width: 100%;
     }
 
-    .wrap{
-      width:100%;
-      max-width:100%;
-      margin:0;
-      padding:0;
+    /* Sidebar - Sticky KPI & Nav */
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:14px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, border-color 0.3s ease;
     }
 
-    h1{
-      margin:0;
-      font-size:clamp(22px, 2.8vw, 32px);
-      line-height:1.15;
-      letter-spacing:-0.02em;
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.3);
     }
 
-    .badge{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(79,140,255,.35);
-      background:rgba(79,140,255,.12);
-      color:#c9dbff;
-      font-size:13px;
-      max-width:100%;
+    /* Typography */
+    h1 { font-size: 24px; margin: 0; letter-spacing: -0.5px; }
+    .kpi-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); }
+    .kpi-sub { font-size: 13px; margin-top: 4px; }
+
+    /* Main Content */
+    .main-content { display: flex; flex-direction: column; gap: 24px; }
+
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
     }
 
-    .card{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:16px;
-      box-shadow:var(--shadow);
-      width:100%;
-      min-width:0;
+    /* Form Elements */
+    .control-group { margin-top: 15px; }
+    select, input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      padding: 12px;
+      border-radius: 12px;
+      color: white;
+      margin-top: 5px;
+      outline: none;
     }
 
-    .grid-kpi,
-    .grid-main,
-    .grid-bottom,
-    .grid-extra{
-      display:grid;
-      gap:14px;
-      margin-bottom:14px;
-      width:100%;
-      min-width:0;
+    .btn-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
     }
 
-    .grid-kpi{
-      grid-template-columns:repeat(6,minmax(0,1fr));
+    button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
 
-    .grid-main{
-      grid-template-columns:minmax(0,1.8fr) minmax(300px,1fr);
-    }
+    button.secondary { background: rgba(255,255,255,0.1); }
+    button:hover { opacity: 0.8; }
 
-    .grid-bottom{
-      grid-template-columns:minmax(0,1.15fr) minmax(320px,1fr);
-    }
+    /* Tables */
+    .table-container { overflow-x: auto; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px; font-size: 12px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border); }
+    td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
 
-    .grid-extra{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
+    .num { font-family: 'Monaco', monospace; text-align: right; }
+    .tag-new { background: var(--good); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-    .title{
-      font-size:18px;
-      font-weight:700;
-      margin:0 0 4px;
-      line-height:1.25;
-    }
+    /* Custom KPI for <100M */
+    .kpi-special { border-left: 4px solid var(--warn); }
 
-    .muted{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .kpi-title{
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:8px;
-    }
-
-    .kpi-value{
-      font-size:clamp(24px, 3.2vw, 38px);
-      font-weight:700;
-      letter-spacing:-.02em;
-      word-break:break-word;
-    }
-
-    .kpi-sub{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:8px;
-      line-height:1.35;
-    }
-
-    .toolbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      flex-wrap:wrap;
-      width:100%;
-    }
-
-    .controls{
-      display:grid;
-      grid-template-columns:auto minmax(180px,220px) minmax(180px,1fr) auto;
-      gap:10px;
-      align-items:end;
-      width:100%;
-      max-width:900px;
-      min-width:0;
-    }
-
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-
-    select, input[type="text"]{
-      width:100%;
-      min-width:0;
-      background:var(--panel2);
-      border:1px solid var(--border);
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 12px;
-      outline:none;
-    }
-
-    .btn{
-      background:var(--accent);
-      border:none;
-      color:#fff;
-      border-radius:12px;
-      padding:11px 14px;
-      cursor:pointer;
-      font-weight:700;
-      min-width:110px;
-      white-space:nowrap;
-    }
-
-    .btn.secondary{ background:#24314f; }
-
-    .msg{
-      margin-top:6px;
-      font-size:13px;
-      color:var(--muted);
-      white-space:pre-wrap;
-    }
-
-    .msg.ok{ color:#90f0be; }
-    .msg.error{ color:#ff9898; }
-
-    .chart-box{
-      margin-top:14px;
-      width:100%;
-      min-width:0;
-      overflow:hidden;
-    }
-
-    .chart-frame{
-      width:100%;
-      overflow-x:auto;
-      overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;
-      border-radius:14px;
-    }
-
-    svg{
-      display:block;
-      width:100%;
-      height:auto;
-      min-width:680px;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:14px;
-    }
-
-    th, td{
-      text-align:left;
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      vertical-align:middle;
-    }
-
-    th{
-      color:#d9e4ff;
-      background:rgba(255,255,255,.03);
-      position:sticky;
-      top:0;
-      z-index:1;
-      white-space:nowrap;
-    }
-
-    td.num{
-      text-align:right;
-      font-variant-numeric:tabular-nums;
-      white-space:nowrap;
-    }
-
-    .table-wrap{
-      width:100%;
-      max-width:100%;
-      max-height:430px;
-      overflow:auto;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.02);
-      min-width:0;
-    }
-
-    .player-table th:nth-child(1), .player-table td:nth-child(1){ width:34%; }
-    .player-table th:nth-child(2), .player-table td:nth-child(2){ width:24%; }
-    .player-table th:nth-child(3), .player-table td:nth-child(3){ width:22%; }
-    .player-table th:nth-child(4), .player-table td:nth-child(4){ width:20%; padding-right:22px; }
-
-    ul.clean{
-      list-style:none;
-      margin:0;
-      padding:0;
-    }
-
-    ul.clean li{
-      padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-    }
-
-    .good{ color:var(--good); }
-    .good-strong{ color:var(--good2); font-weight:700; }
-    .bad{ color:var(--bad); }
-    .warn{ color:var(--warn); }
-    .highlight-grow{ background:rgba(0,255,136,.06); }
-
-    .footer{
-      color:var(--muted);
-      font-size:12px;
-      text-align:center;
-      margin-top:12px;
-      min-height:14px;
-      padding-bottom:8px;
-      word-break:break-word;
-    }
-
-    .embed-note{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:8px;
-    }
-
-    @media (max-width:1400px){
-      .grid-kpi{ grid-template-columns:repeat(3,minmax(0,1fr)); }
-      .grid-extra{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-    }
-
-    @media (max-width:1024px){
-      .grid-main,
-      .grid-bottom,
-      .grid-extra,
-      .grid-kpi{
-        grid-template-columns:1fr;
-      }
-
-      .controls{
-        grid-template-columns:1fr 1fr;
-        max-width:none;
-      }
-
-      .btn{
-        width:100%;
-        min-width:0;
-      }
-    }
-
-    @media (max-width:640px){
-      .site-shell{ padding:10px; }
-      .card{ padding:14px; border-radius:16px; }
-      .controls{ grid-template-columns:1fr; }
-      .toolbar{ align-items:stretch; }
-      th, td{ padding:9px 10px; font-size:13px; }
-      svg{ min-width:620px; }
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .dashboard-container { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="site-shell">
-    <div class="wrap">
-      <div class="header">
-        <h1>WOA Clan Growth Dashboard</h1>
-        <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
-      </div>
 
-      <div class="card" style="margin-bottom:14px;">
-        <div class="msg" id="statusMsg">Loading dashboard data...</div>
-      </div>
-
-      <div class="card" style="margin-bottom:14px;">
-        <div class="toolbar">
-          <div>
-            <div class="title">Navigation</div>
-            <div class="muted">Use arrows for quick week browsing or pick any week from the list.</div>
-          </div>
-          <div class="controls">
-            <div><label>&nbsp;</label><button class="btn secondary" id="prevWeekBtn">← Previous</button></div>
-            <div><label for="weekSelect">Week</label><select id="weekSelect"></select></div>
-            <div><label for="playerSearch">Search Player</label><input type="text" id="playerSearch" placeholder="Type player name" /></div>
-            <div><label>&nbsp;</label><button class="btn secondary" id="nextWeekBtn">Next →</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-kpi">
-        <div class="card"><div class="kpi-title">Total Clan Might</div><div class="kpi-value" id="kpiTotalMight">—</div><div class="kpi-sub">Selected week total</div></div>
-        <div class="card"><div class="kpi-title">Active Players</div><div class="kpi-value" id="kpiActivePlayers">—</div><div class="kpi-sub">Players present in selected week</div></div>
-        <div class="card"><div class="kpi-title">Average Might</div><div class="kpi-value" id="kpiAvgMight">—</div><div class="kpi-sub">Selected week average</div></div>
-        <div class="card"><div class="kpi-title">Week Growth</div><div class="kpi-value" id="kpiGrowth">—</div><div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div></div>
-        <div class="card"><div class="kpi-title">Joined / Left</div><div class="kpi-value" id="kpiRosterDelta">—</div><div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div></div>
-        <div class="card"><div class="kpi-title">Returned</div><div class="kpi-value" id="kpiReturned">—</div><div class="kpi-sub">Returning Members</div></div>
-      </div>
-
-      <div class="grid-main">
-        <div class="card">
-          <div class="title">Clan Might Trend</div>
-          <div class="muted">Historic weekly total might progression</div>
-          <div class="chart-box" id="lineChart"></div>
-        </div>
-        <div class="card">
-          <div class="title">Top 10 Growers</div>
-          <div class="muted">Ranked by highest percentage growth</div>
-          <div class="table-wrap" style="max-height:360px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Player</th>
-                  <th class="num">Net Growth</th>
-                  <th class="num">Growth %</th>
-                </tr>
-              </thead>
-              <tbody id="growersBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-bottom">
-        <div class="card">
-          <div class="title">Top 10 Players by Selected Week</div>
-          <div class="muted">This ranking changes with the selected week</div>
-          <div class="chart-box" id="barChart"></div>
-        </div>
-        <div class="card">
-          <div class="title">Player Analysis by Selected Week</div>
-          <div class="muted">Sorted by highest week % growth first</div>
-          <div class="table-wrap" style="margin-top:12px;">
-            <table class="player-table">
-              <thead>
-                <tr>
-                  <th>Player</th>
-                  <th class="num">Selected Might</th>
-                  <th class="num">Week Change</th>
-                  <th class="num">Week %</th>
-                </tr>
-              </thead>
-              <tbody id="playerBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-extra">
-        <div class="card"><div class="title">New Joiners</div><ul class="clean" id="joinersList"></ul></div>
-        <div class="card"><div class="title">Returned</div><ul class="clean" id="returnedList"></ul></div>
-        <div class="card"><div class="title">Left</div><ul class="clean" id="leaversList"></ul></div>
-        <div class="card"><div class="title">Top Week Gains</div><ul class="clean" id="topWeekGainsList"></ul></div>
-      </div>
-
-      <div class="footer" id="footerMsg"></div>
+<div class="dashboard-container">
+  <aside class="sidebar animate" style="animation-delay: 0.1s;">
+    <div class="glass-card">
+      <div class="kpi-label">Clan Commander</div>
+      <h1>WOA TITAN</h1>
+      <div class="kpi-sub" id="statusMsg" style="color:var(--accent)">System Online</div>
     </div>
-  </div>
 
-  <script>
-  const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-  const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-  const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+    <div class="glass-card">
+      <div class="kpi-label">Global Navigation</div>
+      <div class="control-group">
+        <label>Selected Epoch (Week)</label>
+        <select id="weekSelect"></select>
+      </div>
+      <div class="control-group">
+        <label>Player Intel Search</label>
+        <input type="text" id="playerSearch" placeholder="Enter name...">
+      </div>
+      <div class="btn-nav">
+        <button class="secondary" id="prevWeekBtn">Prev</button>
+        <button class="secondary" id="nextWeekBtn">Next</button>
+      </div>
+    </div>
 
+    <div class="glass-card">
+      <div class="kpi-label">Total Might</div>
+      <div class="kpi-value" id="kpiTotalMight">—</div>
+    </div>
 
-    let WEEKLY = [];
-    let PLAYERS = [];
-    let RAW = [];
-    let WEEK_ORDER = [];
-    let FIRST_WEEK = null;
+    <div class="glass-card kpi-special">
+      <div class="kpi-label">Under 100M Might</div>
+      <div class="kpi-value" id="kpiUnder100M" style="color: var(--warn);">—</div>
+      <div class="kpi-sub">Players needing growth</div>
+    </div>
 
-    function setStatus(msg, kind = "") {
-      const el = document.getElementById("statusMsg");
-      el.textContent = msg;
-      el.className = "msg " + kind;
-    }
+    <div class="glass-card">
+      <div class="kpi-label">Active Roster</div>
+      <div class="kpi-value" id="kpiActivePlayers">—</div>
+    </div>
+  </aside>
 
-    function setFooter(msg = "") {
-      document.getElementById("footerMsg").textContent = msg;
-    }
+  <main class="main-content">
+    <div class="grid-stats">
+      <div class="glass-card animate" style="animation-delay: 0.2s;">
+        <div class="kpi-label">Avg Might</div>
+        <div class="kpi-value" id="kpiAvgMight" style="font-size: 20px;">—</div>
+      </div>
+      <div class="glass-card animate" style="animation-delay: 0.3s;">
+        <div class="kpi-label">Net Gain</div>
+        <div class="kpi-value" id="kpiGrowth" style="font-size: 20px;">—</div>
+        <div class="kpi-sub" id="kpiGrowthPct">0%</div>
+      </div>
+      <div class="glass-card animate" style="animation-delay: 0.4s;">
+        <div class="kpi-label">Joined/Left</div>
+        <div class="kpi-value" id="kpiRosterDelta" style="font-size: 20px;">—</div>
+      </div>
+    </div>
 
-    function fmtInt(n) {
-      return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Number(n || 0));
-    }
+    <div class="glass-card animate" style="animation-delay: 0.5s;">
+      <div class="kpi-label">Clan Growth Progression</div>
+      <div id="lineChart" style="height: 300px; margin-top: 20px;"></div>
+    </div>
 
-    function fmtCompact(n) {
-      return new Intl.NumberFormat("en-US", {
-        notation: "compact",
-        maximumFractionDigits: 2
-      }).format(Number(n || 0));
-    }
+    <div class="glass-card animate" style="animation-delay: 0.6s;">
+      <div class="kpi-label">Roster Intel Analysis</div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>PLAYER</th>
+              <th class="num">MIGHT</th>
+              <th class="num">CHANGE</th>
+              <th class="num">%</th>
+            </tr>
+          </thead>
+          <tbody id="playerBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
 
-    function fmtPct(n) {
-      const v = Number(n || 0);
-      return (v > 0 ? "+" : "") + v.toFixed(2) + "%";
-    }
+<script>
+  // Configuration
+  const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg?gid=176254662&single=true&output=csv";
+  
+  let RAW = [];
+  let WEEK_ORDER = [];
 
-    function cleanNumber(v) {
-      if (v === null || v === undefined) return 0;
-      return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0;
-    }
+  // Formatting
+  const fmtCompact = n => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+  const fmtInt = n => new Intl.NumberFormat("en-US").format(Math.floor(n));
+  
+  function cleanNumber(v) {
+    return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0;
+  }
 
-    function cleanHeader(v) {
-      return String(v || "").replace(/^\uFEFF/, "").trim();
-    }
-
-    function csvToRows(text) {
-      const rows = [];
-      let row = [];
-      let cur = "";
-      let inQuotes = false;
-
-      for (let i = 0; i < text.length; i++) {
-        const ch = text[i];
-        const next = text[i + 1];
-
-        if (ch === '"') {
-          if (inQuotes && next === '"') {
-            cur += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (ch === "," && !inQuotes) {
-          row.push(cur);
-          cur = "";
-        } else if ((ch === "\n" || ch === "\r") && !inQuotes) {
-          if (ch === "\r" && next === "\n") i++;
-          row.push(cur);
-          cur = "";
-          if (row.some(x => String(x).trim() !== "")) rows.push(row);
-          row = [];
-        } else {
-          cur += ch;
-        }
-      }
-
-      row.push(cur);
-      if (row.some(x => String(x).trim() !== "")) rows.push(row);
-      if (!rows.length) return [];
-
-      const headers = rows[0].map(cleanHeader);
-
-      return rows.slice(1).map(r => {
-        const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = String(r[idx] ?? "").trim();
-        });
-        return obj;
-      });
-    }
-
-    async function fetchTextViaFetch(url) {
-      const res = await fetch(url + "&t=" + Date.now(), {
-        method: "GET",
-        cache: "no-store",
-        redirect: "follow"
-      });
-      if (!res.ok) throw new Error("fetch failed with status " + res.status);
+  async function loadData() {
+    try {
+      const res = await fetch(RAW_URL + "&t=" + Date.now());
       const text = await res.text();
-      if (!text || !text.trim()) throw new Error("fetch returned empty response");
-      return text;
-    }
-
-    function fetchTextViaXHR(url) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url + "&t=" + Date.now(), true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText && xhr.responseText.trim()) {
-              resolve(xhr.responseText);
-            } else {
-              reject(new Error("xhr failed with status " + xhr.status));
-            }
-          }
-        };
-        xhr.onerror = function () {
-          reject(new Error("xhr network error"));
-        };
-        xhr.send();
-      });
-    }
-
-    async function fetchCsvRobust(url, label) {
-      const attempts = [];
-      try {
-        const text = await fetchTextViaFetch(url);
-        return { rows: csvToRows(text), method: "fetch", label };
-      } catch (err) {
-        attempts.push(label + " fetch: " + err.message);
-      }
-
-      try {
-        const text = await fetchTextViaXHR(url);
-        return { rows: csvToRows(text), method: "xhr", label };
-      } catch (err) {
-        attempts.push(label + " xhr: " + err.message);
-      }
-
-      throw new Error(attempts.join(" | "));
-    }
-
-    function normalizeWeekly(rows) {
-      return rows.map(r => ({
-        Week: r.Week || r.week || r.WEEK,
-        Total_Might: cleanNumber(r.Total_Might || r["Total Might"] || r.total_might),
-        Active_Players: cleanNumber(r.Active_Players || r["Active Players"] || r.active_players),
-        Avg_Might: cleanNumber(r.Avg_Might || r["Average Might"] || r.avg_might),
-        Growth: cleanNumber(r.Growth || r.growth),
-        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
-      })).filter(r => r.Week);
-    }
-
-    function normalizePlayers(rows) {
-      return rows.map(r => ({
-        Player: r.Player || r.player || r.PLAYER,
-        Latest_Might: cleanNumber(r.Latest_Might || r["Latest Might"] || r.latest_might),
-        Net_Growth: cleanNumber(r.Net_Growth || r["Net Growth"] || r.net_growth),
-        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
-      })).filter(r => r.Player);
-    }
-
-    function normalizeRaw(rows) {
-      return rows.map(r => ({
-        Week: r.Week || r.week || r.WEEK,
-        Player: r.Player || r.player || r.PLAYER,
-        Might: cleanNumber(r.Might || r.might || r.MIGHT)
-      })).filter(r => r.Week && r.Player);
-    }
-
-    function uniqueWeeksFromRaw() {
-      return [...new Set(RAW.map(r => r.Week))].sort();
-    }
-
-    function getSelectedWeek() {
-      return document.getElementById("weekSelect").value;
-    }
-
-    function getPrevWeek(week) {
-      const idx = WEEK_ORDER.indexOf(week);
-      return idx > 0 ? WEEK_ORDER[idx - 1] : null;
-    }
-
-    function getNextWeek(week) {
-      const idx = WEEK_ORDER.indexOf(week);
-      return idx >= 0 && idx < WEEK_ORDER.length - 1 ? WEEK_ORDER[idx + 1] : null;
-    }
-
-    function rowsForWeek(week) {
-      return RAW.filter(r => r.Week === week);
-    }
-
-    function mapForWeek(week) {
-      const m = new Map();
-      rowsForWeek(week).forEach(r => m.set(r.Player, r.Might));
-      return m;
-    }
-
-    function everAppearedBefore(player, week) {
-      return RAW.some(r => r.Player === player && r.Week < week);
-    }
-
-    function weekMetricsFromRaw(week) {
-      const rows = rowsForWeek(week);
-      const total = rows.reduce((s, r) => s + r.Might, 0);
-      const active = rows.length;
-      return { total, active, avg: active ? total / active : 0 };
-    }
-
-    function deriveWeeklyFromRaw() {
-      return uniqueWeeksFromRaw().map((week, idx, arr) => {
-        const current = weekMetricsFromRaw(week);
-        const prevWeek = idx > 0 ? arr[idx - 1] : null;
-        const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0 };
-        const growth = current.total - previous.total;
-        const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
-
+      const rows = text.split('\n').map(r => r.split(','));
+      const headers = rows[0].map(h => h.trim());
+      
+      RAW = rows.slice(1).map(r => {
+        let obj = {};
+        headers.forEach((h, i) => obj[h] = r[i]?.trim());
         return {
-          Week: week,
-          Total_Might: current.total,
-          Active_Players: current.active,
-          Avg_Might: current.avg,
-          Growth: growth,
-          Growth_Pct: growthPct
+          Week: obj.Week,
+          Player: obj.Player,
+          Might: cleanNumber(obj.Might)
         };
-      });
+      }).filter(r => r.Week && r.Player);
+
+      WEEK_ORDER = [...new Set(RAW.map(r => r.Week))].sort();
+      initUI();
+    } catch (e) {
+      document.getElementById('statusMsg').textContent = "Connection Failed";
     }
+  }
 
-    function derivePlayersFromRaw() {
-      const byPlayer = new Map();
+  function initUI() {
+    const select = document.getElementById('weekSelect');
+    select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join('');
+    select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
 
-      RAW.forEach(r => {
-        if (!byPlayer.has(r.Player)) byPlayer.set(r.Player, []);
-        byPlayer.get(r.Player).push(r);
-      });
+    select.addEventListener('change', refresh);
+    document.getElementById('playerSearch').addEventListener('input', refresh);
+    document.getElementById('prevWeekBtn').onclick = () => { select.selectedIndex--; refresh(); };
+    document.getElementById('nextWeekBtn').onclick = () => { select.selectedIndex++; refresh(); };
 
-      return [...byPlayer.entries()].map(([player, rows]) => {
-        const sorted = rows.sort((a, b) => String(a.Week).localeCompare(String(b.Week)));
-        const first = sorted[0]?.Might || 0;
-        const latest = sorted[sorted.length - 1]?.Might || 0;
-        const net = latest - first;
-        const pct = first ? (net / first) * 100 : 0;
+    refresh();
+  }
 
-        return {
-          Player: player,
-          Latest_Might: latest,
-          Net_Growth: net,
-          Growth_Pct: pct
-        };
-      });
-    }
+  function refresh() {
+    const week = document.getElementById('weekSelect').value;
+    const search = document.getElementById('playerSearch').value.toLowerCase();
+    const currentData = RAW.filter(r => r.Week === week);
+    
+    // New KPI Logic: Under 100 Million
+    const under100M = currentData.filter(r => r.Might < 100000000);
+    document.getElementById('kpiUnder100M').textContent = under100M.length;
 
-    function populateWeekFilter() {
-      const select = document.getElementById("weekSelect");
-      WEEK_ORDER = uniqueWeeksFromRaw();
-      FIRST_WEEK = WEEK_ORDER.length ? WEEK_ORDER[0] : null;
+    // Standard KPIs
+    const totalMight = currentData.reduce((s, r) => s + r.Might, 0);
+    document.getElementById('kpiTotalMight').textContent = fmtCompact(totalMight);
+    document.getElementById('kpiActivePlayers').textContent = currentData.length;
+    document.getElementById('kpiAvgMight').textContent = fmtCompact(totalMight / currentData.length);
 
-      select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join("");
-
-      if (WEEK_ORDER.length) {
-        select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
-        document.getElementById("latestWeekLabel").textContent = WEEK_ORDER[WEEK_ORDER.length - 1];
-      } else {
-        document.getElementById("latestWeekLabel").textContent = "—";
-      }
-    }
-
-    function classifyRosterChanges(selectedWeek) {
-      const prevWeek = getPrevWeek(selectedWeek);
-      const currentMap = mapForWeek(selectedWeek);
-      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
-      const joined = [];
-      const returned = [];
-      const left = [];
-
-      if (prevWeek) {
-        for (const player of currentMap.keys()) {
-          if (!prevMap.has(player)) {
-            if (selectedWeek === FIRST_WEEK) {
-            } else if (everAppearedBefore(player, selectedWeek)) {
-              returned.push(player);
-            } else {
-              joined.push(player);
-            }
-          }
-        }
-
-        for (const player of prevMap.keys()) {
-          if (!currentMap.has(player)) left.push(player);
-        }
-      }
-
-      return { joined: joined.sort(), returned: returned.sort(), left: left.sort() };
-    }
-
-    function setKpis() {
-      const selectedWeek = getSelectedWeek();
-      const prevWeek = getPrevWeek(selectedWeek);
-      const current = weekMetricsFromRaw(selectedWeek);
-      const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0, active: 0, avg: 0 };
-      const growth = current.total - previous.total;
-      const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
-      const roster = classifyRosterChanges(selectedWeek);
-
-      document.getElementById("kpiTotalMight").textContent = fmtCompact(current.total);
-      document.getElementById("kpiActivePlayers").textContent = fmtInt(current.active);
-      document.getElementById("kpiAvgMight").textContent = fmtCompact(current.avg);
-      document.getElementById("kpiGrowth").textContent = fmtCompact(growth);
-
-      const pct = document.getElementById("kpiGrowthPct");
-      pct.textContent = "Week-on-week: " + fmtPct(growthPct);
-      pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
-
-      document.getElementById("kpiRosterDelta").textContent = `${roster.joined.length} / ${roster.left.length}`;
-      document.getElementById("kpiRosterSub").textContent = `Joined: ${roster.joined.length} | Left: ${roster.left.length}`;
-      document.getElementById("kpiReturned").textContent = fmtInt(roster.returned.length);
-    }
-
-    function renderLineChart() {
-      const rows = WEEKLY;
-
-      if (!rows.length) {
-        document.getElementById("lineChart").innerHTML = '<div class="muted">No trend data available.</div>';
-        return;
-      }
-
-      const w = 900, h = 340, pad = { l:56, r:20, t:20, b:48 };
-      const vals = rows.map(r => Number(r.Total_Might || 0));
-      const minV = Math.min(...vals);
-      const maxV = Math.max(...vals, 1);
-      const x = i => pad.l + (i * (w - pad.l - pad.r) / Math.max(1, rows.length - 1));
-      const y = v => pad.t + (h - pad.t - pad.b) * (1 - ((v - minV) / Math.max(1, (maxV - minV))));
-
-      let grid = "";
-      for (let i = 0; i < 5; i++) {
-        const frac = i / 4;
-        const val = maxV - frac * (maxV - minV);
-        const yy = pad.t + frac * (h - pad.t - pad.b);
-        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
-      }
-
-      const points = rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");
-      const area = `M ${x(0)} ${h-pad.b} L ` + rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length-1)} ${h-pad.b} Z`;
-      const labels = rows.map((r,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text><circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="4" fill="#4f8cff"/>`).join("");
-
-      document.getElementById("lineChart").innerHTML =
-        `<div class="chart-frame"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">${grid}<path d="${area}" fill="rgba(79,140,255,.18)"></path><polyline fill="none" stroke="#6ba1ff" stroke-width="3" points="${points}"></polyline>${labels}</svg></div>`;
-    }
-
-    function renderBarChart() {
-      const selectedWeek = getSelectedWeek();
-      const rows = rowsForWeek(selectedWeek).sort((a,b)=>b.Might-a.Might).slice(0,10);
-
-      if (!rows.length) {
-        document.getElementById("barChart").innerHTML = '<div class="muted">No selected-week data available.</div>';
-        return;
-      }
-
-      const w = 900, h = 360, pad = { l:56, r:20, t:20, b:80 };
-      const maxV = Math.max(...rows.map(r => Number(r.Might || 0)), 1);
-      const chartH = h - pad.t - pad.b;
-      const chartW = w - pad.l - pad.r;
-      const gap = 10;
-      const bw = Math.max(18, (chartW - gap * (rows.length - 1)) / Math.max(1, rows.length));
-
-      let grid = "";
-      for (let i = 0; i < 5; i++) {
-        const frac = i / 4;
-        const val = maxV - frac * maxV;
-        const yy = pad.t + frac * chartH;
-        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
-        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
-      }
-
-      const bars = rows.map((r,i)=>{
-        const bh = (r.Might / maxV) * chartH;
-        const xx = pad.l + i * (bw + gap);
-        const yy = pad.t + chartH - bh;
-        const label = r.Player.length > 10 ? r.Player.slice(0,10) + "…" : r.Player;
-        return `<rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="6" fill="#4f8cff"></rect>
-                <text x="${xx+bw/2}" y="${h-38}" text-anchor="middle" fill="#9fb0d1" font-size="11">${label}</text>
-                <text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#dfe8ff" font-size="11">${fmtCompact(r.Might)}</text>`;
-      }).join("");
-
-      document.getElementById("barChart").innerHTML = `<div class="chart-frame"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">${grid}${bars}</svg></div>`;
-    }
-
-    function renderGrowers() {
-      const body = document.getElementById("growersBody");
-      const rows = [...PLAYERS].sort((a,b)=> b.Growth_Pct - a.Growth_Pct || b.Net_Growth - a.Net_Growth).slice(0,10);
-
-      body.innerHTML = rows.map((r, idx) => `
-        <tr class="${idx < 3 ? 'highlight-grow' : ''}">
-          <td class="${idx < 3 ? 'good-strong' : 'good'}">${r.Player}</td>
-          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtInt(r.Net_Growth)}</td>
-          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtPct(r.Growth_Pct)}</td>
+    // Table
+    const tbody = document.getElementById('playerBody');
+    tbody.innerHTML = currentData
+      .filter(r => r.Player.toLowerCase().includes(search))
+      .sort((a,b) => b.Might - a.Might)
+      .map(r => `
+        <tr>
+          <td>${r.Player} ${r.Might < 100000000 ? '<span class="tag-new" style="background:#f59e0b">Low Might</span>' : ''}</td>
+          <td class="num">${fmtCompact(r.Might)}</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
         </tr>
-      `).join("");
-    }
+      `).join('');
 
-    function buildSelectedWeekPlayerRows() {
-      const selectedWeek = getSelectedWeek();
-      const prevWeek = getPrevWeek(selectedWeek);
-      const currentMap = mapForWeek(selectedWeek);
-      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+      renderMiniChart();
+  }
 
-      return [...currentMap.entries()].map(([player, might]) => {
-        const prev = prevMap.get(player) || 0;
-        const delta = might - prev;
-        const pct = prev ? (delta / prev) * 100 : 0;
-        const isBaselineWeek = selectedWeek === FIRST_WEEK;
-        const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
-        const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
+  function renderMiniChart() {
+    const chartDiv = document.getElementById('lineChart');
+    // Simple SVG implementation for the trend
+    const weeks = WEEK_ORDER;
+    const totals = weeks.map(w => RAW.filter(r => r.Week === w).reduce((s, r) => s + r.Might, 0));
+    const max = Math.max(...totals);
+    const min = Math.min(...totals);
+    
+    const points = totals.map((v, i) => {
+      const x = (i / (weeks.length - 1)) * 100;
+      const y = 100 - ((v - min) / (max - min)) * 80;
+      return `${x},${y}`;
+    }).join(' ');
 
-        return { Player: player, Might: might, Delta: delta, Pct: pct, IsNew: isNewThisWeek, IsReturned: isReturned };
-      }).sort((a,b) => {
-        if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
-        if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
-        return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
-      });
-    }
+    chartDiv.innerHTML = `
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width:100%; height:100%; overflow:visible">
+        <polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="2" />
+        <path d="M0,100 L${points} L100,100 Z" fill="url(#grad)" opacity="0.2" />
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" />
+            <stop offset="100%" stop-color="transparent" />
+          </linearGradient>
+        </defs>
+      </svg>
+    `;
+  }
 
-    function renderPlayerTable() {
-      const q = document.getElementById("playerSearch").value.trim().toLowerCase();
-      const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
+  loadData();
+</script>
 
-      document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
-        const top5 = idx < 5 && !r.IsNew && !r.IsReturned;
-        const cls = r.IsNew || r.IsReturned
-          ? "warn"
-          : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : "")));
-        const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
-
-        return `<tr class="${top5 ? 'highlight-grow' : ''}">
-          <td class="${cls}">${r.Player}</td>
-          <td class="num ${cls}">${fmtInt(r.Might)}</td>
-          <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
-          <td class="num ${cls}">${weekPct}</td>
-        </tr>`;
-      }).join("");
-    }
-
-    function renderRosterLists() {
-      const selectedWeek = getSelectedWeek();
-      const roster = classifyRosterChanges(selectedWeek);
-
-      document.getElementById("joinersList").innerHTML = roster.joined.length
-        ? roster.joined.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
-        : '<li><span>No new joiners</span><span class="muted">—</span></li>';
-
-      document.getElementById("returnedList").innerHTML = roster.returned.length
-        ? roster.returned.map(p => `<li><span>${p}</span><span class="warn">Returned</span></li>`).join("")
-        : '<li><span>No returned players</span><span class="muted">—</span></li>';
-
-      document.getElementById("leaversList").innerHTML = roster.left.length
-        ? roster.left.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
-        : '<li><span>No players left</span><span class="muted">—</span></li>';
-    }
-
-    function renderTopWeekGains() {
-      const rows = buildSelectedWeekPlayerRows()
-        .filter(r => !r.IsNew && !r.IsReturned)
-        .sort((a,b)=> b.Pct - a.Pct || b.Delta - a.Delta)
-        .slice(0,10);
-
-      document.getElementById("topWeekGainsList").innerHTML = rows.length
-        ? rows.map(r => `<li><span>${r.Player}</span><span class="good">${fmtPct(r.Pct)}</span></li>`).join("")
-        : '<li><span>No data</span><span class="muted">—</span></li>';
-    }
-
-    function refreshSelectedWeekViews() {
-      setKpis();
-      renderBarChart();
-      renderPlayerTable();
-      renderRosterLists();
-      renderTopWeekGains();
-    }
-
-    function bindUi() {
-      document.getElementById("weekSelect").addEventListener("change", refreshSelectedWeekViews);
-      document.getElementById("playerSearch").addEventListener("input", renderPlayerTable);
-
-      document.getElementById("prevWeekBtn").addEventListener("click", () => {
-        const select = document.getElementById("weekSelect");
-        const prev = getPrevWeek(select.value);
-        if (prev) {
-          select.value = prev;
-          refreshSelectedWeekViews();
-        }
-      });
-
-      document.getElementById("nextWeekBtn").addEventListener("click", () => {
-        const select = document.getElementById("weekSelect");
-        const next = getNextWeek(select.value);
-        if (next) {
-          select.value = next;
-          refreshSelectedWeekViews();
-        }
-      });
-    }
-
-    async function loadData() {
-      setStatus("Loading dashboard data...", "");
-      setFooter("");
-
-      const loadNotes = [];
-
-      try {
-        const results = await Promise.allSettled([
-          fetchCsvRobust(WEEKLY_URL, "WEEKLY"),
-          fetchCsvRobust(PLAYER_URL, "PLAYER"),
-          fetchCsvRobust(RAW_URL, "RAW")
-        ]);
-
-        const [weeklyRes, playerRes, rawRes] = results;
-
-        if (rawRes.status !== "fulfilled") {
-          throw new Error("RAW load failed. " + rawRes.reason.message);
-        }
-
-        RAW = normalizeRaw(rawRes.value.rows);
-        loadNotes.push("RAW via " + rawRes.value.method);
-
-        if (!RAW.length) {
-          throw new Error("RAW loaded but no usable rows were found.");
-        }
-
-        if (weeklyRes.status === "fulfilled") {
-          WEEKLY = normalizeWeekly(weeklyRes.value.rows);
-          loadNotes.push("WEEKLY via " + weeklyRes.value.method);
-        } else {
-          loadNotes.push("WEEKLY fallback from RAW");
-        }
-
-        if (playerRes.status === "fulfilled") {
-          PLAYERS = normalizePlayers(playerRes.value.rows);
-          loadNotes.push("PLAYER via " + playerRes.value.method);
-        } else {
-          loadNotes.push("PLAYER fallback from RAW");
-        }
-
-        if (!WEEKLY.length) WEEKLY = deriveWeeklyFromRaw();
-        if (!PLAYERS.length) PLAYERS = derivePlayersFromRaw();
-
-        populateWeekFilter();
-        renderLineChart();
-        renderGrowers();
-        refreshSelectedWeekViews();
-
-        setStatus("Dashboard loaded successfully.", "ok");
-        setFooter(loadNotes.join(" | "));
-      } catch (err) {
-        console.error(err);
-        setStatus("Load failed. " + err.message, "error");
-        setFooter("If this still fails, the remaining issue is likely source access/publication for the RAW tab, not the dashboard layout.");
-      }
-    }
-
-    bindUi();
-    loadData();
-  </script>
 </body>
 </html>
