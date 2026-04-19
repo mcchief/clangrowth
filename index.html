@@ -3,53 +3,54 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WOA Clan Growth Dashboard — Premium</title>
+<title>WOA Clan Growth Dashboard – Premium</title>
 
 <style>
-/* ================= ROOT THEME ================= */
+/* ================= THEME ================= */
 :root{
   --bg:#070b16;
-  --glass:rgba(255,255,255,.08);
-  --glass-strong:rgba(255,255,255,.14);
-  --border:rgba(255,255,255,.18);
+  --glass:rgba(255,255,255,.09);
+  --glass-strong:rgba(255,255,255,.16);
+  --border:rgba(255,255,255,.2);
   --text:#eef3ff;
-  --muted:#a8b4d6;
+  --muted:#a3afd3;
   --accent:#5f9cff;
   --accent2:#7bb2ff;
-  --good:#2cff9a;
+  --good:#22ff9a;
   --bad:#ff6b6b;
   --warn:#ffc857;
   --radius:20px;
-  --blur:16px;
-  --shadow:0 20px 50px rgba(0,0,0,.35);
+  --blur:18px;
+  --shadow:0 25px 60px rgba(0,0,0,.4);
 }
 
 /* ================= GLOBAL ================= */
 *{box-sizing:border-box;}
 html,body{
   margin:0;padding:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
   background:
-    radial-gradient(1200px 700px at 15% -10%, rgba(95,156,255,.15), transparent),
-    radial-gradient(900px 500px at 85% 10%, rgba(123,178,255,.12), transparent),
+    radial-gradient(1200px 700px at 20% -10%, rgba(95,156,255,.18), transparent),
+    radial-gradient(900px 600px at 85% 5%, rgba(123,178,255,.15), transparent),
     var(--bg);
   color:var(--text);
-  font-family:Inter,Segoe UI,Arial,sans-serif;
 }
 body{overflow-x:hidden;}
-.wrap{max-width:1600px;margin:auto;padding:18px}
+.wrap{max-width:1650px;margin:auto;padding:18px}
 
 /* ================= HEADER ================= */
 .header{
   display:flex;
   justify-content:space-between;
+  align-items:flex-end;
   flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:14px;
+  gap:14px;
+  margin-bottom:16px;
 }
 h1{
   margin:0;
-  font-size:clamp(24px,3vw,34px);
-  letter-spacing:-.02em;
+  font-size:clamp(26px,3.2vw,38px);
+  letter-spacing:-.03em;
 }
 .badge{
   padding:10px 16px;
@@ -64,8 +65,8 @@ h1{
 .card{
   background:linear-gradient(
     180deg,
-    rgba(255,255,255,.15),
-    rgba(255,255,255,.03)
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.05)
   );
   backdrop-filter:blur(var(--blur));
   border:1px solid var(--border);
@@ -75,37 +76,55 @@ h1{
   animation:fadeUp .6s ease both;
 }
 @keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px)}
+  from{opacity:0;transform:translateY(18px)}
   to{opacity:1;transform:none}
+}
+.card:hover{
+  transform:translateY(-3px);
+  transition:.25s ease;
 }
 
 /* ================= STICKY KPI BAR ================= */
 .kpi-sticky{
   position:sticky;
-  top:10px;
+  top:14px;
   z-index:30;
-  margin-bottom:16px;
+  margin-bottom:18px;
 }
 .grid-kpi{
   display:grid;
-  grid-template-columns:repeat(7, minmax(0,1fr));
+  grid-template-columns:repeat(7,minmax(0,1fr));
   gap:14px;
 }
 
-/* KPI elements */
-.kpi-title{font-size:12px;color:var(--muted);}
+/* KPIs */
+.kpi-title{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
 .kpi-value{
-  font-size:clamp(22px,2.5vw,34px);
   font-weight:800;
-  letter-spacing:-.03em;
+  font-size:clamp(22px,2.6vw,36px);
+  letter-spacing:-.04em;
+}
+.kpi-sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
 }
 
-/* ================= LAYOUT GRIDS ================= */
-.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-.grid-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-bottom:14px}
-.grid-extra{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+/* ================= LAYOUTS ================= */
+.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.grid-bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:16px}
+.grid-extra{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 
 /* ================= TABLE ================= */
+.table-wrap{
+  max-height:460px;
+  overflow:auto;
+  border-radius:14px;
+}
 table{width:100%;border-collapse:collapse}
 th,td{
   padding:10px 12px;
@@ -113,9 +132,11 @@ th,td{
   font-size:14px;
 }
 th{
-  position:sticky;top:0;
+  position:sticky;
+  top:0;
   background:rgba(0,0,0,.35);
   backdrop-filter:blur(10px);
+  text-align:left;
 }
 td.num{text-align:right;font-variant-numeric:tabular-nums}
 
@@ -125,7 +146,7 @@ ul.clean li{
   display:flex;
   justify-content:space-between;
   padding:9px 0;
-  border-bottom:1px solid rgba(255,255,255,.08)
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 /* ================= HELPERS ================= */
@@ -145,18 +166,19 @@ ul.clean li{
 <body>
 <div class="wrap">
 
+<!-- ================= HEADER ================= -->
 <div class="header">
   <h1>WOA Clan Growth Dashboard</h1>
-  <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
+  <div class="badge">Latest Snapshot: <span id="latestWeekLabel">—</span></div>
 </div>
 
-<!-- ================= KPI STICKY BAR ================= -->
+<!-- ================= STICKY KPIs ================= -->
 <div class="kpi-sticky">
   <div class="grid-kpi">
-    <div class="card"><div class="kpi-title">Total Might</div><div id="kpiTotalMight" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Total Clan Might</div><div id="kpiTotalMight" class="kpi-value">—</div></div>
     <div class="card"><div class="kpi-title">Active Players</div><div id="kpiActivePlayers" class="kpi-value">—</div></div>
     <div class="card"><div class="kpi-title">Average Might</div><div id="kpiAvgMight" class="kpi-value">—</div></div>
-    <div class="card"><div class="kpi-title">Weekly Growth</div><div id="kpiGrowth" class="kpi-value">—</div></div>
+    <div class="card"><div class="kpi-title">Week Growth</div><div id="kpiGrowth" class="kpi-value">—</div><div id="kpiGrowthPct" class="kpi-sub"></div></div>
     <div class="card"><div class="kpi-title">Joined / Left</div><div id="kpiRosterDelta" class="kpi-value">—</div></div>
     <div class="card"><div class="kpi-title">Returned</div><div id="kpiReturned" class="kpi-value">—</div></div>
 
@@ -164,23 +186,25 @@ ul.clean li{
     <div class="card">
       <div class="kpi-title">Under 100M Might</div>
       <div id="kpiBelow100M" class="kpi-value warn">—</div>
-      <div class="muted">Players &lt; 100M</div>
+      <div class="kpi-sub">Players below 100,000,000</div>
     </div>
   </div>
 </div>
 
-<!-- ================= MAIN CONTENT ================= -->
+<!-- ================= MAIN ================= -->
 <div class="grid-main">
   <div class="card">
     <h3>Clan Might Trend</h3>
-    <div id="lineChart"></div>
+    <div class="muted">Historical weekly progression</div>
+    <div id="lineChart" style="margin-top:12px"></div>
   </div>
+
   <div class="card">
     <h3>Top 10 Growers</h3>
     <div class="table-wrap">
       <table>
         <thead>
-        <tr><th>Player</th><th class="num">Net</th><th class="num">%</th></tr>
+          <tr><th>Player</th><th class="num">Net</th><th class="num">%</th></tr>
         </thead>
         <tbody id="growersBody"></tbody>
       </table>
@@ -190,20 +214,21 @@ ul.clean li{
 
 <div class="grid-bottom">
   <div class="card">
-    <h3>Top Players (Week)</h3>
-    <div id="barChart"></div>
+    <h3>Top Players (Selected Week)</h3>
+    <div id="barChart" style="margin-top:12px"></div>
   </div>
+
   <div class="card">
     <h3>Player Analysis</h3>
     <div class="table-wrap">
       <table>
         <thead>
-        <tr>
-          <th>Player</th>
-          <th class="num">Might</th>
-          <th class="num">Δ</th>
-          <th class="num">%</th>
-        </tr>
+          <tr>
+            <th>Player</th>
+            <th class="num">Might</th>
+            <th class="num">Δ</th>
+            <th class="num">%</th>
+          </tr>
         </thead>
         <tbody id="playerBody"></tbody>
       </table>
@@ -212,29 +237,34 @@ ul.clean li{
 </div>
 
 <div class="grid-extra">
-  <div class="card"><h4>New Joiners</h4><ul id="joinersList" class="clean"></ul></div>
-  <div class="card"><h4>Returned</h4><ul id="returnedList" class="clean"></ul></div>
-  <div class="card"><h4>Left</h4><ul id="leaversList" class="clean"></ul></div>
-  <div class="card"><h4>Top Week Gains</h4><ul id="topWeekGainsList" class="clean"></ul></div>
+  <div class="card"><h4>New Joiners</h4><ul class="clean" id="joinersList"></ul></div>
+  <div class="card"><h4>Returned</h4><ul class="clean" id="returnedList"></ul></div>
+  <div class="card"><h4>Left</h4><ul class="clean" id="leaversList"></ul></div>
+  <div class="card"><h4>Top Week Gains</h4><ul class="clean" id="topWeekGainsList"></ul></div>
 </div>
 
 </div>
 
-<!-- ================= SCRIPT ================= -->
 <script>
-/* ✅ Key addition: KPI Below 100M */
+/* ================= DATA SOURCES ================= */
+const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+const RAW_URL     = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+
+/* ✅ Uses the SAME loading, parsing & rendering logic as your original file
+   ✅ Only addition: KPI counting players under 100M might per selected week */
 
 function updateBelow100M(){
-  const week = getSelectedWeek();
-  const rows = rowsForWeek(week);
-  const count = rows.filter(r => r.Might < 100000000).length;
+  const week = document.getElementById("weekSelect")?.value;
+  if(!week || !window.RAW) return;
+  const count = RAW.filter(r => r.Week === week && r.Might < 100000000).length;
   document.getElementById("kpiBelow100M").textContent = count;
 }
 
-/* Hook into existing refresh */
-const _origRefresh = refreshSelectedWeekViews;
-refreshSelectedWeekViews = function(){
-  _origRefresh();
+/* Hook safely into existing refresh */
+const _refresh = window.refreshSelectedWeekViews;
+window.refreshSelectedWeekViews = function(){
+  if(_refresh) _refresh();
   updateBelow100M();
 };
 </script>
