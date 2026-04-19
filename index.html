@@ -1076,8 +1076,8 @@
     ========================== */
 
    const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-    const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-    const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+   const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+   const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
 
     let rawRows = [];
     let normalizedRows = [];
@@ -1827,24 +1827,56 @@
        LOAD DATA
     ========================== */
 
-    async function loadData() {
-      try {
-        if (!DATA_SOURCE_URL || DATA_SOURCE_URL.includes("PASTE_YOUR_PUBLISHED_CSV_URL_HERE")) {
-          throw new Error("Please paste your published CSV URL into DATA_SOURCE_URL.");
-        }
+async function loadData() {
+  try {
+    const response = await fetch(
+      RAW_URL + (RAW_URL.includes("?") ? "&" : "?") + "_ts=" + Date.now()
+    );
 
-        const response = await fetch(DATA_SOURCE_URL + (DATA_SOURCE_URL.includes("?") ? "&" : "?") + "_ts=" + Date.now());
-        if (!response.ok) {
-          throw new Error(`Failed to fetch data. Status: ${response.status}`);
-        }
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data. Status: ${response.status}`);
+    }
 
-        const csvText = await response.text();
-        rawRows = parseCSV(csvText);
-        normalizedRows = normalizeRows(rawRows);
+    const csvText = await response.text();
+    rawRows = parseCSV(csvText);
+    normalizedRows = normalizeRows(rawRows);
 
-        if (!normalizedRows.length) {
-          throw new Error("No valid rows found. Check your CSV column names and data format.");
-        }
+    console.log("RAW rows:", rawRows.length);
+    console.log("Normalized rows:", normalizedRows.length);
+    console.log("Sample normalized rows:", normalizedRows.slice(0, 5));
+
+    if (!normalizedRows.length) {
+      throw new Error("No valid rows found. Check your CSV column names and data format.");
+    }
+
+    buildWeeks();
+    wireEvents();
+    renderAll();
+
+    console.log("WOA Dashboard loaded successfully.");
+
+  } catch (error) {
+    console.error("Dashboard load error:", error);
+
+    setText("latestSnapshot", "Load failed");
+    setText("heroSnapshot", "Load failed");
+
+    document.getElementById("topGrowersTable").innerHTML = `
+      <tr><td colspan="3" class="metric-neg">Failed to load data: ${escapeHtml(error.message)}</td></tr>
+    `;
+    document.getElementById("slowGrowersTable").innerHTML = `
+      <tr><td colspan="3" class="metric-neg">Check RAW_URL and CSV headers.</td></tr>
+    `;
+    document.getElementById("playerWeekAnalysisTable").innerHTML = `
+      <tr><td colspan="6" class="metric-neg">No data available.</td></tr>
+    `;
+
+    renderSimpleList("newJoinersList", [], "new");
+    renderSimpleList("returnedList", [], "returned");
+    renderSimpleList("leftList", [], "left");
+    renderSimpleList("topWeekGainsList", [], "gains");
+  }
+}
 
         buildWeeks();
         wireEvents();
