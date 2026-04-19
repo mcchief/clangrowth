@@ -521,14 +521,11 @@
       border-top:1px solid var(--stroke);
       max-height:280px;
     }
-.table-wrap.tall{
-  max-height:520px;
-}
+
     .table-wrap.tall{
       max-height:520px;
     }
-
-    table{
+	    table{
       width:100%;
       border-collapse:collapse;
       min-width:640px;
@@ -893,8 +890,7 @@
         <div class="kpi-note">Players needing attention</div>
       </div>
     </section>
-
-    <section class="main-grid fade-in">
+	    <section class="main-grid fade-in">
       <div class="panel glass">
         <div class="panel-head">
           <div>
@@ -985,54 +981,55 @@
           </div>
         </div>
       </div>
+    </section>
+
     <section class="fade-in" style="margin-bottom:12px;">
-  <div class="panel glass">
-    <div class="panel-head">
-      <div>
-        <h3 class="panel-title">Top 10 Players by Selected Week</h3>
-        <p class="panel-desc">This ranking changes with the selected week</p>
+      <div class="panel glass">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Top 10 Players by Selected Week</h3>
+            <p class="panel-desc">This ranking changes with the selected week</p>
+          </div>
+          <div class="panel-tools">
+            <div class="chip">Weekly Ranking</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap">
+            <canvas id="weeklyTopChart"></canvas>
+          </div>
+        </div>
       </div>
-      <div class="panel-tools">
-        <div class="chip">Weekly Ranking</div>
-      </div>
-    </div>
-    <div class="panel-body">
-      <div class="chart-wrap">
-        <canvas id="weeklyTopChart"></canvas>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section class="full-width-row fade-in">
-  <div class="table-card glass">
-    <div class="panel-head">
-      <div>
-        <h3 class="panel-title">Player Analysis by Selected Week</h3>
-        <p class="panel-desc">Scored by lifetime growth, recent growth, and might standard</p>
+    <section class="full-width-row fade-in">
+      <div class="table-card glass">
+        <div class="panel-head">
+          <div>
+            <h3 class="panel-title">Player Analysis by Selected Week</h3>
+            <p class="panel-desc">Scored by lifetime growth, recent growth, and might standard</p>
+          </div>
+          <div class="panel-tools">
+            <div class="chip">Week Detail</div>
+          </div>
+        </div>
+        <div class="table-wrap tall">
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Selected Might</th>
+                <th>Week Change</th>
+                <th>Week %</th>
+                <th>Score</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="playerWeekAnalysisTable"></tbody>
+          </table>
+        </div>
       </div>
-      <div class="panel-tools">
-        <div class="chip">Week Detail</div>
-      </div>
-    </div>
-    <div class="table-wrap tall">
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Selected Might</th>
-            <th>Week Change</th>
-            <th>Week %</th>
-            <th>Score</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="playerWeekAnalysisTable"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
+    </section>
 
     <section class="bottom-grid fade-in">
       <div class="list-card glass">
@@ -1085,7 +1082,8 @@
       RAW vs latest fetch | WEEKLY vs latest fetch | PLAYER via latest fetch
     </div>
   </div>
-    <script>
+
+  <script>
     const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
     const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
     const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
@@ -1398,8 +1396,7 @@
       if (score < 80) return "On Track";
       return "Top Growth";
     }
-
-    function renderTrendChart() {
+	    function renderTrendChart() {
       const data = buildTrendData();
       const ctx = document.getElementById("trendChart").getContext("2d");
 
@@ -1595,6 +1592,7 @@
         </tr>
       `).join("");
     }
+
     function renderPlayerWeekAnalysis(selectedWeekRows, prevWeekMap, allStats, newJoinersSet) {
       const searchTerm = document.getElementById("playerSearch").value.trim().toLowerCase();
 
