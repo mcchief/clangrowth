@@ -7,221 +7,181 @@
   <style>
     :root {
       --bg: #030712;
-      --glass: rgba(17, 24, 39, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass: rgba(17, 24, 39, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.1);
       --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.5);
-      --text-main: #f3f4f6;
-      --text-dim: #9ca3af;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
       --good: #10b981;
-      --bad: #ef4444;
       --warn: #f59e0b;
-      --radius: 20px;
+      --bad: #ef4444;
+      --radius: 24px;
     }
 
-    * { box-sizing: border-box; scroll-behavior: smooth; }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: radial-gradient(circle at top right, #111827, var(--bg));
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 0% 0%, #111827 0%, var(--bg) 100%);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* Entry Animations */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Animations */
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    .animate { animation: fadeInUp 0.6s ease forwards; }
-
-    /* Layout Shell */
-    .dashboard-container {
+    .dashboard-grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 340px 1fr;
       gap: 24px;
-      max-width: 1600px;
-      margin: 0 auto;
       padding: 24px;
-      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
     }
 
-    /* Sidebar - Sticky KPI & Nav */
+    /* Sidebar - Sticky KPIs */
     .sidebar {
       position: sticky;
       top: 24px;
-      height: fit-content;
+      height: calc(100vh - 48px);
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .glass-card {
       background: var(--glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, border-color 0.3s ease;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeInScale 0.5s ease-out forwards;
     }
 
-    .glass-card:hover {
-      border-color: rgba(59, 130, 246, 0.3);
-    }
+    .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 8px; }
+    .kpi-value { font-size: 34px; font-weight: 900; letter-spacing: -1px; }
+    .kpi-sub { font-size: 13px; margin-top: 6px; display: block; }
 
-    /* Typography */
-    h1 { font-size: 24px; margin: 0; letter-spacing: -0.5px; }
-    .kpi-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-    .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); }
-    .kpi-sub { font-size: 13px; margin-top: 4px; }
-
-    /* Main Content */
-    .main-content { display: flex; flex-direction: column; gap: 24px; }
-
-    .grid-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-    }
-
-    /* Form Elements */
-    .control-group { margin-top: 15px; }
+    /* Controls */
     select, input {
       width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--glass-border);
-      padding: 12px;
       border-radius: 12px;
+      padding: 12px;
       color: white;
-      margin-top: 5px;
+      margin-top: 8px;
       outline: none;
     }
-
-    .btn-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
     button {
-      flex: 1;
       padding: 10px;
       border-radius: 10px;
       border: none;
       background: var(--accent);
       color: white;
-      font-weight: 600;
+      font-weight: bold;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
-
+    button:hover { background: #60a5fa; box-shadow: 0 0 15px var(--accent-glow); }
     button.secondary { background: rgba(255,255,255,0.1); }
-    button:hover { opacity: 0.8; }
 
-    /* Tables */
-    .table-container { overflow-x: auto; margin-top: 15px; }
+    /* Main Content */
+    .main-view { display: flex; flex-direction: column; gap: 24px; }
+    
+    .stats-header { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+    /* Table Design */
+    .scroll-area { 
+      max-height: 550px; 
+      overflow-y: auto; 
+      margin-top: 12px;
+      padding-right: 8px;
+    }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; font-size: 12px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border); }
-    td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; }
+    th { text-align: left; padding: 12px; font-size: 12px; color: var(--text-dim); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; background: #0f172a; }
+    td { padding: 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
 
-    .num { font-family: 'Monaco', monospace; text-align: right; }
-    .tag-new { background: var(--good); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .might-tag { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+    .tag-low { background: rgba(245, 158, 11, 0.15); color: var(--warn); }
+    .tag-high { background: rgba(16, 185, 129, 0.15); color: var(--good); }
 
-    /* Custom KPI for <100M */
-    .kpi-special { border-left: 4px solid var(--warn); }
-
-    /* Responsive */
     @media (max-width: 1024px) {
-      .dashboard-container { grid-template-columns: 1fr; }
-      .sidebar { position: relative; top: 0; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .sidebar { position: relative; height: auto; }
     }
   </style>
 </head>
 <body>
 
-<div class="dashboard-container">
-  <aside class="sidebar animate" style="animation-delay: 0.1s;">
+<div class="dashboard-grid">
+  <aside class="sidebar">
     <div class="glass-card">
-      <div class="kpi-label">Clan Commander</div>
-      <h1>WOA TITAN</h1>
-      <div class="kpi-sub" id="statusMsg" style="color:var(--accent)">System Online</div>
+      <div class="kpi-label">System Control</div>
+      <h2 style="margin:0; font-weight:900;">TITAN COMMAND</h2>
+      <div id="syncStatus" style="font-size:12px; color:var(--accent); margin-top:10px;">Syncing Sources...</div>
     </div>
 
     <div class="glass-card">
-      <div class="kpi-label">Global Navigation</div>
-      <div class="control-group">
-        <label>Selected Epoch (Week)</label>
-        <select id="weekSelect"></select>
-      </div>
-      <div class="control-group">
-        <label>Player Intel Search</label>
-        <input type="text" id="playerSearch" placeholder="Enter name...">
-      </div>
-      <div class="btn-nav">
-        <button class="secondary" id="prevWeekBtn">Prev</button>
-        <button class="secondary" id="nextWeekBtn">Next</button>
+      <div class="kpi-label">Temporal Navigation</div>
+      <select id="weekSelect"></select>
+      <input type="text" id="playerSearch" placeholder="Search Commander...">
+      <div class="btn-row">
+        <button class="secondary" id="prevBtn">← Previous</button>
+        <button class="secondary" id="nextBtn">Next →</button>
       </div>
     </div>
 
     <div class="glass-card">
-      <div class="kpi-label">Total Might</div>
-      <div class="kpi-value" id="kpiTotalMight">—</div>
+      <div class="kpi-label">Total Clan Might</div>
+      <div class="kpi-value" id="kpiTotal">—</div>
+      <span class="kpi-sub" id="kpiGrowthLabel">Syncing trend...</span>
     </div>
 
-    <div class="glass-card kpi-special">
-      <div class="kpi-label">Under 100M Might</div>
-      <div class="kpi-value" id="kpiUnder100M" style="color: var(--warn);">—</div>
-      <div class="kpi-sub">Players needing growth</div>
+    <div class="glass-card" style="border-left: 4px solid var(--warn);">
+      <div class="kpi-label">Low Might Personnel</div>
+      <div class="kpi-value" id="kpiLowMight" style="color: var(--warn);">—</div>
+      <span class="kpi-sub">Total under 100,000,000</span>
     </div>
 
     <div class="glass-card">
-      <div class="kpi-label">Active Roster</div>
-      <div class="kpi-value" id="kpiActivePlayers">—</div>
+      <div class="kpi-label">Combat Readiness</div>
+      <div class="kpi-value" id="kpiActive">—</div>
+      <span class="kpi-sub">Total Active Players</span>
     </div>
   </aside>
 
-  <main class="main-content">
-    <div class="grid-stats">
-      <div class="glass-card animate" style="animation-delay: 0.2s;">
+  <main class="main-view">
+    <div class="stats-header">
+      <div class="glass-card">
         <div class="kpi-label">Avg Might</div>
-        <div class="kpi-value" id="kpiAvgMight" style="font-size: 20px;">—</div>
+        <div id="kpiAvg" style="font-size: 20px; font-weight: bold; margin-top:8px;">—</div>
       </div>
-      <div class="glass-card animate" style="animation-delay: 0.3s;">
-        <div class="kpi-label">Net Gain</div>
-        <div class="kpi-value" id="kpiGrowth" style="font-size: 20px;">—</div>
-        <div class="kpi-sub" id="kpiGrowthPct">0%</div>
-      </div>
-      <div class="glass-card animate" style="animation-delay: 0.4s;">
-        <div class="kpi-label">Joined/Left</div>
-        <div class="kpi-value" id="kpiRosterDelta" style="font-size: 20px;">—</div>
+      <div class="glass-card">
+        <div class="kpi-label">Top Growers</div>
+        <div id="topGrower" style="font-size: 18px; font-weight: bold; margin-top:8px; color:var(--good);">Loading...</div>
       </div>
     </div>
 
-    <div class="glass-card animate" style="animation-delay: 0.5s;">
-      <div class="kpi-label">Clan Growth Progression</div>
-      <div id="lineChart" style="height: 300px; margin-top: 20px;"></div>
-    </div>
-
-    <div class="glass-card animate" style="animation-delay: 0.6s;">
-      <div class="kpi-label">Roster Intel Analysis</div>
-      <div class="table-container">
+    <div class="glass-card">
+      <div class="kpi-label">Roster Intelligence</div>
+      <div class="scroll-area">
         <table>
           <thead>
             <tr>
-              <th>PLAYER</th>
-              <th class="num">MIGHT</th>
-              <th class="num">CHANGE</th>
-              <th class="num">%</th>
+              <th>COMMANDER</th>
+              <th>MIGHT RATING</th>
+              <th>STATUS</th>
             </tr>
           </thead>
-          <tbody id="playerBody"></tbody>
+          <tbody id="playerTable"></tbody>
         </table>
       </div>
     </div>
@@ -229,119 +189,114 @@
 </div>
 
 <script>
-  // Configuration
- const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+  // All three sources integrated
+  const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
   const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-  const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
-  let RAW = [];
-  let WEEK_ORDER = [];
+  const RAW_URL    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
 
-  // Formatting
-  const fmtCompact = n => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
-  const fmtInt = n => new Intl.NumberFormat("en-US").format(Math.floor(n));
-  
-  function cleanNumber(v) {
-    return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0;
-  }
+  let DATA_WEEKLY = [];
+  let DATA_PLAYER = [];
+  let DATA_RAW    = [];
+  let WEEKS       = [];
 
-  async function loadData() {
+  const fmt = n => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+
+  async function loadAllData() {
+    const status = document.getElementById('syncStatus');
     try {
-      const res = await fetch(RAW_URL + "&t=" + Date.now());
-      const text = await res.text();
-      const rows = text.split('\n').map(r => r.split(','));
-      const headers = rows[0].map(h => h.trim());
-      
-      RAW = rows.slice(1).map(r => {
-        let obj = {};
-        headers.forEach((h, i) => obj[h] = r[i]?.trim());
-        return {
-          Week: obj.Week,
-          Player: obj.Player,
-          Might: cleanNumber(obj.Might)
-        };
-      }).filter(r => r.Week && r.Player);
+      // Parallel fetching for performance
+      const [resW, resP, resR] = await Promise.all([
+        fetch(WEEKLY_URL + "&t=" + Date.now()),
+        fetch(PLAYER_URL + "&t=" + Date.now()),
+        fetch(RAW_URL + "&t=" + Date.now())
+      ]);
 
-      WEEK_ORDER = [...new Set(RAW.map(r => r.Week))].sort();
-      initUI();
-    } catch (e) {
-      document.getElementById('statusMsg').textContent = "Connection Failed";
+      const [textW, textP, textR] = await Promise.all([resW.text(), resP.text(), resR.text()]);
+
+      // Parse and Normalize
+      DATA_WEEKLY = parseCSV(textW); // Historical Growth
+      DATA_PLAYER = parseCSV(textP); // Top Grower rankings
+      DATA_RAW    = parseCSV(textR); // Raw Roster
+
+      WEEKS = [...new Set(DATA_RAW.map(d => d.Week))].sort();
+      
+      const select = document.getElementById('weekSelect');
+      select.innerHTML = WEEKS.map(w => `<option value="${w}">${w}</option>`).join('');
+      select.value = WEEKS[WEEKS.length - 1];
+
+      status.textContent = "Titan Core Online";
+      status.style.color = "var(--good)";
+
+      initApp();
+    } catch (err) {
+      status.textContent = "Data Link Severed";
+      status.style.color = "var(--bad)";
     }
   }
 
-  function initUI() {
-    const select = document.getElementById('weekSelect');
-    select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join('');
-    select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
-
-    select.addEventListener('change', refresh);
-    document.getElementById('playerSearch').addEventListener('input', refresh);
-    document.getElementById('prevWeekBtn').onclick = () => { select.selectedIndex--; refresh(); };
-    document.getElementById('nextWeekBtn').onclick = () => { select.selectedIndex++; refresh(); };
-
-    refresh();
+  function parseCSV(text) {
+    const rows = text.split('\n').filter(r => r.trim() !== "");
+    const headers = rows[0].split(',').map(h => h.trim().replace(/^\uFEFF/, ""));
+    return rows.slice(1).map(row => {
+      const cols = row.split(',');
+      let obj = {};
+      headers.forEach((h, i) => {
+        let val = cols[i]?.trim();
+        obj[h] = isNaN(parseFloat(val?.replace(/[^0-9.]/g, ''))) ? val : parseFloat(val.replace(/[^0-9.]/g, ''));
+      });
+      return obj;
+    });
   }
 
-  function refresh() {
+  function initApp() {
+    document.getElementById('weekSelect').onchange = updateView;
+    document.getElementById('playerSearch').oninput = updateView;
+    document.getElementById('prevBtn').onclick = () => { const s = document.getElementById('weekSelect'); if (s.selectedIndex > 0) { s.selectedIndex--; updateView(); } };
+    document.getElementById('nextBtn').onclick = () => { const s = document.getElementById('weekSelect'); if (s.selectedIndex < s.options.length - 1) { s.selectedIndex++; updateView(); } };
+    updateView();
+  }
+
+  function updateView() {
     const week = document.getElementById('weekSelect').value;
     const search = document.getElementById('playerSearch').value.toLowerCase();
-    const currentData = RAW.filter(r => r.Week === week);
     
-    // New KPI Logic: Under 100 Million
-    const under100M = currentData.filter(r => r.Might < 100000000);
-    document.getElementById('kpiUnder100M').textContent = under100M.length;
+    // Roster Filtering
+    const roster = DATA_RAW.filter(d => d.Week === week);
+    const filtered = roster.filter(d => d.Player.toLowerCase().includes(search));
 
-    // Standard KPIs
-    const totalMight = currentData.reduce((s, r) => s + r.Might, 0);
-    document.getElementById('kpiTotalMight').textContent = fmtCompact(totalMight);
-    document.getElementById('kpiActivePlayers').textContent = currentData.length;
-    document.getElementById('kpiAvgMight').textContent = fmtCompact(totalMight / currentData.length);
+    // KPI logic
+    const total = roster.reduce((s, p) => s + (p.Might || 0), 0);
+    const lowMight = roster.filter(p => p.Might < 100000000); // Your 100M threshold
+    const weeklySummary = DATA_WEEKLY.find(w => w.Week === week) || {};
 
-    // Table
-    const tbody = document.getElementById('playerBody');
-    tbody.innerHTML = currentData
-      .filter(r => r.Player.toLowerCase().includes(search))
-      .sort((a,b) => b.Might - a.Might)
-      .map(r => `
-        <tr>
-          <td>${r.Player} ${r.Might < 100000000 ? '<span class="tag-new" style="background:#f59e0b">Low Might</span>' : ''}</td>
-          <td class="num">${fmtCompact(r.Might)}</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-        </tr>
-      `).join('');
+    document.getElementById('kpiTotal').textContent = fmt(total);
+    document.getElementById('kpiLowMight').textContent = lowMight.length;
+    document.getElementById('kpiActive').textContent = roster.length;
+    document.getElementById('kpiAvg').textContent = fmt(total / (roster.length || 1));
+    
+    document.getElementById('kpiGrowthLabel').textContent = `Growth: ${weeklySummary["Growth %"] || 0}%`;
+    document.getElementById('kpiGrowthLabel').style.color = (weeklySummary["Growth %"] >= 0) ? "var(--good)" : "var(--bad)";
 
-      renderMiniChart();
+    // Top Grower from Player Source
+    const top = DATA_PLAYER.sort((a,b) => (b["Growth %"] || 0) - (a["Growth %"] || 0))[0];
+    document.getElementById('topGrower').textContent = top ? `${top.Player} (${top["Growth %"]}%)` : "—";
+
+    // Table Rendering
+    const tbody = document.getElementById('playerTable');
+    tbody.innerHTML = filtered.sort((a,b) => b.Might - a.Might).map(p => `
+      <tr>
+        <td style="font-weight:700">${p.Player}</td>
+        <td style="font-family:monospace; color:#cbd5e1">${fmt(p.Might)}</td>
+        <td>
+          <span class="might-tag ${p.Might < 100000000 ? 'tag-low' : 'tag-high'}">
+            ${p.Might < 100000000 ? 'RECRUIT' : 'ELITE'}
+          </span>
+        </td>
+      </tr>
+    `).join('');
   }
 
-  function renderMiniChart() {
-    const chartDiv = document.getElementById('lineChart');
-    // Simple SVG implementation for the trend
-    const weeks = WEEK_ORDER;
-    const totals = weeks.map(w => RAW.filter(r => r.Week === w).reduce((s, r) => s + r.Might, 0));
-    const max = Math.max(...totals);
-    const min = Math.min(...totals);
-    
-    const points = totals.map((v, i) => {
-      const x = (i / (weeks.length - 1)) * 100;
-      const y = 100 - ((v - min) / (max - min)) * 80;
-      return `${x},${y}`;
-    }).join(' ');
-
-    chartDiv.innerHTML = `
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width:100%; height:100%; overflow:visible">
-        <polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="2" />
-        <path d="M0,100 L${points} L100,100 Z" fill="url(#grad)" opacity="0.2" />
-        <defs>
-          <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--accent)" />
-            <stop offset="100%" stop-color="transparent" />
-          </linearGradient>
-        </defs>
-      </svg>
-    `;
-  }
-
-  loadData();
+  loadAllData();
 </script>
 
 </body>
