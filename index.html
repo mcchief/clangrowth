@@ -1,226 +1,1676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WOA Clan Growth Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOA Clan Growth Dashboard | Premium</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0c1830;
+      --bg3:#13203f;
+      --panel:rgba(16,24,40,.52);
+      --panel-strong:rgba(20,30,52,.72);
+      --panel-soft:rgba(255,255,255,.06);
+      --text:#eef4ff;
+      --muted:#a7b6d6;
+      --accent:#73a7ff;
+      --accent-2:#4f8cff;
+      --accent-3:#8fd3ff;
+      --good:#22c55e;
+      --good-soft:rgba(34,197,94,.16);
+      --warn:#f59e0b;
+      --warn-soft:rgba(245,158,11,.16);
+      --bad:#ff6b6b;
+      --bad-soft:rgba(255,107,107,.16);
+      --violet:#9b8cff;
+      --cyan:#44d4ff;
+      --border:rgba(255,255,255,.12);
+      --border-strong:rgba(255,255,255,.18);
+      --shadow:0 18px 60px rgba(0,0,0,.34);
+      --shadow-soft:0 10px 30px rgba(0,0,0,.18);
+      --radius:22px;
+      --radius-sm:16px;
+      --blur:18px;
+      --sticky-top:10px;
+    }
 
-<style>
-/* ================= PREMIUM GLASS THEME ================= */
-:root{
-  --bg:#070b16;
-  --glass:rgba(255,255,255,.10);
-  --glass2:rgba(255,255,255,.05);
-  --border:rgba(255,255,255,.22);
-  --text:#eef3ff;
-  --muted:#a3afd3;
-  --accent:#5f9cff;
-  --good:#22ff9a;
-  --bad:#ff6b6b;
-  --warn:#ffc857;
-  --radius:20px;
-  --blur:18px;
-  --shadow:0 25px 60px rgba(0,0,0,.45);
-}
+    *{ box-sizing:border-box; }
 
-*{box-sizing:border-box}
-html,body{
-  margin:0;padding:0;
-  font-family:Inter,Segoe UI,Arial,sans-serif;
-  background:
-    radial-gradient(1200px 700px at 20% -10%, rgba(95,156,255,.18), transparent),
-    radial-gradient(900px 600px at 85% 5%, rgba(123,178,255,.15), transparent),
-    var(--bg);
-  color:var(--text);
-}
+    html{
+      scroll-behavior:smooth;
+    }
 
-.wrap{max-width:1650px;margin:auto;padding:16px}
+    html, body{
+      width:100%;
+      max-width:100%;
+      margin:0;
+      padding:0;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at top left, rgba(115,167,255,.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(68,212,255,.12), transparent 26%),
+        radial-gradient(circle at bottom center, rgba(155,140,255,.10), transparent 28%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 42%,var(--bg3));
+      color:var(--text);
+      font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;
+      line-height:1.45;
+    }
 
-.card{
-  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
-  backdrop-filter:blur(var(--blur));
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:16px;
-  box-shadow:var(--shadow);
-  animation:fadeUp .5s ease both;
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:none}
-}
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      inset:auto;
+      width:440px;
+      height:440px;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:.18;
+      z-index:0;
+      pointer-events:none;
+    }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:12px;
-}
-h1{margin:0;font-size:clamp(24px,3vw,36px);letter-spacing:-.03em}
+    body::before{
+      top:-120px;
+      left:-100px;
+      background:linear-gradient(135deg,var(--accent),transparent);
+      animation:floatGlow 16s ease-in-out infinite;
+    }
 
-.badge{
-  padding:8px 14px;
-  border-radius:999px;
-  background:var(--glass);
-  border:1px solid var(--border);
-  font-size:12px;
-}
+    body::after{
+      right:-120px;
+      bottom:-140px;
+      background:linear-gradient(135deg,var(--violet),transparent);
+      animation:floatGlow 18s ease-in-out infinite reverse;
+    }
 
-/* ================= STICKY KPIs ================= */
-.grid-kpi{
-  display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
-  gap:12px;
-  position:sticky;
-  top:12px;
-  z-index:20;
-  padding-bottom:12px;
-}
+    @keyframes floatGlow{
+      0%,100%{ transform:translateY(0) translateX(0) scale(1); }
+      50%{ transform:translateY(24px) translateX(14px) scale(1.06); }
+    }
 
-.kpi-title{font-size:12px;color:var(--muted)}
-.kpi-value{
-  font-size:clamp(22px,2.6vw,34px);
-  font-weight:800;
-  letter-spacing:-.04em
-}
-.kpi-sub{font-size:12px;color:var(--muted)}
+    @keyframes fadeUp{
+      from{ opacity:0; transform:translateY(16px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
 
-.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-.grid-bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-bottom:14px}
-.grid-extra{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    @keyframes pulseSoft{
+      0%,100%{ box-shadow:0 0 0 0 rgba(115,167,255,.0); }
+      50%{ box-shadow:0 0 0 10px rgba(115,167,255,.06); }
+    }
 
-.table-wrap{max-height:440px;overflow:auto;border-radius:14px}
-table{width:100%;border-collapse:collapse}
-th,td{
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  font-size:14px;
-}
-th{
-  position:sticky;top:0;
-  background:rgba(0,0,0,.35);
-  backdrop-filter:blur(10px);
-}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .site-shell{
+      position:relative;
+      z-index:1;
+      width:100%;
+      max-width:1600px;
+      margin:0 auto;
+      padding:18px;
+    }
 
-ul.clean{list-style:none;margin:0;padding:0}
-ul.clean li{
-  display:flex;justify-content:space-between;
-  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)
-}
+    .wrap{
+      width:100%;
+      max-width:100%;
+      margin:0;
+      padding:0;
+    }
 
-.good{color:var(--good)}
-.bad{color:var(--bad)}
-.warn{color:var(--warn)}
-.muted{color:var(--muted);font-size:13px}
+    .glass{
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      backdrop-filter:blur(var(--blur));
+      -webkit-backdrop-filter:blur(var(--blur));
+      box-shadow:var(--shadow);
+    }
 
-@media(max-width:1200px){
-  .grid-kpi{grid-template-columns:repeat(3,1fr)}
-  .grid-main,.grid-bottom,.grid-extra{grid-template-columns:1fr}
-}
-</style>
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius);
+      padding:18px;
+      width:100%;
+      min-width:0;
+      background:linear-gradient(180deg, rgba(17,25,44,.72), rgba(13,20,37,.55));
+      border:1px solid var(--border);
+      backdrop-filter:blur(var(--blur));
+      -webkit-backdrop-filter:blur(var(--blur));
+      box-shadow:var(--shadow-soft);
+      animation:fadeUp .55s ease both;
+      transition:transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(115,167,255,.24);
+      box-shadow:0 18px 50px rgba(0,0,0,.26);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px auto auto -1px;
+      width:120px;
+      height:120px;
+      background:radial-gradient(circle, rgba(143,211,255,.16), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      padding:24px;
+      margin-bottom:16px;
+      background:
+        linear-gradient(135deg, rgba(115,167,255,.16), rgba(255,255,255,.04) 36%, rgba(155,140,255,.10)),
+        linear-gradient(180deg, rgba(17,25,44,.82), rgba(10,16,30,.66));
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 22px 80px rgba(0,0,0,.30);
+      animation:fadeUp .6s ease both;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      top:-40px;
+      right:-40px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(115,167,255,.22), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-40px;
+      bottom:-70px;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(155,140,255,.18), transparent 72%);
+      pointer-events:none;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-copy{
+      flex:1 1 640px;
+      min-width:280px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#dce8ff;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      margin-bottom:12px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+
+    .hero-sub{
+      margin-top:12px;
+      color:#d7e3ff;
+      max-width:860px;
+      font-size:15px;
+      line-height:1.65;
+    }
+
+    .hero-meta{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      min-width:280px;
+      flex:0 1 360px;
+    }
+
+    .meta-pill{
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+      min-width:0;
+    }
+
+    .meta-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .meta-value{
+      font-weight:800;
+      font-size:16px;
+      word-break:break-word;
+    }
+
+    .status-row{
+      margin-bottom:16px;
+    }
+
+    .status-card{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      border-radius:20px;
+      padding:15px 18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      animation:fadeUp .7s ease both;
+    }
+
+    .status-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .status-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 0 rgba(115,167,255,.35);
+      animation:pulseSoft 2.2s infinite;
+      flex:0 0 auto;
+    }
+
+    .msg{
+      font-size:14px;
+      color:var(--muted);
+      white-space:pre-wrap;
+      line-height:1.45;
+    }
+
+    .msg.ok{ color:#9cf1bf; }
+    .msg.error{ color:#ffabab; }
+
+    .status-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .toolbar-card{
+      margin-bottom:16px;
+      padding:18px;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+      width:100%;
+    }
+
+    .toolbar-copy{
+      flex:1 1 320px;
+      min-width:280px;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:800;
+      margin:0 0 6px;
+      line-height:1.2;
+      letter-spacing:-.02em;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:auto minmax(200px,220px) minmax(220px,1fr) auto;
+      gap:12px;
+      align-items:end;
+      width:100%;
+      max-width:940px;
+      min-width:0;
+    }
+
+    .field{
+      min-width:0;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 7px;
+      font-weight:600;
+      letter-spacing:.02em;
+    }
+
+    select,
+    input[type="text"]{
+      width:100%;
+      min-width:0;
+      background:rgba(14,22,40,.82);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 14px;
+      outline:none;
+      transition:border-color .24s ease, box-shadow .24s ease, background .24s ease;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    select:focus,
+    input[type="text"]:focus{
+      border-color:rgba(115,167,255,.50);
+      box-shadow:0 0 0 4px rgba(115,167,255,.10);
+      background:rgba(15,24,44,.94);
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      color:#fff;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      font-weight:800;
+      min-width:120px;
+      white-space:nowrap;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 12px 28px rgba(79,140,255,.24);
+      transition:transform .22s ease, box-shadow .22s ease, filter .22s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.03);
+      box-shadow:0 16px 34px rgba(79,140,255,.28);
+    }
+
+    .btn.secondary{
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:none;
+      color:#e8f0ff;
+    }
+
+    .sticky-kpis{
+      position:sticky;
+      top:var(--sticky-top);
+      z-index:20;
+      margin-bottom:16px;
+      padding:10px;
+      border-radius:26px;
+      background:rgba(8,14,26,.40);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .grid-kpi{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:12px;
+      width:100%;
+      min-width:0;
+    }
+
+    .kpi{
+      min-height:128px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .kpi::after{
+      content:"";
+      position:absolute;
+      inset:auto -20px -20px auto;
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.08), transparent 72%);
+      pointer-events:none;
+    }
+
+    .kpi-title{
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+    }
+
+    .kpi-value{
+      font-size:clamp(24px,3vw,38px);
+      font-weight:900;
+      letter-spacing:-.03em;
+      line-height:1.05;
+      word-break:break-word;
+    }
+
+    .kpi-sub{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:10px;
+      line-height:1.45;
+    }
+
+    .kpi.kpi-alert{
+      background:
+        linear-gradient(180deg, rgba(255,107,107,.12), rgba(255,107,107,.05)),
+        linear-gradient(180deg, rgba(17,25,44,.72), rgba(13,20,37,.55));
+      border-color:rgba(255,107,107,.20);
+    }
+
+    .kpi.kpi-success{
+      background:
+        linear-gradient(180deg, rgba(34,197,94,.10), rgba(34,197,94,.04)),
+        linear-gradient(180deg, rgba(17,25,44,.72), rgba(13,20,37,.55));
+      border-color:rgba(34,197,94,.18);
+    }
+
+    .kpi.kpi-warning{
+      background:
+        linear-gradient(180deg, rgba(245,158,11,.10), rgba(245,158,11,.04)),
+        linear-gradient(180deg, rgba(17,25,44,.72), rgba(13,20,37,.55));
+      border-color:rgba(245,158,11,.18);
+    }
+
+    .grid-main,
+    .grid-bottom,
+    .grid-extra{
+      display:grid;
+      gap:16px;
+      margin-bottom:16px;
+      width:100%;
+      min-width:0;
+    }
+
+    .grid-main{
+      grid-template-columns:minmax(0,1.75fr) minmax(340px,1fr);
+    }
+
+    .grid-bottom{
+      grid-template-columns:minmax(0,1.1fr) minmax(320px,1fr);
+    }
+
+    .grid-extra{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .card-head .title{
+      margin-bottom:4px;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      color:#dce8ff;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .chart-box{
+      margin-top:12px;
+      width:100%;
+      min-width:0;
+      overflow:hidden;
+    }
+
+    .chart-frame{
+      width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+    }
+
+    svg{
+      display:block;
+      width:100%;
+      height:auto;
+      min-width:720px;
+    }
+
+    .table-wrap{
+      width:100%;
+      max-width:100%;
+      max-height:440px;
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      min-width:0;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+
+    th, td{
+      text-align:left;
+      padding:11px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      vertical-align:middle;
+    }
+
+    th{
+      color:#d9e4ff;
+      background:rgba(9,15,28,.82);
+      position:sticky;
+      top:0;
+      z-index:2;
+      white-space:nowrap;
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    td.num{
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;
+    }
+
+    .player-table th:nth-child(1), .player-table td:nth-child(1){ width:34%; }
+    .player-table th:nth-child(2), .player-table td:nth-child(2){ width:24%; }
+    .player-table th:nth-child(3), .player-table td:nth-child(3){ width:22%; }
+    .player-table th:nth-child(4), .player-table td:nth-child(4){ width:20%; padding-right:22px; }
+
+    tbody tr{
+      transition:background .22s ease, transform .22s ease;
+    }
+
+    tbody tr:hover{
+      background:rgba(255,255,255,.04);
+    }
+
+    ul.clean{
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+
+    ul.clean li{
+      padding:12px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    ul.clean li:last-child{
+      border-bottom:none;
+    }
+
+    .good{ color:var(--good); }
+    .good-strong{ color:#8ef1b2; font-weight:800; }
+    .bad{ color:var(--bad); }
+    .warn{ color:var(--warn); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.04em;
+      border:1px solid transparent;
+    }
+
+    .pill.good{
+      background:var(--good-soft);
+      border-color:rgba(34,197,94,.16);
+    }
+
+    .pill.bad{
+      background:var(--bad-soft);
+      border-color:rgba(255,107,107,.16);
+    }
+
+    .pill.warn{
+      background:var(--warn-soft);
+      border-color:rgba(245,158,11,.16);
+    }
+
+    .highlight-grow{
+      background:rgba(34,197,94,.06);
+    }
+
+    .footer{
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      margin-top:8px;
+      min-height:14px;
+      padding:10px 8px 14px;
+      word-break:break-word;
+    }
+
+    @media (max-width:1400px){
+      .grid-kpi{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .grid-extra{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+
+    @media (max-width:1180px){
+      .grid-main,
+      .grid-bottom{
+        grid-template-columns:1fr;
+      }
+
+      .controls{
+        grid-template-columns:1fr 1fr;
+        max-width:none;
+      }
+    }
+
+    @media (max-width:860px){
+      .hero{
+        padding:20px;
+        border-radius:24px;
+      }
+
+      .hero-meta{
+        grid-template-columns:1fr 1fr;
+        width:100%;
+      }
+
+      .grid-kpi{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .grid-extra{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:640px){
+      .site-shell{ padding:10px; }
+      .hero{ padding:18px; }
+      .card,
+      .toolbar-card{ padding:14px; border-radius:18px; }
+      .controls{ grid-template-columns:1fr; }
+      .toolbar{ align-items:stretch; }
+      .grid-kpi{ grid-template-columns:1fr; }
+      .hero-meta{ grid-template-columns:1fr; }
+      th, td{ padding:10px; font-size:13px; }
+      svg{ min-width:640px; }
+      .sticky-kpis{ padding:8px; border-radius:20px; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrap">
+  <div class="site-shell">
+    <div class="wrap">
 
-<!-- HEADER -->
-<div class="header">
-  <h1>WOA Clan Growth Dashboard</h1>
-  <div class="badge">Latest snapshot: <span id="latestWeekLabel">—</span></div>
-</div>
+      <section class="hero glass">
+        <div class="header">
+          <div class="hero-copy">
+            <div class="eyebrow">WOA Intelligence Hub</div>
+            <h1>WOA Clan Growth Dashboard</h1>
+            <div class="hero-sub">
+              Premium growth intelligence view with glassmorphism, sticky KPI tracking,
+              smoother interactions, stronger visual hierarchy, and fast week-by-week navigation.
+            </div>
+          </div>
 
-<!-- KPIs -->
-<div class="grid-kpi">
-  <div class="card"><div class="kpi-title">Total Clan Might</div><div id="kpiTotalMight" class="kpi-value">—</div></div>
-  <div class="card"><div class="kpi-title">Active Players</div><div id="kpiActivePlayers" class="kpi-value">—</div></div>
-  <div class="card"><div class="kpi-title">Average Might</div><div id="kpiAvgMight" class="kpi-value">—</div></div>
-  <div class="card"><div class="kpi-title">Week Growth</div><div id="kpiGrowth" class="kpi-value">—</div><div id="kpiGrowthPct" class="kpi-sub"></div></div>
-  <div class="card"><div class="kpi-title">Joined / Left</div><div id="kpiRosterDelta" class="kpi-value">—</div></div>
-  <div class="card"><div class="kpi-title">Returned</div><div id="kpiReturned" class="kpi-value">—</div></div>
+          <div class="hero-meta">
+            <div class="meta-pill">
+              <div class="meta-label">Latest Snapshot</div>
+              <div class="meta-value"><span id="latestWeekLabel">—</span></div>
+            </div>
+            <div class="meta-pill">
+              <div class="meta-label">Focus KPI</div>
+              <div class="meta-value">Players under 100M</div>
+            </div>
+            <div class="meta-pill">
+              <div class="meta-label">Experience</div>
+              <div class="meta-value">Premium Glass UI</div>
+            </div>
+            <div class="meta-pill">
+              <div class="meta-label">Mode</div>
+              <div class="meta-value">Live Weekly Analysis</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <!-- ✅ NEW KPI -->
-  <div class="card">
-    <div class="kpi-title">Under 100M Might</div>
-    <div id="kpiBelow100M" class="kpi-value warn">—</div>
-    <div class="kpi-sub">Players below 100,000,000</div>
-  </div>
-</div>
+      <div class="status-row">
+        <div class="status-card">
+          <div class="status-left">
+            <span class="status-dot"></span>
+            <div class="msg" id="statusMsg">Loading dashboard data...</div>
+          </div>
+          <div class="status-actions">
+            <span class="pill good">Operational</span>
+            <span id="miniStatusText">Awaiting data sync</span>
+          </div>
+        </div>
+      </div>
 
-<!-- MAIN -->
-<div class="grid-main">
-  <div class="card">
-    <h3>Clan Might Trend</h3>
-    <div id="lineChart"></div>
-  </div>
-  <div class="card">
-    <h3>Top 10 Growers</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Player</th><th class="num">Net</th><th class="num">%</th></tr></thead>
-        <tbody id="growersBody"></tbody>
-      </table>
+      <div class="card toolbar-card">
+        <div class="toolbar">
+          <div class="toolbar-copy">
+            <div class="title">Navigation & Filters</div>
+            <div class="muted">
+              Browse weekly movement, search players instantly, and pivot quickly without breaking the layout.
+            </div>
+          </div>
+
+          <div class="controls">
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="btn secondary" id="prevWeekBtn">← Previous</button>
+            </div>
+
+            <div class="field">
+              <label for="weekSelect">Week</label>
+              <select id="weekSelect"></select>
+            </div>
+
+            <div class="field">
+              <label for="playerSearch">Search Player</label>
+              <input type="text" id="playerSearch" placeholder="Type player name" />
+            </div>
+
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="btn secondary" id="nextWeekBtn">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-kpis">
+        <div class="grid-kpi">
+          <div class="card kpi kpi-success">
+            <div>
+              <div class="kpi-title">Total Clan Might</div>
+              <div class="kpi-value" id="kpiTotalMight">—</div>
+            </div>
+            <div class="kpi-sub">Selected week total</div>
+          </div>
+
+          <div class="card kpi">
+            <div>
+              <div class="kpi-title">Active Players</div>
+              <div class="kpi-value" id="kpiActivePlayers">—</div>
+            </div>
+            <div class="kpi-sub">Players present in selected week</div>
+          </div>
+
+          <div class="card kpi">
+            <div>
+              <div class="kpi-title">Average Might</div>
+              <div class="kpi-value" id="kpiAvgMight">—</div>
+            </div>
+            <div class="kpi-sub">Selected week average</div>
+          </div>
+
+          <div class="card kpi">
+            <div>
+              <div class="kpi-title">Week Growth</div>
+              <div class="kpi-value" id="kpiGrowth">—</div>
+            </div>
+            <div class="kpi-sub" id="kpiGrowthPct">Week-on-week</div>
+          </div>
+
+          <div class="card kpi kpi-warning">
+            <div>
+              <div class="kpi-title">Joined / Left</div>
+              <div class="kpi-value" id="kpiRosterDelta">—</div>
+            </div>
+            <div class="kpi-sub" id="kpiRosterSub">Joined vs left this week</div>
+          </div>
+
+          <div class="card kpi">
+            <div>
+              <div class="kpi-title">Returned</div>
+              <div class="kpi-value" id="kpiReturned">—</div>
+            </div>
+            <div class="kpi-sub">Returning members</div>
+          </div>
+
+          <div class="card kpi kpi-alert">
+            <div>
+              <div class="kpi-title">Below 100M Might</div>
+              <div class="kpi-value" id="kpiBelow100M">—</div>
+            </div>
+            <div class="kpi-sub" id="kpiBelow100MSub">Players under 100,000,000 in selected week</div>
+          </div>
+        </div>
+      </div>
+	  
+	        <div class="grid-main">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Clan Might Trend</div>
+              <div class="muted">Historic weekly total might progression</div>
+            </div>
+            <div class="tag">Trend View</div>
+          </div>
+          <div class="chart-box" id="lineChart"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Top 10 Growers</div>
+              <div class="muted">Ranked by highest percentage growth</div>
+            </div>
+            <div class="tag">Top Performers</div>
+          </div>
+          <div class="table-wrap" style="max-height:360px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th class="num">Net Growth</th>
+                  <th class="num">Growth %</th>
+                </tr>
+              </thead>
+              <tbody id="growersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-bottom">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Top 10 Players by Selected Week</div>
+              <div class="muted">This ranking changes with the selected week</div>
+            </div>
+            <div class="tag">Weekly Ranking</div>
+          </div>
+          <div class="chart-box" id="barChart"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Player Analysis by Selected Week</div>
+              <div class="muted">Sorted by highest week % growth first</div>
+            </div>
+            <div class="tag">Week Detail</div>
+          </div>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table class="player-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th class="num">Selected Might</th>
+                  <th class="num">Week Change</th>
+                  <th class="num">Week %</th>
+                </tr>
+              </thead>
+              <tbody id="playerBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-extra">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">New Joiners</div>
+              <div class="muted">Members appearing for the first time</div>
+            </div>
+            <div class="pill good">New</div>
+          </div>
+          <ul class="clean" id="joinersList"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Returned</div>
+              <div class="muted">Members back after missing earlier weeks</div>
+            </div>
+            <div class="pill warn">Returned</div>
+          </div>
+          <ul class="clean" id="returnedList"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Left</div>
+              <div class="muted">Members missing from this selected week</div>
+            </div>
+            <div class="pill bad">Left</div>
+          </div>
+          <ul class="clean" id="leaversList"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="title">Top Week Gains</div>
+              <div class="muted">Best weekly growth performers</div>
+            </div>
+            <div class="pill good">Hot</div>
+          </div>
+          <ul class="clean" id="topWeekGainsList"></ul>
+        </div>
+      </div>
+
+      <div class="footer" id="footerMsg"></div>
     </div>
   </div>
-</div>
 
-<div class="grid-bottom">
-  <div class="card">
-    <h3>Top Players (Selected Week)</h3>
-    <div id="barChart"></div>
-  </div>
-  <div class="card">
-    <h3>Player Analysis</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Player</th><th class="num">Might</th><th class="num">Δ</th><th class="num">%</th></tr>
-        </thead>
-        <tbody id="playerBody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
+  <script>
+    const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
+    const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
+    const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
 
-<div class="grid-extra">
-  <div class="card"><h4>New Joiners</h4><ul class="clean" id="joinersList"></ul></div>
-  <div class="card"><h4>Returned</h4><ul class="clean" id="returnedList"></ul></div>
-  <div class="card"><h4>Left</h4><ul class="clean" id="leaversList"></ul></div>
-  <div class="card"><h4>Top Week Gains</h4><ul class="clean" id="topWeekGainsList"></ul></div>
-</div>
+    let WEEKLY = [];
+    let PLAYERS = [];
+    let RAW = [];
+    let WEEK_ORDER = [];
+    let FIRST_WEEK = null;
 
-<div class="muted" id="footerMsg"></div>
+    function setStatus(msg, kind = "") {
+      const el = document.getElementById("statusMsg");
+      el.textContent = msg;
+      el.className = "msg " + kind;
+      const mini = document.getElementById("miniStatusText");
+      if (mini) mini.textContent = msg;
+    }
 
-</div>
+    function setFooter(msg = "") {
+      document.getElementById("footerMsg").textContent = msg;
+    }
 
-<script>
-/* ================= DATA SOURCES ================= */
-const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
-  const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
-  const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
+    function fmtInt(n) {
+      return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(Number(n || 0));
+    }
 
-/* ================= ORIGINAL LOGIC PRESERVED ================= */
-/* FULL logic identical to your working file is intentionally preserved.
-   KPI below 100M is derived from RAW for selected week */
+    function fmtCompact(n) {
+      return new Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 2
+      }).format(Number(n || 0));
+    }
 
-... 
-/* (JS continues exactly as your original file, unchanged) */
+    function fmtPct(n) {
+      const v = Number(n || 0);
+      return (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+    }
 
-/* ✅ ADDITION */
-function setBelow100MKpi(){
-  const selectedWeek=getSelectedWeek();
-  const count=RAW.filter(r=>r.Week===selectedWeek && r.Might<100000000).length;
-  document.getElementById("kpiBelow100M").textContent=count;
-}
+    function cleanNumber(v) {
+      if (v === null || v === undefined) return 0;
+      return Number(String(v).replace(/[%,$\s]/g, "").replace(/,/g, "")) || 0;
+    }
 
-/* ✅ Hook safely */
-const _refresh=refreshSelectedWeekViews;
-refreshSelectedWeekViews=function(){
-  _refresh();
-  setBelow100MKpi();
-};
-</script>
+    function cleanHeader(v) {
+      return String(v || "").replace(/^\uFEFF/, "").trim();
+    }
+
+    function csvToRows(text) {
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+
+        if (ch === '"') {
+          if (inQuotes && next === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          row.push(cur);
+          cur = "";
+        } else if ((ch === "\n" || ch === "\r") && !inQuotes) {
+          if (ch === "\r" && next === "\n") i++;
+          row.push(cur);
+          cur = "";
+          if (row.some(x => String(x).trim() !== "")) rows.push(row);
+          row = [];
+        } else {
+          cur += ch;
+        }
+      }
+
+      row.push(cur);
+      if (row.some(x => String(x).trim() !== "")) rows.push(row);
+      if (!rows.length) return [];
+
+      const headers = rows[0].map(cleanHeader);
+
+      return rows.slice(1).map(r => {
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = String(r[idx] ?? "").trim();
+        });
+        return obj;
+      });
+    }
+
+    async function fetchTextViaFetch(url) {
+      const res = await fetch(url + "&t=" + Date.now(), {
+        method: "GET",
+        cache: "no-store",
+        redirect: "follow"
+      });
+      if (!res.ok) throw new Error("fetch failed with status " + res.status);
+      const text = await res.text();
+      if (!text || !text.trim()) throw new Error("fetch returned empty response");
+      return text;
+    }
+
+    function fetchTextViaXHR(url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url + "&t=" + Date.now(), true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText && xhr.responseText.trim()) {
+              resolve(xhr.responseText);
+            } else {
+              reject(new Error("xhr failed with status " + xhr.status));
+            }
+          }
+        };
+        xhr.onerror = function () {
+          reject(new Error("xhr network error"));
+        };
+        xhr.send();
+      });
+    }
+
+    async function fetchCsvRobust(url, label) {
+      const attempts = [];
+      try {
+        const text = await fetchTextViaFetch(url);
+        return { rows: csvToRows(text), method: "fetch", label };
+      } catch (err) {
+        attempts.push(label + " fetch: " + err.message);
+      }
+
+      try {
+        const text = await fetchTextViaXHR(url);
+        return { rows: csvToRows(text), method: "xhr", label };
+      } catch (err) {
+        attempts.push(label + " xhr: " + err.message);
+      }
+
+      throw new Error(attempts.join(" | "));
+    }
+
+    function normalizeWeekly(rows) {
+      return rows.map(r => ({
+        Week: r.Week || r.week || r.WEEK,
+        Total_Might: cleanNumber(r.Total_Might || r["Total Might"] || r.total_might),
+        Active_Players: cleanNumber(r.Active_Players || r["Active Players"] || r.active_players),
+        Avg_Might: cleanNumber(r.Avg_Might || r["Average Might"] || r.avg_might),
+        Growth: cleanNumber(r.Growth || r.growth),
+        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
+      })).filter(r => r.Week);
+    }
+
+    function normalizePlayers(rows) {
+      return rows.map(r => ({
+        Player: r.Player || r.player || r.PLAYER,
+        Latest_Might: cleanNumber(r.Latest_Might || r["Latest Might"] || r.latest_might),
+        Net_Growth: cleanNumber(r.Net_Growth || r["Net Growth"] || r.net_growth),
+        Growth_Pct: cleanNumber(r["Growth_%"] || r["Growth %"] || r.Growth_Pct || r.growth_pct)
+      })).filter(r => r.Player);
+    }
+
+    function normalizeRaw(rows) {
+      return rows.map(r => ({
+        Week: r.Week || r.week || r.WEEK,
+        Player: r.Player || r.player || r.PLAYER,
+        Might: cleanNumber(r.Might || r.might || r.MIGHT)
+      })).filter(r => r.Week && r.Player);
+    }
+
+    function uniqueWeeksFromRaw() {
+      return [...new Set(RAW.map(r => r.Week))].sort();
+    }
+
+    function getSelectedWeek() {
+      return document.getElementById("weekSelect").value;
+    }
+
+    function getPrevWeek(week) {
+      const idx = WEEK_ORDER.indexOf(week);
+      return idx > 0 ? WEEK_ORDER[idx - 1] : null;
+    }
+
+    function getNextWeek(week) {
+      const idx = WEEK_ORDER.indexOf(week);
+      return idx >= 0 && idx < WEEK_ORDER.length - 1 ? WEEK_ORDER[idx + 1] : null;
+    }
+
+    function rowsForWeek(week) {
+      return RAW.filter(r => r.Week === week);
+    }
+
+    function mapForWeek(week) {
+      const m = new Map();
+      rowsForWeek(week).forEach(r => m.set(r.Player, r.Might));
+      return m;
+    }
+
+    function everAppearedBefore(player, week) {
+      return RAW.some(r => r.Player === player && r.Week < week);
+    }
+
+    function weekMetricsFromRaw(week) {
+      const rows = rowsForWeek(week);
+      const total = rows.reduce((s, r) => s + r.Might, 0);
+      const active = rows.length;
+      return { total, active, avg: active ? total / active : 0 };
+    }
+
+    function deriveWeeklyFromRaw() {
+      return uniqueWeeksFromRaw().map((week, idx, arr) => {
+        const current = weekMetricsFromRaw(week);
+        const prevWeek = idx > 0 ? arr[idx - 1] : null;
+        const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0 };
+        const growth = current.total - previous.total;
+        const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
+
+        return {
+          Week: week,
+          Total_Might: current.total,
+          Active_Players: current.active,
+          Avg_Might: current.avg,
+          Growth: growth,
+          Growth_Pct: growthPct
+        };
+      });
+    }
+
+    function derivePlayersFromRaw() {
+      const byPlayer = new Map();
+
+      RAW.forEach(r => {
+        if (!byPlayer.has(r.Player)) byPlayer.set(r.Player, []);
+        byPlayer.get(r.Player).push(r);
+      });
+
+      return [...byPlayer.entries()].map(([player, rows]) => {
+        const sorted = rows.sort((a, b) => String(a.Week).localeCompare(String(b.Week)));
+        const first = sorted[0]?.Might || 0;
+        const latest = sorted[sorted.length - 1]?.Might || 0;
+        const net = latest - first;
+        const pct = first ? (net / first) * 100 : 0;
+
+        return {
+          Player: player,
+          Latest_Might: latest,
+          Net_Growth: net,
+          Growth_Pct: pct
+        };
+      });
+    }
+
+    function populateWeekFilter() {
+      const select = document.getElementById("weekSelect");
+      WEEK_ORDER = uniqueWeeksFromRaw();
+      FIRST_WEEK = WEEK_ORDER.length ? WEEK_ORDER[0] : null;
+
+      select.innerHTML = WEEK_ORDER.map(w => `<option value="${w}">${w}</option>`).join("");
+
+      if (WEEK_ORDER.length) {
+        select.value = WEEK_ORDER[WEEK_ORDER.length - 1];
+        document.getElementById("latestWeekLabel").textContent = WEEK_ORDER[WEEK_ORDER.length - 1];
+      } else {
+        document.getElementById("latestWeekLabel").textContent = "—";
+      }
+    }
+	    function classifyRosterChanges(selectedWeek) {
+      const prevWeek = getPrevWeek(selectedWeek);
+      const currentMap = mapForWeek(selectedWeek);
+      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+      const joined = [];
+      const returned = [];
+      const left = [];
+
+      if (prevWeek) {
+        for (const player of currentMap.keys()) {
+          if (!prevMap.has(player)) {
+            if (selectedWeek === FIRST_WEEK) {
+              // baseline week, no classification
+            } else if (everAppearedBefore(player, selectedWeek)) {
+              returned.push(player);
+            } else {
+              joined.push(player);
+            }
+          }
+        }
+
+        for (const player of prevMap.keys()) {
+          if (!currentMap.has(player)) left.push(player);
+        }
+      }
+
+      return { joined: joined.sort(), returned: returned.sort(), left: left.sort() };
+    }
+
+    function countBelowThreshold(selectedWeek, threshold = 100000000) {
+      return rowsForWeek(selectedWeek).filter(r => Number(r.Might || 0) < threshold).length;
+    }
+
+    function setKpis() {
+      const selectedWeek = getSelectedWeek();
+      const prevWeek = getPrevWeek(selectedWeek);
+      const current = weekMetricsFromRaw(selectedWeek);
+      const previous = prevWeek ? weekMetricsFromRaw(prevWeek) : { total: 0, active: 0, avg: 0 };
+      const growth = current.total - previous.total;
+      const growthPct = previous.total ? (growth / previous.total) * 100 : 0;
+      const roster = classifyRosterChanges(selectedWeek);
+      const below100M = countBelowThreshold(selectedWeek, 100000000);
+
+      document.getElementById("kpiTotalMight").textContent = fmtCompact(current.total);
+      document.getElementById("kpiActivePlayers").textContent = fmtInt(current.active);
+      document.getElementById("kpiAvgMight").textContent = fmtCompact(current.avg);
+      document.getElementById("kpiGrowth").textContent = fmtCompact(growth);
+
+      const pct = document.getElementById("kpiGrowthPct");
+      pct.textContent = "Week-on-week: " + fmtPct(growthPct);
+      pct.className = "kpi-sub " + (growthPct >= 0 ? "good" : "bad");
+
+      document.getElementById("kpiRosterDelta").textContent = `${roster.joined.length} / ${roster.left.length}`;
+      document.getElementById("kpiRosterSub").textContent = `Joined: ${roster.joined.length} | Left: ${roster.left.length}`;
+
+      document.getElementById("kpiReturned").textContent = fmtInt(roster.returned.length);
+
+      document.getElementById("kpiBelow100M").textContent = fmtInt(below100M);
+      document.getElementById("kpiBelow100MSub").textContent =
+        `${below100M} player${below100M === 1 ? "" : "s"} under 100,000,000 in selected week`;
+    }
+
+    function renderLineChart() {
+      const rows = WEEKLY;
+
+      if (!rows.length) {
+        document.getElementById("lineChart").innerHTML = '<div class="muted" style="padding:18px;">No trend data available.</div>';
+        return;
+      }
+
+      const w = 920, h = 360, pad = { l:56, r:22, t:24, b:52 };
+      const vals = rows.map(r => Number(r.Total_Might || 0));
+      const minV = Math.min(...vals);
+      const maxV = Math.max(...vals, 1);
+      const range = Math.max(1, maxV - minV);
+
+      const x = i => pad.l + (i * (w - pad.l - pad.r) / Math.max(1, rows.length - 1));
+      const y = v => pad.t + (h - pad.t - pad.b) * (1 - ((v - minV) / range));
+
+      let grid = "";
+      for (let i = 0; i < 5; i++) {
+        const frac = i / 4;
+        const val = maxV - frac * (maxV - minV);
+        const yy = pad.t + frac * (h - pad.t - pad.b);
+        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+      }
+
+      const points = rows.map((r,i)=>`${x(i)},${y(r.Total_Might)}`).join(" ");
+      const area = `M ${x(0)} ${h-pad.b} L ` + rows.map((r,i)=>`${x(i)} ${y(r.Total_Might)}`).join(" L ") + ` L ${x(rows.length-1)} ${h-pad.b} Z`;
+
+      const defs = `
+        <defs>
+          <linearGradient id="trendStroke" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#8fd3ff"/>
+            <stop offset="50%" stop-color="#73a7ff"/>
+            <stop offset="100%" stop-color="#9b8cff"/>
+          </linearGradient>
+          <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(115,167,255,.34)"/>
+            <stop offset="100%" stop-color="rgba(115,167,255,.04)"/>
+          </linearGradient>
+          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+      `;
+
+      const labels = rows.map((r,i)=>`
+        <g>
+          <circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="6" fill="rgba(115,167,255,.14)"></circle>
+          <circle cx="${x(i)}" cy="${y(r.Total_Might)}" r="3.8" fill="#9ad7ff"></circle>
+          <text x="${x(i)}" y="${h-18}" text-anchor="middle" fill="#9fb0d1" font-size="12">${r.Week}</text>
+        </g>
+      `).join("");
+
+      document.getElementById("lineChart").innerHTML =
+        `<div class="chart-frame">
+          <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">
+            ${defs}
+            ${grid}
+            <path d="${area}" fill="url(#trendFill)"></path>
+            <polyline fill="none" stroke="url(#trendStroke)" stroke-width="4" points="${points}" filter="url(#softGlow)"></polyline>
+            ${labels}
+          </svg>
+        </div>`;
+    }
+
+    function renderBarChart() {
+      const selectedWeek = getSelectedWeek();
+      const rows = rowsForWeek(selectedWeek).sort((a,b)=>b.Might-a.Might).slice(0,10);
+
+      if (!rows.length) {
+        document.getElementById("barChart").innerHTML = '<div class="muted" style="padding:18px;">No selected-week data available.</div>';
+        return;
+      }
+
+      const w = 920, h = 380, pad = { l:56, r:20, t:24, b:88 };
+      const maxV = Math.max(...rows.map(r => Number(r.Might || 0)), 1);
+      const chartH = h - pad.t - pad.b;
+      const chartW = w - pad.l - pad.r;
+      const gap = 12;
+      const bw = Math.max(18, (chartW - gap * (rows.length - 1)) / Math.max(1, rows.length));
+
+      let grid = "";
+      for (let i = 0; i < 5; i++) {
+        const frac = i / 4;
+        const val = maxV - frac * maxV;
+        const yy = pad.t + frac * chartH;
+        grid += `<line x1="${pad.l}" y1="${yy}" x2="${w-pad.r}" y2="${yy}" stroke="rgba(255,255,255,.10)"/>`;
+        grid += `<text x="${pad.l-10}" y="${yy+4}" text-anchor="end" fill="#9fb0d1" font-size="12">${fmtCompact(val)}</text>`;
+      }
+
+      const defs = `
+        <defs>
+          <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8fd3ff"/>
+            <stop offset="55%" stop-color="#73a7ff"/>
+            <stop offset="100%" stop-color="#4f8cff"/>
+          </linearGradient>
+        </defs>
+      `;
+
+      const bars = rows.map((r,i)=>{
+        const bh = (r.Might / maxV) * chartH;
+        const xx = pad.l + i * (bw + gap);
+        const yy = pad.t + chartH - bh;
+        const label = r.Player.length > 10 ? r.Player.slice(0,10) + "…" : r.Player;
+        return `
+          <g>
+            <rect x="${xx}" y="${yy}" width="${bw}" height="${bh}" rx="10" fill="url(#barFill)"></rect>
+            <rect x="${xx}" y="${yy}" width="${bw}" height="10" rx="10" fill="rgba(255,255,255,.18)"></rect>
+            <text x="${xx+bw/2}" y="${h-42}" text-anchor="middle" fill="#cddcff" font-size="11">${label}</text>
+            <text x="${xx+bw/2}" y="${yy-8}" text-anchor="middle" fill="#e6efff" font-size="11">${fmtCompact(r.Might)}</text>
+          </g>`;
+      }).join("");
+
+      document.getElementById("barChart").innerHTML =
+        `<div class="chart-frame">
+          <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet">
+            ${defs}
+            ${grid}
+            ${bars}
+          </svg>
+        </div>`;
+    }
+
+    function renderGrowers() {
+      const body = document.getElementById("growersBody");
+      const rows = [...PLAYERS].sort((a,b)=> b.Growth_Pct - a.Growth_Pct || b.Net_Growth - a.Net_Growth).slice(0,10);
+
+      body.innerHTML = rows.map((r, idx) => `
+        <tr class="${idx < 3 ? 'highlight-grow' : ''}">
+          <td class="${idx < 3 ? 'good-strong' : 'good'}">${r.Player}</td>
+          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtInt(r.Net_Growth)}</td>
+          <td class="num ${idx < 3 ? 'good-strong' : 'good'}">${fmtPct(r.Growth_Pct)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function buildSelectedWeekPlayerRows() {
+      const selectedWeek = getSelectedWeek();
+      const prevWeek = getPrevWeek(selectedWeek);
+      const currentMap = mapForWeek(selectedWeek);
+      const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+
+      return [...currentMap.entries()].map(([player, might]) => {
+        const prev = prevMap.get(player) || 0;
+        const delta = might - prev;
+        const pct = prev ? (delta / prev) * 100 : 0;
+        const isBaselineWeek = selectedWeek === FIRST_WEEK;
+        const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
+        const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
+        const below100M = might < 100000000;
+
+        return {
+          Player: player,
+          Might: might,
+          Delta: delta,
+          Pct: pct,
+          IsNew: isNewThisWeek,
+          IsReturned: isReturned,
+          Below100M: below100M
+        };
+      }).sort((a,b) => {
+        if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
+        if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
+        if (a.Below100M !== b.Below100M) return a.Below100M ? -1 : 1;
+        return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
+      });
+    }
+
+    function renderPlayerTable() {
+      const q = document.getElementById("playerSearch").value.trim().toLowerCase();
+      const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
+
+      document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
+        const top5 = idx < 5 && !r.IsNew && !r.IsReturned && !r.Below100M;
+        const cls = r.IsNew || r.IsReturned
+          ? "warn"
+          : (r.Below100M ? "bad" : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : ""))));
+        const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
+        const playerLabel = r.Below100M
+          ? `${r.Player} <span class="pill bad" style="margin-left:8px;">Below 100M</span>`
+          : r.Player;
+
+        return `<tr class="${top5 ? 'highlight-grow' : ''}">
+          <td class="${cls}">${playerLabel}</td>
+          <td class="num ${cls}">${fmtInt(r.Might)}</td>
+          <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
+          <td class="num ${cls}">${weekPct}</td>
+        </tr>`;
+      }).join("");
+    }
+	    function renderRosterLists() {
+      const selectedWeek = getSelectedWeek();
+      const roster = classifyRosterChanges(selectedWeek);
+
+      document.getElementById("joinersList").innerHTML = roster.joined.length
+        ? roster.joined.map(p => `<li><span>${p}</span><span class="good">New</span></li>`).join("")
+        : '<li><span>No new joiners</span><span class="muted">—</span></li>';
+
+      document.getElementById("returnedList").innerHTML = roster.returned.length
+        ? roster.returned.map(p => `<li><span>${p}</span><span class="warn">Returned</span></li>`).join("")
+        : '<li><span>No returned players</span><span class="muted">—</span></li>';
+
+      document.getElementById("leaversList").innerHTML = roster.left.length
+        ? roster.left.map(p => `<li><span>${p}</span><span class="bad">Left</span></li>`).join("")
+        : '<li><span>No players left</span><span class="muted">—</span></li>';
+    }
+
+    function renderTopWeekGains() {
+      const rows = buildSelectedWeekPlayerRows()
+        .filter(r => !r.IsNew && !r.IsReturned)
+        .sort((a,b)=> b.Pct - a.Pct || b.Delta - a.Delta)
+        .slice(0,10);
+
+      document.getElementById("topWeekGainsList").innerHTML = rows.length
+        ? rows.map(r => `<li><span>${r.Player}</span><span class="good">${fmtPct(r.Pct)}</span></li>`).join("")
+        : '<li><span>No data</span><span class="muted">—</span></li>';
+    }
+
+    function refreshSelectedWeekViews() {
+      setKpis();
+      renderBarChart();
+      renderPlayerTable();
+      renderRosterLists();
+      renderTopWeekGains();
+    }
+
+    function bindUi() {
+      document.getElementById("weekSelect").addEventListener("change", refreshSelectedWeekViews);
+      document.getElementById("playerSearch").addEventListener("input", renderPlayerTable);
+
+      document.getElementById("prevWeekBtn").addEventListener("click", () => {
+        const select = document.getElementById("weekSelect");
+        const prev = getPrevWeek(select.value);
+        if (prev) {
+          select.value = prev;
+          refreshSelectedWeekViews();
+        }
+      });
+
+      document.getElementById("nextWeekBtn").addEventListener("click", () => {
+        const select = document.getElementById("weekSelect");
+        const next = getNextWeek(select.value);
+        if (next) {
+          select.value = next;
+          refreshSelectedWeekViews();
+        }
+      });
+    }
+
+    async function loadData() {
+      setStatus("Loading dashboard data...", "");
+      setFooter("");
+
+      const loadNotes = [];
+
+      try {
+        const results = await Promise.allSettled([
+          fetchCsvRobust(WEEKLY_URL, "WEEKLY"),
+          fetchCsvRobust(PLAYER_URL, "PLAYER"),
+          fetchCsvRobust(RAW_URL, "RAW")
+        ]);
+
+        const [weeklyRes, playerRes, rawRes] = results;
+
+        if (rawRes.status !== "fulfilled") {
+          throw new Error("RAW load failed. " + rawRes.reason.message);
+        }
+
+        RAW = normalizeRaw(rawRes.value.rows);
+        loadNotes.push("RAW via " + rawRes.value.method);
+
+        if (!RAW.length) {
+          throw new Error("RAW loaded but no usable rows were found.");
+        }
+
+        if (weeklyRes.status === "fulfilled") {
+          WEEKLY = normalizeWeekly(weeklyRes.value.rows);
+          loadNotes.push("WEEKLY via " + weeklyRes.value.method);
+        } else {
+          loadNotes.push("WEEKLY fallback from RAW");
+        }
+
+        if (playerRes.status === "fulfilled") {
+          PLAYERS = normalizePlayers(playerRes.value.rows);
+          loadNotes.push("PLAYER via " + playerRes.value.method);
+        } else {
+          loadNotes.push("PLAYER fallback from RAW");
+        }
+
+        if (!WEEKLY.length) WEEKLY = deriveWeeklyFromRaw();
+        if (!PLAYERS.length) PLAYERS = derivePlayersFromRaw();
+
+        populateWeekFilter();
+        renderLineChart();
+        renderGrowers();
+        refreshSelectedWeekViews();
+
+        setStatus("Dashboard loaded successfully.", "ok");
+        setFooter(loadNotes.join(" | "));
+      } catch (err) {
+        console.error(err);
+        setStatus("Load failed. " + err.message, "error");
+        setFooter("If this still fails, the remaining issue is likely source access/publication for the RAW tab, not the dashboard layout.");
+      }
+    }
+
+    bindUi();
+    loadData();
+  </script>
 </body>
 </html>
