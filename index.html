@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOA Clan Growth Dashboard | Premium Enforcement Edition</title>
+  <title>WOA Clan Growth Dashboard | Premium Scoring Edition</title>
   <style>
     :root{
       --bg:#07111f;
@@ -640,10 +640,11 @@
       white-space:nowrap;
     }
 
-    .player-table th:nth-child(1), .player-table td:nth-child(1){ width:34%; }
-    .player-table th:nth-child(2), .player-table td:nth-child(2){ width:24%; }
-    .player-table th:nth-child(3), .player-table td:nth-child(3){ width:22%; }
-    .player-table th:nth-child(4), .player-table td:nth-child(4){ width:20%; padding-right:22px; }
+    .player-table th:nth-child(1), .player-table td:nth-child(1){ width:32%; }
+    .player-table th:nth-child(2), .player-table td:nth-child(2){ width:20%; }
+    .player-table th:nth-child(3), .player-table td:nth-child(3){ width:18%; }
+    .player-table th:nth-child(4), .player-table td:nth-child(4){ width:15%; }
+    .player-table th:nth-child(5), .player-table td:nth-child(5){ width:15%; padding-right:22px; }
 
     tbody tr{
       transition:background .22s ease, transform .22s ease;
@@ -785,7 +786,7 @@
             <h1>WOA Clan Growth Dashboard</h1>
             <div class="hero-sub">
               Real-time clan performance dashboard delivering weekly growth insights, player rankings,
-              trend analysis, enforcement visibility, slow-grower tracking, and actionable KPIs —
+              trend analysis, slow-grower tracking, enforcement visibility, and scoring-based governance —
               including under-100M alerts, roster movement, and top contributors.
             </div>
           </div>
@@ -801,7 +802,7 @@
             </div>
             <div class="meta-pill">
               <div class="meta-label">Risk Watch</div>
-              <div class="meta-value">Slow Growers</div>
+              <div class="meta-value">Slow Growers + Score</div>
             </div>
             <div class="meta-pill">
               <div class="meta-label">Mode</div>
@@ -920,11 +921,12 @@
               <div class="kpi-title">Enforcement Required</div>
               <div class="kpi-value" id="kpiEnforcement">—</div>
             </div>
-            <div class="kpi-sub" id="kpiEnforcementSub">Players below 100M and low growth</div>
+            <div class="kpi-sub" id="kpiEnforcementSub">Players below 100M and critical score</div>
           </div>
         </div>
       </div>
-	        <div class="grid-main">
+	  ```html
+      <div class="grid-main">
         <div class="card">
           <div class="card-head">
             <div>
@@ -963,7 +965,7 @@
             <div class="card-head">
               <div>
                 <div class="title">Top 10 Slow Growers (All Time)</div>
-                <div class="muted">Lowest growth percentage performers requiring attention</div>
+                <div class="muted">Lowest growth score and weakest lifetime progress</div>
               </div>
               <div class="tag" style="background:rgba(255,107,107,.18);border-color:rgba(255,107,107,.35);">
                 Risk Watch
@@ -974,7 +976,7 @@
                 <thead>
                   <tr>
                     <th>Player</th>
-                    <th class="num">Net Growth</th>
+                    <th class="num">Score</th>
                     <th class="num">Growth %</th>
                   </tr>
                 </thead>
@@ -1001,7 +1003,7 @@
           <div class="card-head">
             <div>
               <div class="title">Player Analysis by Selected Week</div>
-              <div class="muted">Sorted by highest week % growth, with enforcement risks surfaced</div>
+              <div class="muted">Scored by lifetime growth, recent growth, and might standard</div>
             </div>
             <div class="tag">Week Detail</div>
           </div>
@@ -1013,6 +1015,7 @@
                   <th class="num">Selected Might</th>
                   <th class="num">Week Change</th>
                   <th class="num">Week %</th>
+                  <th class="num">Score</th>
                 </tr>
               </thead>
               <tbody id="playerBody"></tbody>
@@ -1340,7 +1343,43 @@
         document.getElementById("latestWeekLabel").textContent = "—";
       }
     }
-	    function classifyRosterChanges(selectedWeek) {
+    function getLifetimeScore(growthPct) {
+      if (growthPct >= 50) return 50;
+      if (growthPct >= 30) return 40;
+      if (growthPct >= 15) return 30;
+      if (growthPct >= 10) return 20;
+      if (growthPct >= 5) return 10;
+      return 0;
+    }
+
+    function getRecentScore(weekPct) {
+      if (weekPct >= 10) return 30;
+      if (weekPct >= 5) return 24;
+      if (weekPct >= 3) return 18;
+      if (weekPct >= 1) return 10;
+      if (weekPct >= 0) return 5;
+      return 0;
+    }
+
+    function getMightScore(might) {
+      if (might >= 100000000) return 20;
+      if (might >= 70000000) return 12;
+      if (might >= 40000000) return 6;
+      return 0;
+    }
+
+    function getGrowthHealthScore(lifetimePct, weekPct, might) {
+      return getLifetimeScore(lifetimePct) + getRecentScore(weekPct) + getMightScore(might);
+    }
+
+    function getScoreBand(score) {
+      if (score >= 85) return "Elite";
+      if (score >= 65) return "Stable";
+      if (score >= 40) return "Risk";
+      return "Critical";
+    }
+
+    function classifyRosterChanges(selectedWeek) {
       const prevWeek = getPrevWeek(selectedWeek);
       const currentMap = mapForWeek(selectedWeek);
       const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
@@ -1376,7 +1415,7 @@
     function calculateEnforcement(selectedWeek) {
       const rows = buildSelectedWeekPlayerRows();
       const critical = rows.filter(r =>
-        r.Below100M && r.Pct < 5 && !r.IsNew && !r.IsReturned
+        r.Score < 40 && r.Below100M && !r.IsNew && !r.IsReturned
       );
 
       document.getElementById("kpiEnforcement").textContent = fmtInt(critical.length);
@@ -1562,19 +1601,35 @@
 
     function renderSlowGrowers() {
       const body = document.getElementById("slowGrowersBody");
-      const rows = [...PLAYERS]
-        .sort((a,b)=> a.Growth_Pct - b.Growth_Pct || a.Net_Growth - b.Net_Growth)
-        .slice(0,10);
+
+      const rows = RAW.map(r => {
+        const summary = PLAYERS.find(p => p.Player === r.Player);
+        const lifetimePct = summary ? summary.Growth_Pct : 0;
+        const selectedWeek = getSelectedWeek();
+        const prevWeek = getPrevWeek(selectedWeek);
+        const prevMap = prevWeek ? mapForWeek(prevWeek) : new Map();
+        const prev = prevMap.get(r.Player) || 0;
+        const weekPct = prev ? ((r.Might - prev) / prev) * 100 : 0;
+        const score = getGrowthHealthScore(lifetimePct, weekPct, r.Might);
+        return {
+          Player: r.Player,
+          Score: score,
+          Growth_Pct: lifetimePct
+        };
+      })
+      .filter((v, i, arr) => arr.findIndex(x => x.Player === v.Player) === i)
+      .sort((a,b)=> a.Score - b.Score || a.Growth_Pct - b.Growth_Pct)
+      .slice(0,10);
 
       body.innerHTML = rows.map((r, idx) => {
         let cls = "";
-        if (r.Growth_Pct < 0) cls = "bad";
-        else if (r.Growth_Pct < 5) cls = "warn";
+        if (r.Score < 40) cls = "bad";
+        else if (r.Score < 65) cls = "warn";
 
         return `
           <tr class="${idx < 3 ? 'highlight-enforcement' : ''}">
             <td class="${cls}">${r.Player}</td>
-            <td class="num ${cls}">${fmtInt(r.Net_Growth)}</td>
+            <td class="num ${cls}">${r.Score}</td>
             <td class="num ${cls}">${fmtPct(r.Growth_Pct)}</td>
           </tr>
         `;
@@ -1595,13 +1650,22 @@
         const isNewThisWeek = !isBaselineWeek && !prevMap.has(player) && !everAppearedBefore(player, selectedWeek);
         const isReturned = !isBaselineWeek && !prevMap.has(player) && everAppearedBefore(player, selectedWeek);
         const below100M = might < 100000000;
-        const enforcement = below100M && pct < 5 && !isNewThisWeek && !isReturned;
+
+        const playerSummary = PLAYERS.find(p => p.Player === player);
+        const lifetimePct = playerSummary ? playerSummary.Growth_Pct : 0;
+        const score = getGrowthHealthScore(lifetimePct, pct, might);
+        const scoreBand = getScoreBand(score);
+
+        const enforcement = score < 40 && below100M && !isNewThisWeek && !isReturned;
 
         return {
           Player: player,
           Might: might,
           Delta: delta,
           Pct: pct,
+          LifetimePct: lifetimePct,
+          Score: score,
+          ScoreBand: scoreBand,
           IsNew: isNewThisWeek,
           IsReturned: isReturned,
           Below100M: below100M,
@@ -1611,8 +1675,8 @@
         if (a.Enforcement !== b.Enforcement) return a.Enforcement ? -1 : 1;
         if (a.IsNew !== b.IsNew) return a.IsNew ? 1 : -1;
         if (a.IsReturned !== b.IsReturned) return a.IsReturned ? 1 : -1;
-        if (a.Below100M !== b.Below100M) return a.Below100M ? -1 : 1;
-        return b.Pct - a.Pct || b.Delta - a.Delta || b.Might - a.Might;
+        if (a.Score !== b.Score) return a.Score - b.Score;
+        return b.Might - a.Might;
       });
     }
 
@@ -1621,17 +1685,29 @@
       const rows = buildSelectedWeekPlayerRows().filter(r => !q || r.Player.toLowerCase().includes(q));
 
       document.getElementById("playerBody").innerHTML = rows.map((r, idx) => {
-        const top5 = idx < 5 && !r.IsNew && !r.IsReturned && !r.Below100M && !r.Enforcement;
+        const top5 = idx < 5 && !r.IsNew && !r.IsReturned && !r.Below100M && !r.Enforcement && r.Score >= 85;
         const cls = r.IsNew || r.IsReturned
           ? "warn"
           : (r.Enforcement ? "bad" : (r.Below100M ? "bad" : (top5 ? "good-strong" : (r.Pct > 0 ? "good" : (r.Pct < 0 ? "bad" : "")))));
+
         const weekPct = r.IsNew || r.IsReturned ? "—" : fmtPct(r.Pct);
 
-        let playerLabel = r.Player;
+        let scorePill = "";
+        if (r.ScoreBand === "Elite") {
+          scorePill = `<span class="pill good" style="margin-left:8px;">Elite</span>`;
+        } else if (r.ScoreBand === "Stable") {
+          scorePill = `<span class="pill good" style="margin-left:8px;">Stable</span>`;
+        } else if (r.ScoreBand === "Risk") {
+          scorePill = `<span class="pill warn" style="margin-left:8px;">Risk</span>`;
+        } else {
+          scorePill = `<span class="pill bad" style="margin-left:8px;">Critical</span>`;
+        }
+
+        let playerLabel = `${r.Player} ${scorePill}`;
         if (r.Enforcement) {
-          playerLabel = `${r.Player} <span class="pill bad" style="margin-left:8px;">Enforcement</span>`;
+          playerLabel += ` <span class="pill bad" style="margin-left:8px;">Enforcement</span>`;
         } else if (r.Below100M) {
-          playerLabel = `${r.Player} <span class="pill bad" style="margin-left:8px;">Below 100M</span>`;
+          playerLabel += ` <span class="pill bad" style="margin-left:8px;">Below 100M</span>`;
         }
 
         return `<tr class="${r.Enforcement ? 'highlight-enforcement' : (top5 ? 'highlight-grow' : '')}">
@@ -1639,6 +1715,7 @@
           <td class="num ${cls}">${fmtInt(r.Might)}</td>
           <td class="num ${r.Delta >= 0 ? 'good' : 'bad'}">${fmtInt(r.Delta)}</td>
           <td class="num ${cls}">${weekPct}</td>
+          <td class="num ${cls}">${r.Score}</td>
         </tr>`;
       }).join("");
     }
@@ -1677,6 +1754,7 @@
       renderPlayerTable();
       renderRosterLists();
       renderTopWeekGains();
+      renderSlowGrowers();
     }
 
     function bindUi() {
