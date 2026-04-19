@@ -31,9 +31,8 @@
       --shadow:0 16px 40px rgba(0,0,0,0.30);
     }
 
-    *{ box-sizing:border-box; }
-
-    html{ scroll-behavior:smooth; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
 
     body{
       margin:0;
@@ -332,7 +331,7 @@
       transition:all .22s ease;
     }
 
-    .input::placeholder{ color:#90a2c5; }
+    .input::placeholder{color:#90a2c5}
 
     .input:focus,
     .select:focus{
@@ -432,6 +431,18 @@
       align-items:start;
     }
 
+    .dual-grid{
+      display:grid;
+      grid-template-columns:1.55fr .95fr;
+      gap:12px;
+      margin-bottom:12px;
+      align-items:start;
+    }
+
+    .full-width-row{
+      margin-bottom:12px;
+    }
+
     .panel{
       border-radius:22px;
       overflow:hidden;
@@ -512,7 +523,7 @@
     }
 
     .table-wrap.tall{
-      max-height:700px;
+      max-height:520px;
     }
 
     table{
@@ -598,9 +609,9 @@
       border-color:rgba(255,107,125,0.22);
     }
 
-    .metric-pos{ color:#61e29d; font-weight:800; }
-    .metric-neg{ color:#ff7f8f; font-weight:800; }
-    .metric-flat{ color:#c6d3ea; font-weight:800; }
+    .metric-pos{color:#61e29d;font-weight:800}
+    .metric-neg{color:#ff7f8f;font-weight:800}
+    .metric-flat{color:#c6d3ea;font-weight:800}
 
     .bottom-grid{
       display:grid;
@@ -642,17 +653,13 @@
     }
 
     .footer-note{
-      text-align:center;
-      color:#7f93b8;
-      font-size:10px;
-      margin-top:10px;
-      letter-spacing:.04em;
-      text-transform:uppercase;
+      display:none;
     }
 
     @media (max-width: 1200px){
       .hero-grid,
       .main-grid,
+      .dual-grid,
       .bottom-grid{
         grid-template-columns:1fr;
       }
@@ -675,7 +682,8 @@
       .filters,
       .panel,
       .list-card,
-      .topbar{
+      .topbar,
+      .table-card{
         border-radius:18px;
       }
 
@@ -976,51 +984,52 @@
         </div>
       </div>
     </section>
-	    <section class="main-grid fade-in">
-      <div class="panel glass">
-        <div class="panel-head">
-          <div>
-            <h3 class="panel-title">Top 10 Players by Selected Week</h3>
-            <p class="panel-desc">This ranking changes with the selected week</p>
-          </div>
-          <div class="panel-tools">
-            <div class="chip">Weekly Ranking</div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="chart-wrap">
-            <canvas id="weeklyTopChart"></canvas>
-          </div>
-        </div>
+	<section class="dual-grid fade-in">
+  <div class="panel glass">
+    <div class="panel-head">
+      <div>
+        <h3 class="panel-title">Top 10 Players by Selected Week</h3>
+        <p class="panel-desc">This ranking changes with the selected week</p>
       </div>
+      <div class="panel-tools">
+        <div class="chip">Weekly Ranking</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chart-wrap">
+        <canvas id="weeklyTopChart"></canvas>
+      </div>
+    </div>
+  </div>
 
-      <div class="table-card glass">
-        <div class="panel-head">
-          <div>
-            <h3 class="panel-title">Player Analysis by Selected Week</h3>
-            <p class="panel-desc">Scored by lifetime growth, recent growth, and might standard</p>
-          </div>
-          <div class="panel-tools">
-            <div class="chip">Week Detail</div>
-          </div>
-        </div>
-        <div class="table-wrap tall">
-          <table>
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th>Selected Might</th>
-                <th>Week Change</th>
-                <th>Week %</th>
-                <th>Score</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="playerWeekAnalysisTable"></tbody>
-          </table>
-        </div>
+  <div class="table-card glass">
+    <div class="panel-head">
+      <div>
+        <h3 class="panel-title">Player Analysis by Selected Week</h3>
+        <p class="panel-desc">Scored by lifetime growth, recent growth, and might standard</p>
       </div>
-    </section>
+      <div class="panel-tools">
+        <div class="chip">Week Detail</div>
+      </div>
+    </div>
+    <div class="table-wrap tall">
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Selected Might</th>
+            <th>Week Change</th>
+            <th>Week %</th>
+            <th>Score</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="playerWeekAnalysisTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 
     <section class="bottom-grid fade-in">
       <div class="list-card glass">
@@ -1073,12 +1082,7 @@
       RAW vs latest fetch | WEEKLY vs latest fetch | PLAYER via latest fetch
     </div>
   </div>
-
-  <script>
-    /* =========================
-       CONFIG
-    ========================== */
-
+    <script>
     const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
     const PLAYER_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=474461150&single=true&output=csv";
     const RAW_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=176254662&single=true&output=csv";
@@ -1090,10 +1094,6 @@
 
     let trendChart = null;
     let weeklyTopChart = null;
-
-    /* =========================
-       HELPERS
-    ========================== */
 
     function parseCSVLine(line) {
       const result = [];
@@ -1246,9 +1246,6 @@
     function createEmptyListMessage(message) {
       return `<li><span>${escapeHtml(message)}</span><span>—</span></li>`;
     }
-	    /* =========================
-       NORMALIZATION
-    ========================== */
 
     function normalizeRows(rows) {
       return rows
@@ -1379,7 +1376,6 @@
       else if (weekPct >= 2) score += 18;
       else if (weekPct > 0) score += 10;
       else if (weekPct === 0) score += 5;
-      else score += 0;
 
       const lifePct = lifetimeStat?.growthPct || 0;
       if (lifePct >= 100) score += 35;
@@ -1387,7 +1383,6 @@
       else if (lifePct >= 25) score += 20;
       else if (lifePct >= 10) score += 12;
       else if (lifePct > 0) score += 6;
-      else score += 0;
 
       return Math.max(0, Math.round(score));
     }
@@ -1400,10 +1395,6 @@
       if (score < 80) return "On Track";
       return "Top Growth";
     }
-
-    /* =========================
-       RENDERERS
-    ========================== */
 
     function renderTrendChart() {
       const data = buildTrendData();
@@ -1784,10 +1775,6 @@
       renderBottomLists(ctx);
     }
 
-    /* =========================
-       EVENTS
-    ========================== */
-
     function wireEvents() {
       document.getElementById("weekSelect").addEventListener("change", (e) => {
         selectedWeek = e.target.value;
@@ -1814,10 +1801,6 @@
         renderAll();
       });
     }
-
-    /* =========================
-       LOAD DATA
-    ========================== */
 
     async function loadData() {
       try {
@@ -1876,4 +1859,3 @@
   </script>
 </body>
 </html>
-```
