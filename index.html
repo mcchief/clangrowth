@@ -101,7 +101,7 @@
 
     .topbar-inner{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
@@ -112,6 +112,7 @@
       align-items:center;
       gap:10px;
       min-width:0;
+      flex:1 1 260px;
     }
 
     .brand-badge{
@@ -128,6 +129,7 @@
       letter-spacing:.04em;
       text-transform:uppercase;
       white-space:nowrap;
+      max-width:100%;
     }
 
     .dot{
@@ -136,27 +138,67 @@
       border-radius:50%;
       background:linear-gradient(135deg, var(--green), var(--cyan));
       box-shadow:0 0 16px rgba(53,210,138,0.8);
+      flex:0 0 auto;
     }
 
-    .status-strip{
+    .topbar-actions{
       display:flex;
       align-items:center;
       gap:10px;
+      flex:1 1 680px;
+      justify-content:flex-end;
+      min-width:0;
       flex-wrap:wrap;
     }
 
+    .status-strip{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:10px;
+      flex:1 1 620px;
+      min-width:0;
+    }
+
     .pill{
-      display:inline-flex;
-      align-items:center;
+      display:flex;
+      align-items:flex-start;
       gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
+      padding:10px 12px;
+      border-radius:16px;
       border:1px solid var(--stroke);
       background:rgba(255,255,255,0.06);
       color:var(--soft);
       font-size:12px;
       font-weight:700;
+      white-space:normal;
+      line-height:1.45;
+      min-width:0;
+      word-break:break-word;
+    }
+
+    .home-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 16px;
+      border-radius:14px;
+      border:1px solid rgba(122,184,255,0.28);
+      background:linear-gradient(135deg, rgba(122,184,255,0.22), rgba(79,124,255,0.18));
+      color:#ffffff;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.02em;
+      transition:all .22s ease;
+      flex:0 0 auto;
       white-space:nowrap;
+    }
+
+    .home-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(122,184,255,0.44);
+      box-shadow:0 10px 24px rgba(79,124,255,0.18);
     }
 
     .hero{
@@ -407,16 +449,15 @@
       margin-bottom:12px;
     }
 
-   .kpi-value{
-  font-size:clamp(18px, 2vw, 34px);
-  line-height:1;
-  font-weight:900;
-  letter-spacing:-0.05em;
-  margin-bottom:8px;
-  color:#fff;
-
-  white-space:nowrap;   /* keep on one line */
-}
+    .kpi-value{
+      font-size:clamp(18px, 2vw, 34px);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-0.05em;
+      margin-bottom:8px;
+      color:#fff;
+      white-space:nowrap;
+    }
 
     .kpi-note{
       color:var(--muted);
@@ -495,7 +536,8 @@
     .chart-wrap-wide{
       height:340px;
     }
-	    .rank-stack-full{
+
+    .rank-stack-full{
       display:grid;
       grid-template-columns:1fr;
       gap:12px;
@@ -521,19 +563,22 @@
     .table-wrap.tall{
       max-height:520px;
     }
-.rank-table-wrap{
-  overflow:visible;
-  border-top:1px solid var(--stroke);
-  max-height:none;
-}
-.rank-card-full table{
-  min-width:100%;
-}
 
-.rank-card-full tbody td,
-.rank-card-full thead th{
-  padding:10px 14px;
-}
+    .rank-table-wrap{
+      overflow:auto;
+      border-top:1px solid var(--stroke);
+      max-height:none;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .rank-card-full table{
+      min-width:100%;
+    }
+
+    .rank-card-full tbody td,
+    .rank-card-full thead th{
+      padding:10px 14px;
+    }
 
     table{
       width:100%;
@@ -572,6 +617,7 @@
       display:flex;
       align-items:center;
       gap:10px;
+      min-width:0;
     }
 
     .avatar{
@@ -685,6 +731,12 @@
       display:none;
     }
 
+    @media (max-width:1400px){
+      .status-strip{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width:1200px){
       .hero-grid,
       .bottom-grid{
@@ -697,6 +749,43 @@
 
       .filter-grid{
         grid-template-columns:repeat(2, minmax(0,1fr));
+      }
+
+      .topbar-actions{
+        justify-content:stretch;
+      }
+
+      .status-strip{
+        flex:1 1 100%;
+      }
+    }
+
+    @media (max-width:900px){
+      .topbar{
+        top:6px;
+        padding:10px;
+      }
+
+      .topbar-inner{
+        gap:10px;
+      }
+
+      .brand{
+        flex:1 1 100%;
+      }
+
+      .topbar-actions{
+        flex:1 1 100%;
+        justify-content:stretch;
+      }
+
+      .status-strip{
+        grid-template-columns:1fr 1fr;
+        width:100%;
+      }
+
+      .home-btn{
+        width:100%;
       }
     }
 
@@ -745,6 +834,10 @@
       table{
         min-width:980px;
       }
+
+      .pill{
+        border-radius:14px;
+      }
     }
 
     @media (max-width:560px){
@@ -770,6 +863,23 @@
         padding-left:14px;
         padding-right:14px;
       }
+
+      .status-strip{
+        grid-template-columns:1fr;
+      }
+
+      .pill{
+        font-size:11px;
+        padding:10px 11px;
+      }
+
+      .brand-badge{
+        white-space:normal;
+      }
+
+      .home-btn{
+        min-height:40px;
+      }
     }
   </style>
 </head>
@@ -785,11 +895,17 @@
           </div>
         </div>
 
-        <div class="status-strip">
-          <div class="pill"><strong>Latest Snapshot:</strong>&nbsp;<span id="latestSnapshot">Loading...</span></div>
-          <div class="pill"><strong>Focus KPI:</strong>&nbsp;Players under 100M</div>
-          <div class="pill"><strong>Development Focus:</strong>&nbsp;Low Growth Performers</div>
-          <div class="pill"><strong>Mode:</strong>&nbsp;Live Weekly Analysis</div>
+        <div class="topbar-actions">
+          <div class="status-strip">
+            <div class="pill"><strong>Latest Snapshot:</strong>&nbsp;<span id="latestSnapshot">Loading...</span></div>
+            <div class="pill"><strong>Focus KPI:</strong>&nbsp;Players under 100M</div>
+            <div class="pill"><strong>Development Focus:</strong>&nbsp;Low Growth Performers</div>
+            <div class="pill"><strong>Mode:</strong>&nbsp;Live Weekly Analysis</div>
+          </div>
+
+          <a class="home-btn" href="https://sites.google.com/view/woa-command-center/home" target="_blank" rel="noopener noreferrer">
+            ⌂ Home
+          </a>
         </div>
       </div>
     </div>
@@ -920,7 +1036,8 @@
         <div class="kpi-note">Players with low growth performance</div>
       </div>
     </section>
-	    <section class="full-width-row fade-in">
+
+    <section class="full-width-row fade-in">
       <div class="panel glass">
         <div class="panel-head">
           <div>
@@ -941,8 +1058,8 @@
 
     <section class="full-width-row fade-in">
       <div class="rank-stack-full">
-	  
-	    <div class="rank-card-full glass">
+
+        <div class="rank-card-full glass">
           <div class="panel-head">
             <div>
               <h3 class="panel-title">Top 10 Week Gains</h3>
@@ -965,8 +1082,7 @@
             </table>
           </div>
         </div>
-	  
-	  
+
         <div class="rank-card-full glass">
           <div class="panel-head">
             <div>
@@ -990,8 +1106,6 @@
             </table>
           </div>
         </div>
-
-      
 
         <div class="rank-card-full glass">
           <div class="panel-head">
@@ -1424,7 +1538,8 @@
       if (score < 80) return "On Track";
       return "Top Growth";
     }
-	    function renderTrendChart() {
+
+    function renderTrendChart() {
       const data = buildTrendData();
       const ctx = document.getElementById("trendChart").getContext("2d");
 
@@ -1556,7 +1671,9 @@
         .slice(0, 10);
 
       const tbody = document.getElementById("topGrowersTable");
-      tbody.innerHTML = stats.map((item, index) => `
+      tbody.innerHTML = stats.map(() => "").join("");
+
+      tbody.innerHTML = stats.map((item) => `
         <tr class="highlight-top10">
           <td>${createNameCell(item.player)}</td>
           <td class="${metricClass(item.netGrowth)}">${formatSignedShort(item.netGrowth)}</td>
