@@ -91,9 +91,9 @@
     }
 
     .topbar{
-      position:sticky;
-      top:8px;
-      z-index:50;
+      position:relative;
+      top:auto;
+      z-index:10;
       border-radius:24px;
       padding:10px 12px;
       margin-bottom:12px;
@@ -730,6 +730,40 @@
       display:none;
     }
 
+    .back-to-top{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:48px;
+      height:48px;
+      border:none;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg, rgba(122,184,255,0.95), rgba(79,124,255,0.95));
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 14px 30px rgba(0,0,0,0.28);
+      z-index:999;
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(10px);
+      transition:all .25s ease;
+    }
+
+    .back-to-top.show{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+    }
+
+    .back-to-top:hover{
+      transform:translateY(-2px);
+    }
+
     @media (max-width:1400px){
       .status-strip{
         grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -761,7 +795,7 @@
 
     @media (max-width:900px){
       .topbar{
-        top:6px;
+        top:auto;
         padding:10px;
       }
 
@@ -878,6 +912,14 @@
 
       .home-btn{
         min-height:40px;
+      }
+
+      .back-to-top{
+        right:12px;
+        bottom:12px;
+        width:44px;
+        height:44px;
+        font-size:20px;
       }
     }
   </style>
@@ -1232,6 +1274,10 @@
       RAW vs latest fetch | WEEKLY vs latest fetch | PLAYER via latest fetch
     </div>
   </div>
+
+  <button id="backToTopBtn" class="back-to-top" aria-label="Back to top" title="Back to top">
+    ↑
+  </button>
 
   <script>
     const WEEKLY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSGRZ5WTeYts84FCArLvGa5iaZWimBaxq_MuRAfwmXp0-iKVV5X6JwacmvTSnM6sg/pub?gid=1957525861&single=true&output=csv";
@@ -1989,6 +2035,26 @@
       });
     }
 
+    function wireBackToTop() {
+      const btn = document.getElementById("backToTopBtn");
+      if (!btn) return;
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+          btn.classList.add("show");
+        } else {
+          btn.classList.remove("show");
+        }
+      });
+
+      btn.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+    }
+
     async function loadData() {
       try {
         const response = await fetch(
@@ -2013,6 +2079,7 @@
 
         buildWeeks();
         wireEvents();
+        wireBackToTop();
         renderAll();
 
         console.log("WOA Dashboard loaded successfully.");
