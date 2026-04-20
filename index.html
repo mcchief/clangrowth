@@ -465,8 +465,7 @@
       line-height:1.5;
       font-weight:600;
     }
-
-    .full-width-row{
+	    .full-width-row{
       margin-bottom:12px;
     }
 
@@ -1036,8 +1035,7 @@
         <div class="kpi-note">Players with low growth performance</div>
       </div>
     </section>
-
-    <section class="full-width-row fade-in">
+	    <section class="full-width-row fade-in">
       <div class="panel glass">
         <div class="panel-head">
           <div>
@@ -1538,8 +1536,7 @@
       if (score < 80) return "On Track";
       return "Top Growth";
     }
-
-    function renderTrendChart() {
+	    function renderTrendChart() {
       const data = buildTrendData();
       const ctx = document.getElementById("trendChart").getContext("2d");
 
@@ -1671,8 +1668,6 @@
         .slice(0, 10);
 
       const tbody = document.getElementById("topGrowersTable");
-      tbody.innerHTML = stats.map(() => "").join("");
-
       tbody.innerHTML = stats.map((item) => `
         <tr class="highlight-top10">
           <td>${createNameCell(item.player)}</td>
